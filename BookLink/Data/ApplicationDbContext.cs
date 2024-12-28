@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using BookLink.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookLink.Data
 {
@@ -8,6 +9,8 @@ namespace BookLink.Data
 		{
 
 		}
+
+		public DbSet<Book> Books { get; set; }
 
 	}
 }
