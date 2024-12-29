@@ -1,1 +1,19 @@
-﻿<h1>Category List</h1>
+﻿@model List<Category>
+
+<h1 class="text-center">Category List</h1>
+<br />
+
+<div class="table table-responsive">
+    <table class="table table-striped table-hover text-center">
+        <tbody>
+            @foreach(var obj in Model)
+            {
+                <tr>
+                    <th>
+                        @obj.CategoryName
+                    </th>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
