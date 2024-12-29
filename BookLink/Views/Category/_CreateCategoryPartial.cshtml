@@ -1,0 +1,16 @@
+﻿@model Category
+
+<!-- Form to create or edit a category -->
+<form id="createCategoryForm" method="post" asp-controller="Category" asp-action="Create">
+    <div class="mb-3">
+        <!-- Category Name input -->
+        <label for="CategoryName" class="form-label">Category Name</label>
+        <input type="text" class="form-control border border-primary" id="CategoryName" name="CategoryName" value="@Model?.CategoryName" required />
+    </div>
+    <div class="modal-footer">
+        <!-- Close button to dismiss modal -->
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <!-- Submit button to save category -->
+        <button type="submit" class="btn btn-primary">Save Category</button>
+    </div>
+</form>

@@ -1,4 +1,5 @@
-﻿using BookLink.Data;
+﻿using AspNetCoreGeneratedDocument;
+using BookLink.Data;
 using BookLink.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,10 +14,16 @@ namespace BookLink.Controllers
 			_db = db;
 
 		}
+		// GET: Category
 		public IActionResult Index()
 		{
 			List<Category> objCategoryList = _db.Categories.ToList();
 			return View(objCategoryList);
+		}
+
+		public IActionResult Create()
+		{
+			return PartialView("_CreateCategoryPartial");
 		}
 	}
 }
