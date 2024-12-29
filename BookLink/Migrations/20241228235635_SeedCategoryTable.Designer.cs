@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookLink.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241228184800_SeedCategoryTable")]
+    [Migration("20241228235635_SeedCategoryTable")]
     partial class SeedCategoryTable
     {
         /// <inheritdoc />
