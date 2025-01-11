@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace BookLink.Models
@@ -8,8 +9,9 @@ namespace BookLink.Models
 		[BindNever]
 		public int CategoryId { get; set; }
 
+		
 		[Required]
-		[Display(Name = "Category Name")]
+		[DisplayName("Category Name")]
 		public string CategoryName { get; set; }
 	}
 }

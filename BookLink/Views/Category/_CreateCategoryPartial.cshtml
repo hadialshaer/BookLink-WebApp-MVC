@@ -4,8 +4,8 @@
 <form id="createCategoryForm" method="post" asp-controller="Category" asp-action="Create">
     <div class="mb-3">
         <!-- Category Name input -->
-        <label for="CategoryName" class="form-label">Category Name</label>
-        <input type="text" class="form-control border border-primary" id="CategoryName" name="CategoryName" value="@Model?.CategoryName" required />
+        <label asp-for="CategoryName" class="form-label"></label>
+        <input asp-for="CategoryName" class="form-control border border-primary"/>
     </div>
     <div class="modal-footer">
         <!-- Close button to dismiss modal -->

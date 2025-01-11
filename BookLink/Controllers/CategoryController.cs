@@ -25,5 +25,14 @@ namespace BookLink.Controllers
 		{
 			return PartialView("_CreateCategoryPartial");
 		}
+
+		[HttpPost]
+		public IActionResult Create(Category category)
+		{
+			_db.Categories.Add(category); // Keep Track of changes made but not actually added them
+			_db.SaveChanges(); // Save Changes to the Database (create the category)
+			return RedirectToAction("Index"); // Redirect to the Index Action of the Category Controller
+		}
+
 	}
 }
