@@ -10,7 +10,7 @@ namespace BookLink.Models
 		public int CategoryId { get; set; }
 
 		
-		[Required]
+		[Required(ErrorMessage = "Category Name is required")]
 		[DisplayName("Category Name")]
 		public string CategoryName { get; set; }
 	}
