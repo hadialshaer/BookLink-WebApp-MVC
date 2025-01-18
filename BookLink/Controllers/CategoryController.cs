@@ -48,6 +48,28 @@ namespace BookLink.Controllers
 			return Json(category);
 		}
 
+		[HttpPost]
+		[ValidateAntiForgeryToken] // Prevent CSRF attacks
+		public JsonResult Edit(Category category)
+		{
+			if (!ModelState.IsValid)
+			{
+				return Json(new { success = false, message = "Invalid data" });
+			}
+
+			var existingCategory = _context.Categories.Find(category.CategoryId);
+			if (existingCategory == null)
+			{
+				return Json(new { success = false, message = "Category not found" });
+			}
+
+			existingCategory.CategoryName = category.CategoryName;
+			_context.SaveChanges();
+
+			return Json(new { success = true });
+		}
+
+
 
 
 
