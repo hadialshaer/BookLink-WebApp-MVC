@@ -26,7 +26,13 @@
                 {
                     <tr>
                         <!-- Display the Category Name -->
-                        <th>@category.CategoryName</th>
+                        <td class="text-start align-middle fw-bold">@category.CategoryName</td>
+                        <!-- Edit Button -->
+                        <td class="text-end">
+                            <a asp-controller="Category" asp-action="Edit" class="btn btn-primary">
+                                <i class="bi bi-pencil-square"></i> Edit
+                            </a>
+                        </td>
                     </tr>
                 }
             </tbody>
