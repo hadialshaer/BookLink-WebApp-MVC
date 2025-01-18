@@ -52,4 +52,51 @@
 
 @section Scripts {
 	@await Html.PartialAsync("_ValidationScriptsPartial") <!-- Client-side validation scripts -->
+
+    <script>
+        $(document).ready(function () {
+            // Handle "Edit" button click
+            $(".edit-category-btn").click(function () {
+                let categoryId = $(this).data("id");
+
+                // Make AJAX request to fetch category data
+                $.ajax({
+                    url: "/Category/GetCategory",
+                    type: "GET",
+                    data: { id: categoryId },
+                    success: function (category) {
+                        // Populate the modal fields
+                        $("#editCategoryId").val(category.CategoryId);
+                        $("#editCategoryName").val(category.CategoryName);
+
+                        // Show the modal
+                        $("#editCategoryModal").modal("show");
+                    },
+                    error: function () {
+                        alert("Error loading category details.");
+                    }
+                });
+            });
+
+            // Handle form submission via AJAX
+            $("#editCategoryForm").submit(function (event) {
+                event.preventDefault(); // Prevent normal form submission
+
+                let formData = $(this).serialize(); // Serialize form data
+
+                $.ajax({
+                    url: "/Category/Edit",
+                    type: "POST",
+                    data: formData,
+                    success: function () {
+                        $("#editCategoryModal").modal("hide"); // Close modal
+                        location.reload(); // Refresh the page to show updated data
+                    },
+                    error: function () {
+                        alert("Error updating category.");
+                    }
+                });
+            });
+        });
+    </script>
 }
