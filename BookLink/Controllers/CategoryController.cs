@@ -35,5 +35,30 @@ namespace BookLink.Controllers
 			_context.SaveChanges();
 			return RedirectToAction(nameof(Index));
 		}
+		
+		
+		[HttpGet]
+		public JsonResult GetCategory(int id)
+		{
+			var category = _context.Categories.Find(id);
+			if (category == null)
+			{
+				return Json(null);
+			}
+			return Json(category);
+		}
+
+
+
+
+
+
+
+
+
+
+
+
+
 	}
 }
