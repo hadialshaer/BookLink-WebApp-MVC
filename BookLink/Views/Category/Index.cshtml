@@ -1,58 +1,54 @@
 ﻿@model List<Category>
 
 <section class="container mt-4">
-	<!-- Header Row: Contains Title and Create Button -->
-	<div class="d-flex justify-content-between align-items-center pb-3">
-		<h2 class="mb-0">Categories List</h2>
-		<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createCategoryModal">
-			<i class="bi bi-plus-circle"></i> Create New Category
-		</button>
-	</div>
+    <!-- Header Row -->
+    <div class="d-flex justify-content-between align-items-center pb-3">
+        <h2 class="mb-0">Categories List</h2>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createCategoryModal">
+            <i class="bi bi-plus-circle"></i> Create New Category
+        </button>
+    </div>
 
-	<!-- Table Section -->
-	<div class="table-responsive">
-		<!-- Enables horizontal scrolling on small screens -->
-		<table class="table table-striped table-hover text-center">
-			<thead class="table-dark">
-				<tr>
-					<th class="text-start">Category Name</th>
-					<th>Actions</th>
-				</tr>
-			</thead>
-			<tbody>
-				@foreach (var category in Model)
-				{
-					<tr>
-						<td class="text-start align-middle fw-bold">@category.CategoryName</td>
-						<td class="align-middle">
-							<!-- Action Buttons (Centered in Row) -->
-							<div class="d-flex justify-content-center gap-2 flex-wrap">
-								
-								<button type="button" class="btn btn-primary edit-category-btn"
-										data-bs-toggle="modal" data-bs-target="#editCategoryModal"
-										data-id="@category.CategoryId">
-									<i class="bi bi-pencil-square"></i> Edit
-								</button>
+    <!-- Table Section -->
+    <div class="table-responsive">
+        <table class="table table-striped table-hover text-center">
+            <thead class="table-dark">
+                <tr>
+                    <th class="text-start">Category Name</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var category in Model)
+                {
+                    <tr>
+                        <td class="text-start align-middle fw-bold">@category.CategoryName</td>
+                        <td class="align-middle">
+                            <div class="d-flex justify-content-center gap-2 flex-wrap">
+                                <!-- Edit Button -->
+                                <button type="button" class="btn btn-primary edit-category-btn" data-id="@category.CategoryId">
+                                    <i class="bi bi-pencil-square"></i> Edit
+                                </button> 
+                                <!-- Delete Button -->
+                                <a asp-controller="Category" asp-action="Delete" class="btn btn-danger">
+                                    <i class="bi bi-trash-fill"></i> Delete
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 
-								<a asp-controller="Category" asp-action="Delete" class="btn btn-danger">
-									<i class="bi bi-trash-fill"></i> Delete
-								</a>
-							</div>
-						</td>
-					</tr>
-				}
-			</tbody>
-		</table>
-	</div>
-
-	<!-- Include Modal Partial View for Creating a New Category -->
-	@await Html.PartialAsync("_CreateCategoryPartial", new BookLink.Models.Category())
-	@await Html.PartialAsync("_EditCategoryPartial", new BookLink.Models.Category())
+    <!-- Load Modals -->
+    @await Html.PartialAsync("_CreateCategoryPartial", new Category())
+    @await Html.PartialAsync("_EditCategoryPartial", new Category())
 
 </section>
 
 @section Scripts {
-	@await Html.PartialAsync("_ValidationScriptsPartial") <!-- Client-side validation scripts -->
+    @await Html.PartialAsync("_ValidationScriptsPartial") <!-- Client-side validation scripts -->
 
     <script>
         $(document).ready(function () {
@@ -60,17 +56,13 @@
             $(".edit-category-btn").click(function () {
                 let categoryId = $(this).data("id");
 
-                // Make AJAX request to fetch category data
                 $.ajax({
                     url: "/Category/GetCategory",
                     type: "GET",
                     data: { id: categoryId },
                     success: function (category) {
-                        // Populate the modal fields
-                        $("#editCategoryId").val(category.CategoryId);
-                        $("#editCategoryName").val(category.CategoryName);
-
-                        // Show the modal
+                        $("#editCategoryId").val(category.categoryId);
+                        $("#editCategoryName").val(category.categoryName);
                         $("#editCategoryModal").modal("show");
                     },
                     error: function () {
@@ -81,17 +73,29 @@
 
             // Handle form submission via AJAX
             $("#editCategoryForm").submit(function (event) {
-                event.preventDefault(); // Prevent normal form submission
+                event.preventDefault();
 
-                let formData = $(this).serialize(); // Serialize form data
+                let categoryId = $("#editCategoryId").val();
+                let categoryName = $("#editCategoryName").val();
 
                 $.ajax({
                     url: "/Category/Edit",
                     type: "POST",
-                    data: formData,
-                    success: function () {
-                        $("#editCategoryModal").modal("hide"); // Close modal
-                        location.reload(); // Refresh the page to show updated data
+                    contentType: "application/json",
+                    data: JSON.stringify({
+                        CategoryId: parseInt(categoryId),
+                        CategoryName: categoryName
+                    }),
+                    headers: {
+                        "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val()
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            $("#editCategoryModal").modal("hide");
+                            location.reload();
+                        } else {
+                            alert(response.message);
+                        }
                     },
                     error: function () {
                         alert("Error updating category.");
