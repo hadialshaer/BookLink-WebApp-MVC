@@ -45,13 +45,19 @@ namespace BookLink.Controllers
 
 		// GET: Get Category by ID for Editing
 		[HttpGet]
-		public IActionResult GetCategory(int id)
+		public IActionResult GetCategory(int? id)
 		{
+			if (id == null)
+			{
+				return NotFound();
+			}
+
 			Category? category = _context.Categories.Find(id);
 			if (category == null)
 			{
 				return Json(new { success = false, message = "Category not found" });
 			}
+
 			return Json(category);
 		}
 
