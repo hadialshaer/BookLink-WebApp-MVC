@@ -16,7 +16,7 @@
                 <form id="editCategoryForm">
                     @Html.AntiForgeryToken()  <!-- CSRF protection -->
                     <!-- Hidden input for CategoryId -->
-                    <input type="hidden" asp-for="CategoryId" id="editCategoryId" />
+                    <input asp-for="CategoryId" id="editCategoryId" hidden />
 
                     <!-- Input field for Category Name -->
                     <div class="mb-3">
