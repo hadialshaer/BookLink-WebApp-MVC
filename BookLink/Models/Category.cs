@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BookLink.Models
 {
@@ -7,6 +8,7 @@ namespace BookLink.Models
 	{
 
 		[BindNever]
+		[DatabaseGenerated(DatabaseGeneratedOption.Identity)] // Auto-increments CategoryId
 		public int CategoryId { get; set; }
 
 		// Server side validation 1: Required attribute
