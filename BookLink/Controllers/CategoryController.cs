@@ -75,6 +75,7 @@ namespace BookLink.Controllers
 			return Json(new { success = true, message = "Category updated successfully" });
 		}
 
+
 		// POST: Delete Category
 		[HttpPost]
 		[ValidateAntiForgeryToken] // Prevent CSRF attacks

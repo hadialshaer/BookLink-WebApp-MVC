@@ -28,11 +28,21 @@
                                 <!-- Edit Button -->
                                 <button type="button" class="btn btn-primary edit-category-btn" data-id="@category.CategoryId">
                                     <i class="bi bi-pencil-square"></i> Edit
-                                </button> 
+                                </button>
+
                                 <!-- Delete Button -->
-                                <a asp-controller="Category" asp-action="Delete" class="btn btn-danger">
-                                    <i class="bi bi-trash-fill"></i> Delete
-                                </a>
+                                <form asp-controller="Category" asp-action="Delete" method="post"
+                                      onsubmit="return confirm('Are you sure you want to delete this category?');" style="display: inline;">
+                                    @Html.AntiForgeryToken() <!-- CSRF protection -->
+
+                                    <!-- Hidden input field for CategoryId -->
+                                    <input type="hidden" name="id" value="@category.CategoryId" />
+
+                                    <button type="submit" class="btn btn-danger">
+                                        <i class="bi bi-trash-fill"></i> Delete
+                                    </button>
+                                </form>
+
                             </div>
                         </td>
                     </tr>
