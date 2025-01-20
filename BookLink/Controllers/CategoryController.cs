@@ -37,6 +37,8 @@ namespace BookLink.Controllers
 				return View("Index", _context.Categories.ToList());
 			}
 
+			TempData["success"] = "Category created succesfully";
+
 			_context.Categories.Add(category);
 			_context.SaveChanges();
 			return RedirectToAction(nameof(Index));
@@ -72,6 +74,7 @@ namespace BookLink.Controllers
 			}
 			_context.Categories.Update(category);
 			_context.SaveChanges();
+			TempData["success"] = "Category updated successfully";
 			return Json(new { success = true, message = "Category updated successfully" });
 		}
 
@@ -89,6 +92,7 @@ namespace BookLink.Controllers
 			}
 			_context.Categories.Remove(category);
 			_context.SaveChanges();
+			TempData["success"] = "Category deleted succesfully";
 			return RedirectToAction(nameof(Index));
 		}
 
