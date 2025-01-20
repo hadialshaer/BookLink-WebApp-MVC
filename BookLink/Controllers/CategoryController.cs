@@ -47,7 +47,7 @@ namespace BookLink.Controllers
 		[HttpGet]
 		public IActionResult GetCategory(int? id)
 		{
-			if (id == null)
+			if (id == null || id == 0)
 			{
 				return NotFound();
 			}
@@ -74,5 +74,6 @@ namespace BookLink.Controllers
 			_context.SaveChanges();
 			return Json(new { success = true, message = "Category updated successfully" });
 		}
+
 	}
 }
