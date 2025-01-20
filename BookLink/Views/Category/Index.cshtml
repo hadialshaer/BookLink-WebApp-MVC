@@ -1,5 +1,8 @@
 ﻿@model List<Category>
-
+@if(TempData["success"] != null)
+{
+	<h2>@TempData["success"]</h2>
+}
 <section class="container mt-4">
     <!-- Header Row -->
     <div class="d-flex justify-content-between align-items-center pb-3">

@@ -92,7 +92,7 @@ namespace BookLink.Controllers
 			}
 			_context.Categories.Remove(category);
 			_context.SaveChanges();
-			TempData["success"] = "Category deleted succesfully";
+			TempData["success"] = "Category deleted succesfully"; // TempData is used to store temporary data, for only one request
 			return RedirectToAction(nameof(Index));
 		}
 
