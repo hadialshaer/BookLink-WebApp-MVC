@@ -75,5 +75,39 @@ namespace BookLink.Controllers
 			return Json(new { success = true, message = "Category updated successfully" });
 		}
 
+
+		// GET: Get Category by ID for Delete
+		[HttpGet]
+		public IActionResult Delete(int? id)
+		{
+			if (id == null || id == 0)
+			{
+				return NotFound();
+			}
+
+			Category? category = _context.Categories.Find(id);
+			if (category == null)
+			{
+				return NotFound();
+			}
+			return View(category);
+		}
+
+		// POST: Delete Category
+		[HttpPost, ActionName("Delete")]
+		[ValidateAntiForgeryToken] // Prevent CSRF attacks
+		public IActionResult DeletePost(int? id)
+		{
+			Category? category = _context.Categories.Find(id);
+
+			if (category == null) 
+			{
+				return NotFound();
+			}
+			_context.Categories.Remove(category);
+			_context.SaveChanges();
+			return RedirectToAction(nameof(Index));
+		}
+
 	}
 }
