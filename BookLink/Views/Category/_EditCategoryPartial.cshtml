@@ -4,23 +4,21 @@
 <div class="modal fade" id="editCategoryModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
-
             <!-- Modal Header -->
-            <div class="modal-header">
-                <h5 class="modal-title">Edit Category</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            <div class="modal-header bg-secondary bg-gradient text-white justify-content-center">
+                <h3 class="text-white py-2">Edit Category</h3>
+                <button type="button" class="btn-close position-absolute end-0 me-3" data-bs-dismiss="modal"></button>
             </div>
-
             <!-- Modal Body -->
             <div class="modal-body">
                 <form id="editCategoryForm">
-                    @Html.AntiForgeryToken()  <!-- CSRF protection -->
+                    @Html.AntiForgeryToken() <!-- CSRF protection -->
                     <!-- Hidden input for CategoryId -->
                     <input asp-for="CategoryId" id="editCategoryId" hidden />
 
-                    <!-- Input field for Category Name -->
+                    <!-- Input for Category Name -->
                     <div class="mb-3">
-                        <label asp-for="CategoryName" class="form-label"></label>
+                        <label asp-for="CategoryName" class="form-label">Category Name</label>
                         <input asp-for="CategoryName" id="editCategoryName" class="form-control border border-primary" />
                         <span asp-validation-for="CategoryName" class="text-danger"></span>
                     </div>
