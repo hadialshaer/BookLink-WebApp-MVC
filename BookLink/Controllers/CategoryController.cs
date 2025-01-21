@@ -34,13 +34,14 @@ namespace BookLink.Controllers
 			if (!ModelState.IsValid) // Server side validation 2: Check if the model is valid
 			{
 				// Return the same view with validation errors
-				return View("Index", _context.Categories.ToList());
+				return View(nameof(Index), _context.Categories.ToList());
 			}
-
-			TempData["success"] = "Category created succesfully";
 
 			_context.Categories.Add(category);
 			_context.SaveChanges();
+
+			TempData["success"] = "Category created succesfully";
+
 			return RedirectToAction(nameof(Index));
 		}
 
@@ -74,7 +75,9 @@ namespace BookLink.Controllers
 			}
 			_context.Categories.Update(category);
 			_context.SaveChanges();
+
 			TempData["success"] = "Category updated successfully";
+
 			return Json(new { success = true, message = "Category updated successfully" });
 		}
 
@@ -92,7 +95,9 @@ namespace BookLink.Controllers
 			}
 			_context.Categories.Remove(category);
 			_context.SaveChanges();
-			TempData["success"] = "Category deleted succesfully"; // TempData is used to store temporary data, for only one request
+
+			TempData["success"] = "Category deleted succesfully"; // TempData is used to store temporary data, works for only one request
+			
 			return RedirectToAction(nameof(Index));
 		}
 
