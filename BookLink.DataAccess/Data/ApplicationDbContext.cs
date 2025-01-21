@@ -1,8 +1,8 @@
 ﻿using BookLink.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace BookLink.Data
-{
+namespace BookLink.DataAccess.Data;
+
 	public class ApplicationDbContext : DbContext
 	{
 		public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
@@ -27,4 +27,3 @@ namespace BookLink.Data
 			}
 
 		}
-	}
