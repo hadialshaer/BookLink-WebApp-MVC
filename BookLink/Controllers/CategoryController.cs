@@ -8,17 +8,17 @@ namespace BookLink.Controllers
 {
 	public class CategoryController : Controller
 	{
-		private readonly ICategoryRepository _categoryRep;
+		private readonly IUnitOfWork _unitOfWork;
 
-		public CategoryController(ICategoryRepository context)
+		public CategoryController(IUnitOfWork unitOfWork)
 		{
-			_categoryRep = context;
+			_unitOfWork = unitOfWork;
 		}
 
 		// GET: Display categories
 		public IActionResult Index()
 		{
-			List<Category> categories = _categoryRep.GetAll().ToList();
+			List<Category> categories = _unitOfWork.Category.GetAll().ToList();
 			return View(categories);
 		}
 
@@ -36,11 +36,11 @@ namespace BookLink.Controllers
 			if (!ModelState.IsValid) // Server side validation 2: Check if the model is valid
 			{
 				// Return the same view with validation errors
-				return View(nameof(Index), _categoryRep.GetAll().ToList());
+				return View(nameof(Index), _unitOfWork.Category.GetAll().ToList());
 			}
 
-			_categoryRep.Add(category);
-			_categoryRep.Save();
+			_unitOfWork.Category.Add(category);
+			_unitOfWork.Save();
 
 			TempData["success"] = "Category created succesfully";
 
@@ -57,7 +57,7 @@ namespace BookLink.Controllers
 				return NotFound();
 			}
 
-			Category? category = _categoryRep.Get(u=>u.CategoryId == id);
+			Category? category = _unitOfWork.Category.Get(u=>u.CategoryId == id);
 			if (category == null)
 			{
 				return Json(new { success = false, message = "Category not found" });
@@ -75,8 +75,8 @@ namespace BookLink.Controllers
 			{
 				return Json(new { success = false, message = "Invalid data" });
 			}
-			_categoryRep.Update(category);
-			_categoryRep.Save();
+			_unitOfWork.Category.Update(category);
+			_unitOfWork.Save();
 
 			TempData["success"] = "Category updated successfully";
 
@@ -89,14 +89,14 @@ namespace BookLink.Controllers
 		[ValidateAntiForgeryToken] // Prevent CSRF attacks
 		public IActionResult Delete(int? id)
 		{
-			Category? category = _categoryRep.Get(u => u.CategoryId == id);
+			Category? category = _unitOfWork.Category.Get(u => u.CategoryId == id);
 
 			if (category == null) 
 			{
 				return NotFound();
 			}
-			_categoryRep.Remove(category);
-			_categoryRep.Save();
+			_unitOfWork.Category.Remove(category);
+			_unitOfWork.Save();
 
 			TempData["success"] = "Category deleted succesfully"; // TempData is used to store temporary data, works for only one request
 			
