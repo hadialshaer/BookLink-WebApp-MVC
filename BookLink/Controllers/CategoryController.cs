@@ -1,5 +1,6 @@
 ﻿using BookLink;
 using BookLink.DataAccess.Data;
+using BookLink.DataAccess.Repository.IRepository;
 using BookLink.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,17 +8,17 @@ namespace BookLink.Controllers
 {
 	public class CategoryController : Controller
 	{
-		private readonly ApplicationDbContext _context;
+		private readonly ICategoryRepository _categoryRep;
 
-		public CategoryController(ApplicationDbContext context)
+		public CategoryController(ICategoryRepository context)
 		{
-			_context = context;
+			_categoryRep = context;
 		}
 
 		// GET: Display categories
 		public IActionResult Index()
 		{
-			List<Category> categories = _context.Categories.ToList();
+			List<Category> categories = _categoryRep.GetAll().ToList();
 			return View(categories);
 		}
 
@@ -35,11 +36,11 @@ namespace BookLink.Controllers
 			if (!ModelState.IsValid) // Server side validation 2: Check if the model is valid
 			{
 				// Return the same view with validation errors
-				return View(nameof(Index), _context.Categories.ToList());
+				return View(nameof(Index), _categoryRep.GetAll().ToList());
 			}
 
-			_context.Categories.Add(category);
-			_context.SaveChanges();
+			_categoryRep.Add(category);
+			_categoryRep.Save();
 
 			TempData["success"] = "Category created succesfully";
 
@@ -56,7 +57,7 @@ namespace BookLink.Controllers
 				return NotFound();
 			}
 
-			Category? category = _context.Categories.Find(id);
+			Category? category = _categoryRep.Get(u=>u.CategoryId == id);
 			if (category == null)
 			{
 				return Json(new { success = false, message = "Category not found" });
@@ -74,8 +75,8 @@ namespace BookLink.Controllers
 			{
 				return Json(new { success = false, message = "Invalid data" });
 			}
-			_context.Categories.Update(category);
-			_context.SaveChanges();
+			_categoryRep.Update(category);
+			_categoryRep.Save();
 
 			TempData["success"] = "Category updated successfully";
 
@@ -88,14 +89,14 @@ namespace BookLink.Controllers
 		[ValidateAntiForgeryToken] // Prevent CSRF attacks
 		public IActionResult Delete(int? id)
 		{
-			Category? category = _context.Categories.Find(id);
+			Category? category = _categoryRep.Get(u => u.CategoryId == id);
 
 			if (category == null) 
 			{
 				return NotFound();
 			}
-			_context.Categories.Remove(category);
-			_context.SaveChanges();
+			_categoryRep.Remove(category);
+			_categoryRep.Save();
 
 			TempData["success"] = "Category deleted succesfully"; // TempData is used to store temporary data, works for only one request
 			
