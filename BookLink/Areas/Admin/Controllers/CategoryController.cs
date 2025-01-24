@@ -1,11 +1,11 @@
-﻿using BookLink;
-using BookLink.DataAccess.Data;
+﻿using BookLink.DataAccess.Data;
 using BookLink.DataAccess.Repository.IRepository;
 using BookLink.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BookLink.Controllers
+namespace BookLink.Areas.Admin.Controllers
 {
+	[Area("Admin")]
 	public class CategoryController : Controller
 	{
 		private readonly IUnitOfWork _unitOfWork;
@@ -57,7 +57,7 @@ namespace BookLink.Controllers
 				return NotFound();
 			}
 
-			Category? category = _unitOfWork.Category.Get(u=>u.CategoryId == id);
+			Category? category = _unitOfWork.Category.Get(u => u.CategoryId == id);
 			if (category == null)
 			{
 				return Json(new { success = false, message = "Category not found" });
@@ -91,7 +91,7 @@ namespace BookLink.Controllers
 		{
 			Category? category = _unitOfWork.Category.Get(u => u.CategoryId == id);
 
-			if (category == null) 
+			if (category == null)
 			{
 				return NotFound();
 			}
@@ -99,7 +99,7 @@ namespace BookLink.Controllers
 			_unitOfWork.Save();
 
 			TempData["success"] = "Category deleted succesfully"; // TempData is used to store temporary data, works for only one request
-			
+
 			return RedirectToAction(nameof(Index));
 		}
 

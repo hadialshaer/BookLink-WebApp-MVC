@@ -71,7 +71,7 @@
                 let categoryId = $(this).data("id");
 
                 $.ajax({
-                    url: "/Category/GetCategory",
+                    url: "/Admin/Category/GetCategory",
                     type: "GET",
                     data: { id: categoryId },
                     success: function (category) {

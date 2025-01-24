@@ -2,8 +2,9 @@ using BookLink.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
-namespace BookLink.Controllers
+namespace BookLink.Areas.Member.Controllers
 {
+	[Area("Member")]
 	public class HomeController : Controller
 	{
 		private readonly ILogger<HomeController> _logger;
