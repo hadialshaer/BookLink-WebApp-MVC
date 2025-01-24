@@ -11,9 +11,12 @@ public class ApplicationDbContext : DbContext
 
 	}
 
+	// Define the database tabless
 	public DbSet<Category> Categories { get; set; }
+
 	public DbSet<Book> Books { get; set; }
 
+	// Seed the database with initial data
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
 		modelBuilder.Entity<Category>().HasData(

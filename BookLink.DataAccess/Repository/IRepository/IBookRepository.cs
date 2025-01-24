@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BookLink.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,11 +7,9 @@ using System.Threading.Tasks;
 
 namespace BookLink.DataAccess.Repository.IRepository
 {
-	public interface IUnitOfWork
+	public interface IBookRepository : IRepository<Book> // Book is a model
 	{
-		ICategoryRepository Category { get; }
+		void Update(Book book);
 
-		IBookRepository Book { get; }
-		void Save();
 	}
 }
