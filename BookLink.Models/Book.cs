@@ -7,6 +7,7 @@ namespace BookLink.Models;
 public class Book
 {
 	[BindNever]
+	[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 	public int BookId { get; set; }
 
 	[Required(ErrorMessage = "The Title field is required.")]
