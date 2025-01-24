@@ -1,4 +1,5 @@
 ﻿using BookLink.DataAccess.Data;
+using BookLink.DataAccess.Repository.IRepository;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BookLink.DataAccess.Repository.IRepository
+namespace BookLink.DataAccess.Repository
 {
 	public class Repository<T> : IRepository<T> where T : class
 	{
@@ -16,7 +17,7 @@ namespace BookLink.DataAccess.Repository.IRepository
 		public Repository(ApplicationDbContext context)
 		{
 			_context = context;
-			this.dbSet = _context.Set<T>();
+			dbSet = _context.Set<T>();
 		}
 		public void Add(T entity)
 		{
