@@ -18,6 +18,8 @@ public class Book
 	[StringLength(500, ErrorMessage = "Description cannot exceed 500 characters.", MinimumLength = 5)]
 	public string Description { get; set; }
 
+	[Required]
+	public string Author { get; set; }
 
 	[Required]
 	[Display(Name ="List Price")]
@@ -39,12 +41,9 @@ public class Book
 	[Range(1, 100, ErrorMessage = "Price must be between $1 and $100")]
 	public double Price5 { get; set; }
 
+	
 
-	// Relations
-	[Required]
-	[ForeignKey(nameof(Author))]
-	public int AuthorId { get; set; }
-	public virtual Author Author { get; set; }
+	
 
 
 	//[Required]
