@@ -11,7 +11,6 @@ namespace BookLink.DataAccess.Repository.IRepository
 	public interface ICategoryRepository : IRepository<Category> // Category is a model
 	{
 		void Update(Category category);
-		void Save();
 		
 	}
 }

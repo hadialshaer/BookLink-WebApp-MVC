@@ -1,26 +1,26 @@
 ﻿using BookLink.DataAccess.Data;
 using BookLink.DataAccess.Repository.IRepository;
-using BookLink.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace BookLink.DataAccess.Repository
 {
-	public class CategoryRepository : Repository<Category>, ICategoryRepository
+	public class UnitOfWork : IUnitOfWork
 	{
 		private ApplicationDbContext _context;
-		public CategoryRepository(ApplicationDbContext context) : base(context)
+		public ICategoryRepository Category { get; private set; }
+		public UnitOfWork(ApplicationDbContext context)
 		{
 			_context = context;
+			Category = new CategoryRepository(_context);
 		}
-
-		public void Update(Category category)
+		
+		public void Save()
 		{
-			_context.Categories.Update(category);
+			_context.SaveChanges();
 		}
 	}
 }
