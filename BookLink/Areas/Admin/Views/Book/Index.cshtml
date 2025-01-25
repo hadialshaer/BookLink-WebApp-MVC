@@ -13,7 +13,7 @@
             <div class="col-md-6"></div>
             <div class="col-md-6 text-md-end">
                 <!-- Button to Add a New Book -->
-                <a asp-controller="Book" asp-action="Create" class="btn btn-primary">
+                <a asp-controller="Book" asp-action="Upsert" class="btn btn-primary">
                     <i class="bi bi-plus-circle"></i> Create New Book
                 </a>
             </div>
@@ -47,7 +47,7 @@
                             <td class="text-center align-middle">
                                 <div class="btn-group gap-2" role="group">
                                     <!-- Edit Button -->
-                                    <a asp-controller="Book" asp-action="Edit" asp-route-id="@book.BookId"
+                                    <a asp-controller="Book" asp-action="Upsert" asp-route-id="@book.BookId"
                                        class="btn btn-primary" title="Edit Book">
                                         <i class="bi bi-pencil-square"></i> Edit
                                     </a>

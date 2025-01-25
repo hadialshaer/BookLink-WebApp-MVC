@@ -25,27 +25,38 @@ namespace BookLink.Areas.Admin.Controllers
 			return View(books);
 		}
 
-	
-		public ActionResult Create()
-		{ 
+
+		public ActionResult Upsert(int? id)
+		{
 			BookVM bookVM = new()
 			{
-				Book = new Book(),
 				CategoryList = _unitOfWork.Category.GetAll().Select(
 				u => new SelectListItem
 				{
 					Text = u.CategoryName,
 					Value = u.CategoryId.ToString()
-				}) // Get all categories and convert them to SelectListItem
+				}), // Get all categories and convert them to SelectListItem
+
+				Book = new Book()
 			};
 
-			return View(bookVM);
+			if (id == null || id == 0)
+			{
+				// create
+				return View(bookVM);
+			}
+			else
+			{
+				//  update
+				bookVM.Book = _unitOfWork.Book.Get(u => u.BookId == id);
+				return bookVM.Book != null ? View(bookVM) : NotFound();
+			}
 		}
 
 		// Handles book creation
 		[HttpPost]
 		[ValidateAntiForgeryToken] // Prevents CSRF attacks
-		public IActionResult Create(BookVM bookVM)
+		public IActionResult Upsert(BookVM bookVM, IFormFile? file)
 		{
 			if (!ModelState.IsValid)
 			{
@@ -66,36 +77,6 @@ namespace BookLink.Areas.Admin.Controllers
 			TempData["success"] = "Book created successfully";
 			return RedirectToAction(nameof(Index));
 
-		}
-
-		// GET: Get Book by ID for Editing
-		public IActionResult Edit(int? id)
-		{
-			if (id == null || id == 0)
-			{
-				return NotFound();
-			}
-
-			Book book = _unitOfWork.Book.Get(u => u.BookId == id);
-
-			return book!= null ? View(book) : NotFound();
-		}
-
-
-		// Handles book editing
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public IActionResult Edit(Book book)
-		{
-			if (!ModelState.IsValid)
-			{
-				return View(book);
-			}
-
-			_unitOfWork.Book.Update(book);
-			_unitOfWork.Save();
-			TempData["success"] = "Book updated successfully";
-			return RedirectToAction(nameof(Index));
 		}
 
 		// GET: Get Book by ID for Deleting
