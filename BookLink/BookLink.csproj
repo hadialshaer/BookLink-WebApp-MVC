@@ -23,7 +23,7 @@
 
   <ItemGroup>
     <Folder Include="Areas\Guest\Controllers\" />
-    <Folder Include="Controllers\" />
+    <Folder Include="wwwroot\images\books\" />
   </ItemGroup>
 
 </Project>

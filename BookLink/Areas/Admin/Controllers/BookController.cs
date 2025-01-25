@@ -12,10 +12,12 @@ namespace BookLink.Areas.Admin.Controllers
 	public class BookController : Controller
 	{
 		private readonly IUnitOfWork _unitOfWork;
-
-		public BookController(IUnitOfWork unitOfWork)
+		private readonly IWebHostEnvironment _webHostEnvironment; // Used to get the web root path
+		public BookController(IUnitOfWork unitOfWork, IWebHostEnvironment webHostEnvironment)
 		{
 			_unitOfWork = unitOfWork;
+			_webHostEnvironment = webHostEnvironment;
+
 		}
 
 		// GET: Display books
@@ -71,6 +73,24 @@ namespace BookLink.Areas.Admin.Controllers
 				return View(bookVM);
 
 			}
+
+
+			string wwwRootPath = _webHostEnvironment.WebRootPath; // Get the root path
+
+			if (file != null)
+			{
+				string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+				string bookPath = Path.Combine(wwwRootPath, @"images\books");
+
+				using (var fileStream = new FileStream(Path.Combine(bookPath, fileName), FileMode.Create))
+				{
+					file.CopyTo(fileStream);
+				}
+
+				bookVM.Book.ImageUrl = @"\images\books\" + fileName;
+
+			}
+
 
 			_unitOfWork.Book.Add(bookVM.Book);
 			_unitOfWork.Save();
