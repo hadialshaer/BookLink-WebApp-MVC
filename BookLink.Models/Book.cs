@@ -42,17 +42,15 @@ public class Book
 	[Range(1, 100, ErrorMessage = "Price must be between $1 and $100")]
 	public double Price5 { get; set; }
 
+	[Required]
 	public int CategoryId { get; set; }
 
 	// Navigations
 	[ForeignKey("CategoryId")]
 	public Category BookCategory { get; set; }
 
-
-
-
-	//[Required]
-	//public string CoverImageUrl { get; set; }
+	[Required]
+	public string ImageUrl { get; set; }
 
 	//public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 	//public DateTime? UpdatedAt { get; set; }

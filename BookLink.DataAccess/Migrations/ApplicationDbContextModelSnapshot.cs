@@ -41,6 +41,10 @@ namespace BookLink.DataAccess.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<double>("ListPrice")
                         .HasColumnType("float");
 
@@ -71,6 +75,7 @@ namespace BookLink.DataAccess.Migrations
                             Author = "F. Scott Fitzgerald",
                             CategoryId = 1,
                             Description = "The Great Gatsby is a 1925 novel by American writer F. Scott Fitzgerald. Set in the Jazz Age on Long Island, near New York City, the novel depicts first-person narrator Nick Carraway's interactions with mysterious millionaire Jay Gatsby and Gatsby's obsession to reunite with his former lover, Daisy Buchanan.",
+                            ImageUrl = "",
                             ListPrice = 10.99,
                             Price = 8.9900000000000002,
                             Price3 = 7.9900000000000002,
@@ -83,6 +88,7 @@ namespace BookLink.DataAccess.Migrations
                             Author = "J. D. Salinger",
                             CategoryId = 1,
                             Description = "The Catcher in the Rye is a novel by J. D. Salinger, partially published in serial form in 1945–1946 and as a novel in 1951. It was originally intended for adults but is often read by adolescents for its themes of angst, alienation, and as a critique on superficiality in society.",
+                            ImageUrl = "",
                             ListPrice = 12.99,
                             Price = 10.99,
                             Price3 = 9.9900000000000002,
@@ -95,6 +101,7 @@ namespace BookLink.DataAccess.Migrations
                             Author = "Harper Lee",
                             CategoryId = 2,
                             Description = "To Kill a Mockingbird is a novel by Harper Lee published in 1960. Instantly successful, widely read in high schools and middle schools in the United States, it has become a classic of modern American literature, winning the Pulitzer Prize.",
+                            ImageUrl = "",
                             ListPrice = 14.99,
                             Price = 12.99,
                             Price3 = 11.99,
@@ -107,6 +114,7 @@ namespace BookLink.DataAccess.Migrations
                             Author = "George Orwell",
                             CategoryId = 2,
                             Description = "1984 is a dystopian social science fiction novel by English novelist George Orwell. It was published on 8 June 1949 by Secker & Warburg as Orwell's ninth and final book completed in his lifetime.",
+                            ImageUrl = "",
                             ListPrice = 16.989999999999998,
                             Price = 14.99,
                             Price3 = 13.99,
@@ -119,6 +127,7 @@ namespace BookLink.DataAccess.Migrations
                             Author = "Aldous Huxley",
                             CategoryId = 2,
                             Description = "Brave New World is a dystopian social science fiction novel by English author Aldous Huxley, written in 1931 and published in 1932. Largely set in a futuristic World State, whose citizens are environmentally engineered into an intelligence-based social hierarchy.",
+                            ImageUrl = "",
                             ListPrice = 18.989999999999998,
                             Price = 16.989999999999998,
                             Price3 = 15.99,
@@ -131,6 +140,7 @@ namespace BookLink.DataAccess.Migrations
                             Author = "J. R. R. Tolkien",
                             CategoryId = 3,
                             Description = "The Lord of the Rings is an epic high-fantasy novel by English author and scholar J. R. R. Tolkien. Set in Middle-earth, the world at some distant time in the past, the story began as a sequel to Tolkien's 1937 children's book The Hobbit, but eventually developed into a much larger work.",
+                            ImageUrl = "",
                             ListPrice = 20.989999999999998,
                             Price = 18.989999999999998,
                             Price3 = 17.989999999999998,

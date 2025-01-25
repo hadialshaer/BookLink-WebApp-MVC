@@ -40,7 +40,8 @@ public class ApplicationDbContext : DbContext
 				Price = 8.99,
 				Price3 = 7.99,
 				Price5 = 6.99,
-				CategoryId= 1
+				CategoryId= 1,
+				ImageUrl = ""
 			},
 			new Book
 			{
@@ -52,7 +53,8 @@ public class ApplicationDbContext : DbContext
 				Price = 10.99,
 				Price3 = 9.99,
 				Price5 = 8.99,
-				CategoryId= 1
+				CategoryId= 1,
+				ImageUrl = ""
 			},
 			new Book
 			{
@@ -64,7 +66,8 @@ public class ApplicationDbContext : DbContext
 				Price = 12.99,
 				Price3 = 11.99,
 				Price5 = 10.99,
-				CategoryId = 2
+				CategoryId = 2,
+				ImageUrl = ""
 			},
 			new Book
 			{
@@ -76,7 +79,8 @@ public class ApplicationDbContext : DbContext
 				Price = 14.99,
 				Price3 = 13.99,
 				Price5 = 12.99,
-				CategoryId= 2
+				CategoryId= 2,
+				ImageUrl = ""
 			},
 			new Book
 			{
@@ -88,7 +92,8 @@ public class ApplicationDbContext : DbContext
 				Price = 16.99,
 				Price3 = 15.99,
 				Price5 = 14.99,
-				CategoryId = 2
+				CategoryId = 2,
+				ImageUrl = ""
 			},
 			new Book
 			{
@@ -100,7 +105,8 @@ public class ApplicationDbContext : DbContext
 				Price = 18.99,
 				Price3 = 17.99,
 				Price5 = 16.99,
-				CategoryId = 3
+				CategoryId = 3,
+				ImageUrl = ""
 			}
 
 			);
