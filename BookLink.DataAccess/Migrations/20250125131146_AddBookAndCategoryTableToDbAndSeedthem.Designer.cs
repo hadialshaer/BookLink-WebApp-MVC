@@ -3,6 +3,7 @@ using BookLink.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookLink.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250125131146_AddBookAndCategoryTableToDbAndSeedthem")]
+    partial class AddBookAndCategoryTableToDbAndSeedthem
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -32,9 +35,6 @@ namespace BookLink.DataAccess.Migrations
                     b.Property<string>("Author")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -60,8 +60,6 @@ namespace BookLink.DataAccess.Migrations
 
                     b.HasKey("BookId");
 
-                    b.HasIndex("CategoryId");
-
                     b.ToTable("Books");
 
                     b.HasData(
@@ -69,7 +67,6 @@ namespace BookLink.DataAccess.Migrations
                         {
                             BookId = 1,
                             Author = "F. Scott Fitzgerald",
-                            CategoryId = 1,
                             Description = "The Great Gatsby is a 1925 novel by American writer F. Scott Fitzgerald. Set in the Jazz Age on Long Island, near New York City, the novel depicts first-person narrator Nick Carraway's interactions with mysterious millionaire Jay Gatsby and Gatsby's obsession to reunite with his former lover, Daisy Buchanan.",
                             ListPrice = 10.99,
                             Price = 8.9900000000000002,
@@ -81,7 +78,6 @@ namespace BookLink.DataAccess.Migrations
                         {
                             BookId = 2,
                             Author = "J. D. Salinger",
-                            CategoryId = 1,
                             Description = "The Catcher in the Rye is a novel by J. D. Salinger, partially published in serial form in 1945–1946 and as a novel in 1951. It was originally intended for adults but is often read by adolescents for its themes of angst, alienation, and as a critique on superficiality in society.",
                             ListPrice = 12.99,
                             Price = 10.99,
@@ -93,7 +89,6 @@ namespace BookLink.DataAccess.Migrations
                         {
                             BookId = 3,
                             Author = "Harper Lee",
-                            CategoryId = 2,
                             Description = "To Kill a Mockingbird is a novel by Harper Lee published in 1960. Instantly successful, widely read in high schools and middle schools in the United States, it has become a classic of modern American literature, winning the Pulitzer Prize.",
                             ListPrice = 14.99,
                             Price = 12.99,
@@ -105,7 +100,6 @@ namespace BookLink.DataAccess.Migrations
                         {
                             BookId = 4,
                             Author = "George Orwell",
-                            CategoryId = 2,
                             Description = "1984 is a dystopian social science fiction novel by English novelist George Orwell. It was published on 8 June 1949 by Secker & Warburg as Orwell's ninth and final book completed in his lifetime.",
                             ListPrice = 16.989999999999998,
                             Price = 14.99,
@@ -117,7 +111,6 @@ namespace BookLink.DataAccess.Migrations
                         {
                             BookId = 5,
                             Author = "Aldous Huxley",
-                            CategoryId = 2,
                             Description = "Brave New World is a dystopian social science fiction novel by English author Aldous Huxley, written in 1931 and published in 1932. Largely set in a futuristic World State, whose citizens are environmentally engineered into an intelligence-based social hierarchy.",
                             ListPrice = 18.989999999999998,
                             Price = 16.989999999999998,
@@ -129,7 +122,6 @@ namespace BookLink.DataAccess.Migrations
                         {
                             BookId = 6,
                             Author = "J. R. R. Tolkien",
-                            CategoryId = 3,
                             Description = "The Lord of the Rings is an epic high-fantasy novel by English author and scholar J. R. R. Tolkien. Set in Middle-earth, the world at some distant time in the past, the story began as a sequel to Tolkien's 1937 children's book The Hobbit, but eventually developed into a much larger work.",
                             ListPrice = 20.989999999999998,
                             Price = 18.989999999999998,
@@ -196,17 +188,6 @@ namespace BookLink.DataAccess.Migrations
                             CategoryId = 8,
                             CategoryName = "Philosophy"
                         });
-                });
-
-            modelBuilder.Entity("BookLink.Models.Book", b =>
-                {
-                    b.HasOne("BookLink.Models.Category", "BookCategory")
-                        .WithMany()
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("BookCategory");
                 });
 #pragma warning restore 612, 618
         }

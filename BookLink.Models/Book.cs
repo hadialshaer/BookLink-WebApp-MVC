@@ -42,9 +42,13 @@ public class Book
 	[Range(1, 100, ErrorMessage = "Price must be between $1 and $100")]
 	public double Price5 { get; set; }
 
-	
+	public int CategoryId { get; set; }
 
-	
+	// Navigations
+	[ForeignKey("CategoryId")]
+	public Category BookCategory { get; set; }
+
+
 
 
 	//[Required]
