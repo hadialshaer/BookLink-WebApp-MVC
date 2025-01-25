@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -47,9 +48,10 @@ public class Book
 
 	// Navigations
 	[ForeignKey("CategoryId")]
+	[ValidateNever]
 	public Category BookCategory { get; set; }
 
-	[Required]
+	[ValidateNever]
 	public string ImageUrl { get; set; }
 
 	//public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

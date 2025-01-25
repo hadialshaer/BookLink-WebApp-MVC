@@ -1,6 +1,7 @@
 ﻿using BookLink.DataAccess.Data;
 using BookLink.DataAccess.Repository.IRepository;
 using BookLink.Models;
+using BookLink.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
@@ -26,31 +27,45 @@ namespace BookLink.Areas.Admin.Controllers
 
 	
 		public ActionResult Create()
-		{
-			IEnumerable<SelectListItem> categoryList = _unitOfWork.Category.GetAll().Select(
+		{ 
+			BookVM bookVM = new()
+			{
+				Book = new Book(),
+				CategoryList = _unitOfWork.Category.GetAll().Select(
 				u => new SelectListItem
 				{
 					Text = u.CategoryName,
 					Value = u.CategoryId.ToString()
-				}); // Get all categories and convert them to SelectListItem
+				}) // Get all categories and convert them to SelectListItem
+			};
 
-			ViewBag.CategoryList = categoryList; // Pass the category list to the view
-			return View();
+			return View(bookVM);
 		}
 
 		// Handles book creation
 		[HttpPost]
 		[ValidateAntiForgeryToken] // Prevents CSRF attacks
-		public IActionResult Create(Book book)
+		public IActionResult Create(BookVM bookVM)
 		{
 			if (!ModelState.IsValid)
 			{
-				return View(book);
+				bookVM.CategoryList = _unitOfWork.Category.GetAll().Select(
+				u => new SelectListItem
+				{
+					Text = u.CategoryName,
+					Value = u.CategoryId.ToString()
+				}); // Get all categories and convert them to SelectListItem
+					
+				
+				return View(bookVM);
+
 			}
-			_unitOfWork.Book.Add(book);
+
+			_unitOfWork.Book.Add(bookVM.Book);
 			_unitOfWork.Save();
 			TempData["success"] = "Book created successfully";
 			return RedirectToAction(nameof(Index));
+
 		}
 
 		// GET: Get Book by ID for Editing
