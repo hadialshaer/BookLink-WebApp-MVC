@@ -21,20 +21,20 @@ namespace BookLink.Areas.Admin.Controllers
 		public IActionResult Index()
 		{
 			List<Book> books = _unitOfWork.Book.GetAll().ToList();
-
-			IEnumerable<SelectListItem> categoryList = _unitOfWork.Category.GetAll().Select(
-				u => new SelectListItem
-				{
-					Text = u.CategoryName,
-					Value = u.CategoryId.ToString()
-				});
-
 			return View(books);
 		}
 
 	
 		public ActionResult Create()
 		{
+			IEnumerable<SelectListItem> categoryList = _unitOfWork.Category.GetAll().Select(
+				u => new SelectListItem
+				{
+					Text = u.CategoryName,
+					Value = u.CategoryId.ToString()
+				}); // Get all categories and convert them to SelectListItem
+
+			ViewBag.CategoryList = categoryList; // Pass the category list to the view
 			return View();
 		}
 
