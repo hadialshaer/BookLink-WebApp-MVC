@@ -2,6 +2,8 @@
 using BookLink.DataAccess.Repository.IRepository;
 using BookLink.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Collections.Generic;
 
 namespace BookLink.Areas.Admin.Controllers
 {
@@ -19,6 +21,14 @@ namespace BookLink.Areas.Admin.Controllers
 		public IActionResult Index()
 		{
 			List<Book> books = _unitOfWork.Book.GetAll().ToList();
+
+			IEnumerable<SelectListItem> categoryList = _unitOfWork.Category.GetAll().Select(
+				u => new SelectListItem
+				{
+					Text = u.CategoryName,
+					Value = u.CategoryId.ToString()
+				});
+
 			return View(books);
 		}
 
