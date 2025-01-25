@@ -23,19 +23,20 @@
             <table class="table table-bordered table-striped table-hover align-middle text-center">
                 <thead class="table-dark">
                     <tr>
-                        <th class="text-start">Category Name</th>
-                        <th class="text-center">Actions</th>
+                        <th class="text-center align-middle">Category Name</th>
+                        <th class="text-center align-middle">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var category in Model)
                     {
                         <tr>
-                            <td class="text-start align-middle fw-bold">@category.CategoryName</td>
+                            <td class="text-center align-middle fw-bold">@category.CategoryName</td>
                             <td class="text-center align-middle">
-                                <div class="d-flex justify-content-center gap-2 flex-wrap">
+                                <div class="btn-group gap-2" role="group">
                                     <!-- Edit Button -->
-                                    <button type="button" class="btn btn-primary edit-category-btn" data-id="@category.CategoryId">
+                                    <button type="button" class="btn btn-primary edit-category-btn" data-id="@category.CategoryId"
+                                            data-bs-toggle="tooltip" title="Edit this category">
                                         <i class="bi bi-pencil-square"></i> Edit
                                     </button>
                                     <!-- Delete Button -->
@@ -93,7 +94,7 @@
                 let categoryName = $("#editCategoryName").val();
 
                 $.ajax({
-                    url: "/Category/Edit",
+                    url: "/Admin/Category/Edit",
                     type: "POST",
                     contentType: "application/json",
                     data: JSON.stringify({

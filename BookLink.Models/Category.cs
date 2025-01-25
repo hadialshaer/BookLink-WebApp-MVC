@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -6,8 +7,6 @@ namespace BookLink.Models;
 
 public class Category
 {
-
-	[BindNever]
 	[DatabaseGenerated(DatabaseGeneratedOption.Identity)] // Auto-increments CategoryId
 	public int CategoryId { get; set; }
 

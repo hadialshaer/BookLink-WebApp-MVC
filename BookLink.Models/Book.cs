@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -6,17 +7,16 @@ namespace BookLink.Models;
 
 public class Book
 {
-	[BindNever]
 	[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 	public int BookId { get; set; }
 
 	[Required(ErrorMessage = "The Title field is required.")]
-	[StringLength(100, ErrorMessage = "Title cannot exceed 100 characters.", MinimumLength = 5)]
+	[StringLength(100, ErrorMessage ="Title must be 5-100 charachters", MinimumLength = 5) ]
 	public string Title { get; set; }
 
 
 	[Required]
-	[StringLength(500, ErrorMessage = "Description cannot exceed 500 characters.", MinimumLength = 5)]
+	[StringLength(500, ErrorMessage = "Description must be 5-500 characters.", MinimumLength = 5)]
 	public string Description { get; set; }
 
 	[Required]

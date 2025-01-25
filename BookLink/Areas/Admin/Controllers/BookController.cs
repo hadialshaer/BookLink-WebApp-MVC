@@ -53,12 +53,7 @@ namespace BookLink.Areas.Admin.Controllers
 
 			Book book = _unitOfWork.Book.Get(u => u.BookId == id);
 
-			if (book == null)
-			{
-				return NotFound();
-			}
-
-			return View(book);
+			return book!= null ? View(book) : NotFound();
 		}
 
 
@@ -70,12 +65,6 @@ namespace BookLink.Areas.Admin.Controllers
 			if (!ModelState.IsValid)
 			{
 				return View(book);
-			}
-
-			Book existingBook = _unitOfWork.Book.Get(u => u.BookId == book.BookId);
-			if (existingBook == null)
-			{
-				return NotFound();
 			}
 
 			_unitOfWork.Book.Update(book);
@@ -94,16 +83,11 @@ namespace BookLink.Areas.Admin.Controllers
 
 			Book book = _unitOfWork.Book.Get(u => u.BookId == id);
 
-			if (book == null)
-			{
-				return NotFound();
-			}
-
-			return View(book);
+			return book != null ? View(book) : NotFound();
 		}
 
 		// Handles book deletion
-		[HttpPost, ActionName("Delete")]
+		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public IActionResult DeletePost(int? id)
 		{
