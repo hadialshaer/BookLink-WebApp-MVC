@@ -127,6 +127,7 @@ namespace BookLink.Areas.Admin.Controllers
 		}
 
 		// Delete book
+		[HttpDelete]
 		public IActionResult Delete(int? id)
 		{
 			Book bookToDelete = _unitOfWork.Book.Get(u => u.BookId == id);
@@ -147,6 +148,7 @@ namespace BookLink.Areas.Admin.Controllers
 
 			_unitOfWork.Book.Remove(bookToDelete);
 			_unitOfWork.Save();
+
 			return Json(new { success = true, message = "Delete successful" });
 		}
 		#endregion
