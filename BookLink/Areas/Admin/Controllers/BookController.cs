@@ -84,7 +84,8 @@ namespace BookLink.Areas.Admin.Controllers
 				if(!string.IsNullOrEmpty(bookVM.Book.ImageUrl))
 				{
 					// delete the old image
-					string oldImagePath = Path.Combine(wwwRootPath, bookVM.Book.ImageUrl.TrimStart('\\'));
+					string oldImagePath =
+										Path.Combine(wwwRootPath, bookVM.Book.ImageUrl.TrimStart('\\'));
 
 					if (System.IO.File.Exists(oldImagePath))
 					{
@@ -116,43 +117,6 @@ namespace BookLink.Areas.Admin.Controllers
 
 		}
 
-		// GET: Get Book by ID for Deleting
-		public IActionResult Delete(int? id)
-		{
-			if (id == null || id == 0)
-			{
-				return NotFound();
-			}
-
-			Book book = _unitOfWork.Book.Get(u => u.BookId == id);
-
-			return book != null ? View(book) : NotFound();
-		}
-
-		// Handles book deletion
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public IActionResult DeletePost(int? id)
-		{
-			if (id == null || id == 0)
-			{
-				return NotFound();
-			}
-
-			Book book = _unitOfWork.Book.Get(u => u.BookId == id);
-
-			if (book == null)
-			{
-				return NotFound();
-			}
-
-			_unitOfWork.Book.Remove(book);
-			_unitOfWork.Save();
-			TempData["success"] = "Book deleted successfully";
-			return RedirectToAction(nameof(Index));
-
-		}
-
 		#region API CALLS
 
 		[HttpGet]
@@ -162,6 +126,29 @@ namespace BookLink.Areas.Admin.Controllers
 			return Json(new { data = books });
 		}
 
+		// Delete book
+		public IActionResult Delete(int? id)
+		{
+			Book bookToDelete = _unitOfWork.Book.Get(u => u.BookId == id);
+
+			if (bookToDelete == null)
+			{
+				return Json(new { success = false, message = "Error while deleting" });
+			}
+
+			var oldImagePath =	
+							Path.Combine(_webHostEnvironment.WebRootPath,
+							bookToDelete.ImageUrl.TrimStart('\\'));
+
+			if (System.IO.File.Exists(oldImagePath))
+			{
+				System.IO.File.Delete(oldImagePath);
+			}
+
+			_unitOfWork.Book.Remove(bookToDelete);
+			_unitOfWork.Save();
+			return Json(new { success = true, message = "Delete successful" });
+		}
 		#endregion
 
 
