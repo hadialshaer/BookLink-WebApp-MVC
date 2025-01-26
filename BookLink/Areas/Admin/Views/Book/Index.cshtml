@@ -40,7 +40,18 @@
                             <td class="text-center align-middle">@book.Title</td>
                             <td class="text-center align-middle">@book.ListPrice</td>
                             <td class="text-center align-middle">@book.Author</td>
-                            <td class="text-center align-middle"></td>
+                            <td class="text-center align-middle">
+
+								@if (book.BookCategory.CategoryName != null)
+								{
+									@book.BookCategory.CategoryName
+								}
+								else
+								{
+									<span class="text-danger">No Category</span>
+								}
+
+                            </td>
                             
 
                             <!-- Action Buttons (Edit & Delete) -->

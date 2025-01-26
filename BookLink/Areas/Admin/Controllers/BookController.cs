@@ -23,7 +23,7 @@ namespace BookLink.Areas.Admin.Controllers
 		// GET: Display books
 		public IActionResult Index()
 		{
-			List<Book> books = _unitOfWork.Book.GetAll().ToList();
+			List<Book> books = _unitOfWork.Book.GetAll(includeProperties:"BookCategory").ToList();
 			return View(books);
 		}
 
