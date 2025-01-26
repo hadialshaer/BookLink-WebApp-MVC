@@ -22,90 +22,22 @@
         <!-- Table Section -->
         <div class="table-responsive-sm">
             <!-- Ensures table responsiveness on small screens -->
-            <table class="table table-bordered table-striped table-hover align-middle text-center">
+            <table id="tableData" class="table table-bordered table-striped table-hover align-middle text-center" style="width:100%">
                 <thead class="table-dark">
                     <tr>
                         <th class="text-center align-middle">Title</th>
                         <th class="text-center align-middle">Price</th>
                         <th class="text-center align-middle">Author</th>
                         <th class="text-center align-middle">Category</th>
-                        <th class="text-center align-middle">Actions</th>
+                        
                     </tr>
                 </thead>
-                <tbody>
-                    @foreach (var book in Model)
-                    {
-                        <tr>
-                            <!-- Display book details -->
-                            <td class="text-center align-middle">@book.Title</td>
-                            <td class="text-center align-middle">@book.ListPrice</td>
-                            <td class="text-center align-middle">@book.Author</td>
-                            <td class="text-center align-middle">
-
-								@if (book.BookCategory.CategoryName != null)
-								{
-									@book.BookCategory.CategoryName
-								}
-								else
-								{
-									<span class="text-danger">No Category</span>
-								}
-
-                            </td>
-                            
-
-                            <!-- Action Buttons (Edit & Delete) -->
-                            <td class="text-center align-middle">
-                                <div class="btn-group gap-2" role="group">
-                                    <!-- Edit Button -->
-                                    <a asp-controller="Book" asp-action="Upsert" asp-route-id="@book.BookId"
-                                       class="btn btn-primary" title="Edit Book">
-                                        <i class="bi bi-pencil-square"></i> Edit
-                                    </a>
-
-                                    <!-- Delete Button (Triggers Bootstrap Modal) -->
-                                    <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                                            data-bs-target="#deleteModal-@book.BookId">
-                                        <i class="bi bi-trash-fill"></i> Delete
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <!-- Bootstrap Modal for Delete Confirmation -->
-                        <div class="modal fade" id="deleteModal-@book.BookId" tabindex="-1"
-                             aria-labelledby="deleteModalLabel-@book.BookId" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header bg-danger text-white">
-                                        <h5 class="modal-title" id="deleteModalLabel-@book.BookId">
-                                            Confirm Deletion
-                                        </h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        Are you sure you want to delete <strong>@book.Title</strong>?
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary"
-                                                data-bs-dismiss="modal">
-                                            Cancel
-                                        </button>
-                                        <!-- Delete Form (CSRF Protected) -->
-                                        <form asp-controller="Book" asp-action="DeletePost" method="post">
-                                            @Html.AntiForgeryToken()
-                                            <input type="hidden" name="id" value="@book.BookId" />
-                                            <button type="submit" class="btn btn-danger">Yes, Delete</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- End of Delete Modal -->
-                    }
-                </tbody>
             </table>
         </div>
     </div>
 </div>
+
+@section Scripts
+{
+    <script src="~/js/book.js"></script>
+}
