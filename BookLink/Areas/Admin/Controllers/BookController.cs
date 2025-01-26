@@ -153,6 +153,17 @@ namespace BookLink.Areas.Admin.Controllers
 
 		}
 
+		#region API CALLS
+
+		[HttpGet]
+		public IActionResult GetAll()
+		{
+			List<Book> books = _unitOfWork.Book.GetAll(includeProperties: "BookCategory").ToList();
+			return Json(new { data = books });
+		}
+
+		#endregion
+
 
 	}
 }
