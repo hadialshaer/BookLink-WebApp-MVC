@@ -110,7 +110,6 @@ namespace BookLink.Areas.Admin.Controllers
 				_unitOfWork.Book.Add(bookVM.Book);
 			}
 
-			_unitOfWork.Book.Add(bookVM.Book);
 			_unitOfWork.Save();
 			TempData["success"] = "Book created successfully";
 			return RedirectToAction(nameof(Index));

@@ -20,7 +20,25 @@ namespace BookLink.DataAccess.Repository
 
 		public void Update(Book book)
 		{
-			_context.Books.Update(book);
+			// manual mapping
+			var bookFromDb = _context.Books.FirstOrDefault(b => b.BookId == book.BookId);
+			if (bookFromDb != null)
+			{
+				bookFromDb.Title = book.Title;
+				bookFromDb.Author = book.Author;
+				bookFromDb.Description = book.Description;
+				bookFromDb.ListPrice = book.ListPrice;
+				bookFromDb.Price = book.Price;
+				bookFromDb.Price3 = book.Price3;
+				bookFromDb.Price5 = book.Price5;			
+				bookFromDb.CategoryId = book.CategoryId;
+
+				if (book.ImageUrl != null)
+				{
+					bookFromDb.ImageUrl = book.ImageUrl;
+				}
+
+			}
 		}
 	}
 }
