@@ -74,13 +74,23 @@ namespace BookLink.Areas.Admin.Controllers
 
 			}
 
-
 			string wwwRootPath = _webHostEnvironment.WebRootPath; // Get the root path
 
 			if (file != null)
 			{
 				string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
 				string bookPath = Path.Combine(wwwRootPath, @"images\books");
+
+				if(!string.IsNullOrEmpty(bookVM.Book.ImageUrl))
+				{
+					// delete the old image
+					string oldImagePath = Path.Combine(wwwRootPath, bookVM.Book.ImageUrl.TrimStart('\\'));
+
+					if (System.IO.File.Exists(oldImagePath))
+					{
+						System.IO.File.Delete(oldImagePath);
+					}
+				}
 
 				using (var fileStream = new FileStream(Path.Combine(bookPath, fileName), FileMode.Create))
 				{
@@ -91,6 +101,14 @@ namespace BookLink.Areas.Admin.Controllers
 
 			}
 
+			if(bookVM.Book.BookId != 0)
+			{
+				_unitOfWork.Book.Update(bookVM.Book);
+			}
+			else
+			{
+				_unitOfWork.Book.Add(bookVM.Book);
+			}
 
 			_unitOfWork.Book.Add(bookVM.Book);
 			_unitOfWork.Save();
