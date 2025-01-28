@@ -28,6 +28,15 @@ namespace BookLink.Areas.Member.Controllers
 			return View(bookList);
 		}
 
+		// GET - Details
+		public IActionResult Details(int? id)
+		{
+
+			Book book = _unitOfWork.Book.Get(u => u.BookId == id, includeProperties: "BookCategory");
+
+			return View(book);
+		}
+
 		public IActionResult About()
 		{
 			return View();
