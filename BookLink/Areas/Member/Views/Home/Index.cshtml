@@ -1,8 +1,76 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model IEnumerable<Book>
+
+@section Styles {
+    <style>
+        /* Flexbox layout for cards to ensure equal height */
+        .card {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            margin-bottom: 20px;
+        }
+
+        /* Card body styling with padding */
+        .card-body {
+            padding: 15px;
+            flex-grow: 1;
+        }
+
+        /* Ensure button stays at the bottom of the card */
+        .card .mt-auto {
+            margin-top: auto;
+        }
+
+        /* Truncate long titles with ellipsis */
+        .card-title {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    </style>
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="row pb-3">
+    @foreach (var book in Model)
+    {
+        <div class="col-12 col-sm-6 col-lg-3 mb-4">
+            <div class="row">
+                <div class="col-12 p-2">
+
+                    <!-- Card with Flexbox layout to ensure equal height -->
+                    <div class="card book-card border-0 p-3 shadow border-top border-5 rounded">
+                        <img src="@book.ImageUrl" class="card-img-top rounded" alt="@book.Title" loading="lazy" />
+
+                        <div class="card-body pb-0">
+                            <!-- Book title and author -->
+                            <div class="pl-1 text-center">
+                                <p class="card-title h5 text-dark opacity-75 text-uppercase">@book.Title</p>
+                                <p class="card-title text-warning">by <b>@book.Author</b></p>
+                            </div>
+
+                            <!-- Price details -->
+                            <div class="pl-1 text-center">
+                                <p class="text-dark text-opacity-75 mb-0">
+                                    List Price: <span class="text-decoration-line-through">@book.ListPrice.ToString("c")</span>
+                                </p>
+                            </div>
+                            <div class="pl-1 text-center">
+                                <p class="text-dark text-opacity-75">
+                                    Special Price: <span>@book.Price5.ToString("c")</span>
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Button at the bottom of the card -->
+                        <div class="mt-auto">
+                            <a href="#" class="btn btn-primary bg-gradient border-0 form-control">
+                                Details
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
 </div>

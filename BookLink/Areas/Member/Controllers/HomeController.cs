@@ -1,3 +1,5 @@
+using BookLink.DataAccess.Repository;
+using BookLink.DataAccess.Repository.IRepository;
 using BookLink.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -9,14 +11,21 @@ namespace BookLink.Areas.Member.Controllers
 	{
 		private readonly ILogger<HomeController> _logger;
 
-		public HomeController(ILogger<HomeController> logger)
+		private readonly IUnitOfWork _unitOfWork;
+
+
+		public HomeController(ILogger<HomeController> logger, IUnitOfWork unitOfWork)
 		{
 			_logger = logger;
+			_unitOfWork = unitOfWork;
 		}
 
 		public IActionResult Index()
 		{
-			return View();
+
+			IEnumerable<Book> bookList = _unitOfWork.Book.GetAll(includeProperties: "BookCategory").ToList();
+
+			return View(bookList);
 		}
 
 		public IActionResult About()
