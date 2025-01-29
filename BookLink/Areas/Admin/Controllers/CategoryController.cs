@@ -1,11 +1,14 @@
 ﻿using BookLink.DataAccess.Data;
 using BookLink.DataAccess.Repository.IRepository;
 using BookLink.Models;
+using BookLink.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookLink.Areas.Admin.Controllers
 {
 	[Area("Admin")]
+	[Authorize(Roles = SD.Role_Admin)]
 	public class CategoryController : Controller
 	{
 		private readonly IUnitOfWork _unitOfWork;

@@ -17,7 +17,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 
@@ -26,7 +28,7 @@ namespace BookLink.Areas.Identity.Pages.Account
 	public class RegisterModel : PageModel
 	{
 		private readonly SignInManager<IdentityUser> _signInManager;
-		private readonly RoleManager<IdentityRole> _roleManager;
+		private readonly RoleManager<IdentityRole> _roleManager;         // Added RoleManager
 		private readonly UserManager<IdentityUser> _userManager;
 		private readonly IUserStore<IdentityUser> _userStore;
 		private readonly IUserEmailStore<IdentityUser> _emailStore;
@@ -103,6 +105,12 @@ namespace BookLink.Areas.Identity.Pages.Account
 			[Display(Name = "Confirm password")]
 			[Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
 			public string ConfirmPassword { get; set; }
+
+			public string? Role { get; set; }
+
+			[ValidateNever]
+			public IEnumerable<SelectListItem> RoleList { get; set; }
+
 		}
 
 
@@ -110,13 +118,21 @@ namespace BookLink.Areas.Identity.Pages.Account
 		{
 
 			// Creatign Roles
-			if (!_roleManager.RoleExistsAsync(SD.Role_Customer).GetAwaiter().GetResult())
+			if (!_roleManager.RoleExistsAsync(SD.Role_Member).GetAwaiter().GetResult())
 			{
-				_roleManager.CreateAsync(new IdentityRole(SD.Role_Customer)).GetAwaiter().GetResult();
+				_roleManager.CreateAsync(new IdentityRole(SD.Role_Member)).GetAwaiter().GetResult();
 				_roleManager.CreateAsync(new IdentityRole(SD.Role_Admin)).GetAwaiter().GetResult();
 				_roleManager.CreateAsync(new IdentityRole(SD.Role_Guest)).GetAwaiter().GetResult();
 			}
 
+			Input = new()
+			{
+				RoleList = _roleManager.Roles.Select(r => new SelectListItem
+				{
+					Text = r.Name,
+					Value = r.Name
+				})
+			};
 
 			ReturnUrl = returnUrl;
 			ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
@@ -137,6 +153,15 @@ namespace BookLink.Areas.Identity.Pages.Account
 				if (result.Succeeded)
 				{
 					_logger.LogInformation("User created a new account with password.");
+
+					if (!string.IsNullOrEmpty(Input.Role))
+					{
+						await _userManager.AddToRoleAsync(user, Input.Role);
+					}
+					else
+					{
+						await _userManager.AddToRoleAsync(user, SD.Role_Member);
+					}
 
 					var userId = await _userManager.GetUserIdAsync(user);
 					var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
