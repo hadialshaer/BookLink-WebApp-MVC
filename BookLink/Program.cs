@@ -3,6 +3,8 @@ using BookLink.DataAccess.Repository;
 using BookLink.DataAccess.Repository.IRepository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using BookLink.Utility;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,11 +17,11 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Configure Identity
-builder.Services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
 
 // Register Repositories for Dependency Injection
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-
+builder.Services.AddScoped<IEmailSender, EmailSender>();
 var app = builder.Build();
 
 // Configure Middleware (Request Processing Pipeline)
