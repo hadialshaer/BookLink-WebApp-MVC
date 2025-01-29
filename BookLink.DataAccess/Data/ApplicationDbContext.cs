@@ -18,6 +18,8 @@ public class ApplicationDbContext : IdentityDbContext<IdentityUser>
 
 	public DbSet<Book> Books { get; set; }
 
+	public DbSet<User> users { get; set; }
+
 	// Seed the database with initial data
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
