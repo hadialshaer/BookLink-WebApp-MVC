@@ -33,6 +33,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication(); // if username and password is valid, then user is authenticated
 app.UseAuthorization();
 
 app.MapControllerRoute(
