@@ -1,10 +1,11 @@
 ﻿using BookLink.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
 
 namespace BookLink.DataAccess.Data;
 
-public class ApplicationDbContext : DbContext
+public class ApplicationDbContext : IdentityDbContext
 {
 	public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
 	{
@@ -19,6 +20,9 @@ public class ApplicationDbContext : DbContext
 	// Seed the database with initial data
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
+
+		base.OnModelCreating(modelBuilder); // Keys of Identity User and Role are defined here
+
 		modelBuilder.Entity<Category>().HasData(
 			new Category { CategoryId = 1, CategoryName = "Literature" },
 			new Category { CategoryId = 2, CategoryName = "History" },
