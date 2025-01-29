@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddRazorPages();
 builder.Services.AddControllersWithViews();
 
 // Configure the database
@@ -36,6 +37,7 @@ app.UseRouting();
 app.UseAuthentication(); // if username and password is valid, then user is authenticated
 app.UseAuthorization();
 
+app.MapRazorPages();
 app.MapControllerRoute(
 	name: "default",
 	pattern: "{area=Member}/{controller=Home}/{action=Index}/{id?}");
