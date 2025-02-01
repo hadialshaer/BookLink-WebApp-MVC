@@ -2,79 +2,110 @@
 @model LoginModel
 
 @{
-    ViewData["Title"] = "Log in";
+    ViewData["HideNavbar"] = true;
 }
 
-<h1>@ViewData["Title"]</h1>
-<div class="row">
-    <div class="col-md-4">
-        <section>
-            <form id="account" method="post">
-                <h2>Use a local account to log in.</h2>
-                <hr />
-                <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-                <div class="form-floating mb-3">
-                    <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-                    <label asp-for="Input.Email" class="form-label">Email</label>
-                    <span asp-validation-for="Input.Email" class="text-danger"></span>
+<style>
+    body {
+        background-image: url('https://images.unsplash.com/photo-1497633762265-9d179a990aa6?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
+        background-size: cover;
+        background-position: center;
+    }
+
+    .card {
+        background: rgba(255, 255, 255, 0.9);
+    }
+
+    .btn-google {
+        background-color: #DB4437;
+        color: white;
+    }
+
+    .btn-facebook {
+        background-color: #1877F2;
+        color: white;
+    }
+    
+</style>
+
+<div class="d-flex justify-content-center align-items-center min-vh-100">
+    <div class="card shadow-lg border-0">
+        <div class="card-header bg-secondary bg-gradient py-4">
+            <h2 class="text-white py-2 m-0 text-center">Log In</h2>
+        </div>
+        <div class="card-body">
+            <p class="text-center text-muted">Use your local account to log in to BookLink!</p>
+            <hr />
+
+            <form id="loginForm" method="post">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                <!-- Email Input -->
+                <div class="input-group mb-3">
+                    <span class="input-group-text"><i class="bi bi-envelope" aria-label="Email"></i></span>
+                    <input asp-for="Input.Email" class="form-control custom-input @(ViewData.ModelState["Input.Email"]?.Errors.Any() == true ? "is-invalid" : "")" autocomplete="username" aria-required="true" placeholder="Email Address" aria-describedby="email-error" />
                 </div>
-                <div class="form-floating mb-3">
-                    <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" />
-                    <label asp-for="Input.Password" class="form-label">Password</label>
-                    <span asp-validation-for="Input.Password" class="text-danger"></span>
+                <span asp-validation-for="Input.Email" class="text-danger" id="email-error"></span>
+
+                <!-- Password Input -->
+                <div class="input-group mb-3">
+                    <span class="input-group-text"><i class="bi bi-lock" aria-label="Password"></i></span>
+                    <input asp-for="Input.Password" class="form-control custom-input @(ViewData.ModelState["Input.Password"]?.Errors.Any() == true ? "is-invalid" : "")" autocomplete="current-password" aria-required="true" placeholder="Password" aria-describedby="password-error" />
                 </div>
-                <div class="checkbox mb-3">
-                    <label asp-for="Input.RememberMe" class="form-label">
+                <span asp-validation-for="Input.Password" class="text-danger" id="password-error"></span>
+
+                <!-- Remember Me -->
+                <div class="mb-3">
+                    <label class="form-check-label" asp-for="Input.RememberMe">
                         <input class="form-check-input" asp-for="Input.RememberMe" />
-                        @Html.DisplayNameFor(m => m.Input.RememberMe)
+                        Remember me
                     </label>
                 </div>
-                <div>
-                    <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">Log in</button>
-                </div>
-                <div>
-                    <p>
-                        <a id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>
-                    </p>
-                    <p>
-                        <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
-                    </p>
-                    <p>
-                        <a id="resend-confirmation" asp-page="./ResendEmailConfirmation">Resend email confirmation</a>
-                    </p>
+
+                <div class="d-flex justify-content-center">
+                    <!-- Login Button -->
+                    <button id="login-submit" type="submit" class="text-center btn btn-primary py-2" style="width:50%;" onclick="this.disabled=true;this.form.submit();">
+                        <i class="bi bi-person-check"></i> Log in
+                    </button>
                 </div>
             </form>
-        </section>
-    </div>
-    <div class="col-md-6 col-md-offset-2">
-        <section>
-            <h3>Use another service to log in.</h3>
+
+            <div class="text-center mt-3">
+                <p class="mb-0">Don't have an account? <a asp-page="./Register" class="text-decoration-none">Register here</a></p>
+            </div>
+
             <hr />
-            @{
-                if ((Model.ExternalLogins?.Count ?? 0) == 0)
-                {
-                    <div>
-                        <p>
-                            There are no external authentication services configured. See this <a href="https://go.microsoft.com/fwlink/?LinkID=532715">article
-                            about setting up this ASP.NET application to support logging in via external services</a>.
-                        </p>
-                    </div>
-                }
-                else
-                {
-                    <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
-                        <div>
-                            <p>
-                                @foreach (var provider in Model.ExternalLogins!)
-                                {
-                                    <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
-                                }
+
+            <!-- External Login Section -->
+            <div>
+                <h5 class="text-center">Or log in with</h5>
+                <div class="text-center">
+                    @if ((Model.ExternalLogins?.Count ?? 0) > 0)
+                    {
+                        <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                            @foreach (var provider in Model.ExternalLogins!)
+                            {
+                                <button type="submit" class="btn btn-google w-100 my-2" name="provider" value="@provider.Name">
+                                    <i class="bi bi-google"></i> @provider.DisplayName
+                                </button>
+                                <button type="submit" class="btn btn-facebook w-100 my-2" name="provider" value="@provider.Name">
+                                    <i class="bi bi-facebook"></i> @provider.DisplayName
+                                </button>
+                            }
+                        </form>
+                    }
+                    else
+                    {
+                        <div class="alert alert-warning">
+                            <p class="mb-0">
+                                No external authentication services configured.
+                                <a href="https://go.microsoft.com/fwlink/?LinkID=532715">Learn More</a>
                             </p>
                         </div>
-                    </form>
-                }
-            }
-        </section>
+                    }
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 

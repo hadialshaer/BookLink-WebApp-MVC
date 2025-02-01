@@ -704,3 +704,15 @@ bg-success {
         transform: scale(1.05);
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
     }
+.form-control {
+    transition: border-color 0.3s ease;
+    border: 1px solid #ccc;
+    padding: 8px;
+    border-radius: 5px;
+}
+
+    .form-control:focus {
+        border-color: #3CB371;
+        box-shadow: 0 0 5px rgba(46, 139, 87, 0.5);
+    }
+
