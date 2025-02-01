@@ -111,8 +111,25 @@ namespace BookLink.Areas.Identity.Pages.Account
 			[ValidateNever]
 			public IEnumerable<SelectListItem> RoleList { get; set; }
 
-		}
+			[Required]
+			[StringLength(50, ErrorMessage = "This name is not allowed", MinimumLength = 3)]
+			public string FirstName { get; set; }
 
+			[Required]
+			[StringLength(100, ErrorMessage = "This last name is not allowed", MinimumLength = 4)]
+			public string LastName { get; set; }
+
+			public string? City { get; set; }
+
+			[DataType(DataType.Date)]
+			public DateTime BirthDate { get; set; }
+
+			public string? PhoneNumber { get; set; }
+
+			public Gender gender { get; set; }
+
+			public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+		}
 
 		public async Task OnGetAsync(string returnUrl = null)
 		{
@@ -148,6 +165,15 @@ namespace BookLink.Areas.Identity.Pages.Account
 
 				await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
 				await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+
+				user.City = Input.City;
+				user.FirstName = Input.FirstName;
+				user.LastName = Input.LastName;
+				user.BirthDate = Input.BirthDate;
+				user.PhoneNumber = Input.PhoneNumber;
+				user.gender = Input.gender;
+
+
 				var result = await _userManager.CreateAsync(user, Input.Password);
 
 				if (result.Succeeded)

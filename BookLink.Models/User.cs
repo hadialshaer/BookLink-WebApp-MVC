@@ -25,7 +25,6 @@ namespace BookLink.Models
 
 		[DataType(DataType.Date)]
 		public DateTime BirthDate { get; set; }
-		public int age { get; set; }
 
 		public Gender gender { get; set; }
 
