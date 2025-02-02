@@ -1,29 +1,75 @@
 ﻿@{
-    if (ViewData.TryGetValue("ParentLayout", out var parentLayout) && parentLayout !=  null)
-    {
-        Layout = parentLayout.ToString();
-    }
-    else
-    {
-        Layout = "/Views/Shared/_Layout.cshtml";
-    }
+    // Set the parent layout dynamically or default to the main application layout
+    Layout = ViewData["ParentLayout"]?.ToString() ?? "/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Custom Styles for this layout -->
+@section Styles {
+    <style>
+        /* Sidebar Styling */
+        .sidebar {
+            padding: 1rem;
+            border-right: 1px solid #dee2e6;
+            position: sticky;
+            top: 0; /* Stick to the top of the viewport */
+            height: 100vh; /* Full height of the viewport */
+            overflow-y: auto;
+            background-color: transparent;
+        }
+
+            /* Hover Effect for Sidebar Links */
+            .sidebar .nav-link {
+                color: #333;
+                transition: all 0.3s ease;
+                padding: 0.75rem 1rem;
+                border-radius: 0.25rem;
+                text-decoration: none;
+            }
+
+                .sidebar .nav-link:hover {
+                    background-color: transparent;
+                    color: #57bedc;
+                    border-left: 4px solid #613659;
+                    transform: scale(1.05);
+                }
+
+                /* Active Link Highlighting */
+                .sidebar .nav-link.active {
+                    background-color: transparent;
+                    color: #211522;
+                    font-weight: bold;
+                    border-left: 4px solid #c197d2;
+                }
+
+            /* Smooth Scrolling for Overflow */
+            .sidebar::-webkit-scrollbar {
+                width: 8px;
+            }
+
+            .sidebar::-webkit-scrollbar-thumb {
+                background: #d3b1c2;
+                border-radius: 4px;
+            }
+    </style>
 }
 
 <h1>Manage your account</h1>
-
 <div>
-    <h2>Change your account settings</h2>
+    <p class="text-muted">Change your account settings</p>
     <hr />
     <div class="row">
-        <div class="col-md-3">
-            <partial name="_ManageNav" />
+        <!-- Sidebar -->
+        <div class="col-md-3 col-lg-2 sidebar d-flex flex-column">
+            @await Html.PartialAsync("_ManageNav")
         </div>
-        <div class="col-md-9">
+        <!-- Main Content -->
+        <div class="col-md-9 col-lg-10 main-content">
             @RenderBody()
         </div>
     </div>
 </div>
 
+<!-- Scripts Section -->
 @section Scripts {
     @RenderSection("Scripts", required: false)
 }
