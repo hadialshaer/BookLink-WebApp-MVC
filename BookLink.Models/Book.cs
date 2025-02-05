@@ -12,7 +12,7 @@ public class Book
 	public int BookId { get; set; }
 
 	[Required(ErrorMessage = "The Title field is required.")]
-	[StringLength(100, ErrorMessage ="Title must be 5-100 charachters", MinimumLength = 5) ]
+	[StringLength(100, ErrorMessage = "Title must be 5-100 charachters", MinimumLength = 5)]
 	public string Title { get; set; }
 
 
@@ -23,25 +23,23 @@ public class Book
 	[Required]
 	public string Author { get; set; }
 
-	[Required]
-	[Display(Name ="List Price")]
-	[Range(1,100, ErrorMessage = "Price must be between $1 and $100")]
-	public double ListPrice { get; set; }
 
-	[Required]
+	[Display(Name = "List Price")]
+	[Range(1, 100, ErrorMessage = "Price must be between $1 and $100")]
+	public double? ListPrice { get; set; }
+
 	[Display(Name = "Price for 1-3")]
 	[Range(1, 1000, ErrorMessage = "Price must be between $1 and $1000")]
-	public double Price { get; set; }
+	public double? Price { get; set; }
 
-	[Required]
 	[Display(Name = "Price for 3+")]
 	[Range(1, 100, ErrorMessage = "Price must be between $1 and $100")]
-	public double Price3 { get; set; }
+	public double? Price3 { get; set; }
 
-	[Required]
+
 	[Display(Name = "Price for 5+")]
 	[Range(1, 100, ErrorMessage = "Price must be between $1 and $100")]
-	public double Price5 { get; set; }
+	public double? Price5 { get; set; }
 
 	[Required]
 	public int CategoryId { get; set; }
@@ -51,29 +49,40 @@ public class Book
 	[ValidateNever]
 	public Category BookCategory { get; set; }
 
+	[Required]
 	[ValidateNever]
 	public string ImageUrl { get; set; }
 
-	//public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-	//public DateTime? UpdatedAt { get; set; }
 
-	//[BindNever]
-	//[Display(Name = "Available")]
-	//public bool IsAvailable { get; set; } = true; // Default to available
+	[Required]
+	public TransactionType TransactionType { get; set; }
 
+	// Lending properties
+	[Display(Name = "Max Lend Duration (Days)")]
+	[Range(1, 365, ErrorMessage = "Duration must be between 1 and 365 days")]
+	public int? MaxLendDurationDays { get; set; }
 
-	/// ///////////////////////////////////////////////////////////////////////////////
-	// Borrowing Details
-	//public DateTime? BorrowedDate { get; set; } // When it was borrowed
-	//public DateTime? DueDate { get; set; } // When it should be returned
-	//////////////////////////////////////////////////////////////////////////////
-	//[Required]
-	//public bool IsForBorrow { get; set; } // True if available for borrowing
+	public DateTime? DueDate { get; set; }
+	public string? BorrowerId { get; set; }
 
-	//[Required]
-	//public bool IsForSale { get; set; } // True if available for sale	
+	[ForeignKey("BorrowerId")]
+	[ValidateNever]
+	public User? Borrower { get; set; }
 
-	//public string Condition { get; set; } // New, Good, Used, Damaged
+	public BookStatus? BookStatus { get; set; } = Models.BookStatus.Available;
 
 }
+public enum TransactionType
+{
+	Sell,
+	Lend
+}
+public enum BookStatus
+{
+	Available,   
+	Borrowed,    
+	Sold,        
+	Pending      
+}
+
 

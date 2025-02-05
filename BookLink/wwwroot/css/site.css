@@ -716,3 +716,6 @@ bg-success {
         box-shadow: 0 0 5px rgba(46, 139, 87, 0.5);
     }
 
+.btn-info {
+    color: white;
+}

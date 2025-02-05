@@ -1,24 +1,25 @@
 ﻿@model List<Book>
-
 <div class="card shadow border-0 mt-4">
     <!-- Header -->
     <div class="card-header bg-secondary bg-gradient py-3">
         <h2 class="text-white text-center mb-0">Books List</h2>
     </div>
-
     <!-- Card Body -->
     <div class="card-body p-4">
         <!-- Header Row -->
         <div class="row pb-3">
             <div class="col-md-6"></div>
             <div class="col-md-6 text-md-end">
-                <!-- Button to Add a New Book -->
-                <a asp-controller="Book" asp-action="Upsert" class="btn btn-primary">
-                    <i class="bi bi-plus-circle"></i> Create New Book
+                <!-- Sell button -->
+                <a asp-controller="Book" asp-action="Upsert" asp-route-transactionType="Sell" class="btn btn-secondary me-2">
+                    <i class="bi bi-plus-circle"></i> Sell New Book
+                </a>
+                <!-- Lend button -->
+                <a asp-controller="Book" asp-action="Upsert" asp-route-transactionType="Lend" class="btn btn-success">
+                    <i class="bi bi-arrow-repeat"></i> Lend New Book
                 </a>
             </div>
         </div>
-
         <!-- Table Section -->
         <div class="table-responsive-sm">
             <!-- Ensures table responsiveness on small screens -->
@@ -26,9 +27,12 @@
                 <thead class="table-dark">
                     <tr>
                         <th class="text-center align-middle">Title</th>
-                        <th class="text-center align-middle">Price</th>
                         <th class="text-center align-middle">Author</th>
                         <th class="text-center align-middle">Category</th>
+                        <th class="text-center align-middle">Transaction Type</th>
+                        <th class="text-center align-middle">Price</th>
+                        <th class="text-center align-middle">Max Lend Duration (Days)</th>
+                        <th class="text-center align-middle">Due Date</th>
                         <th class="text-center align-middle">Actions</th>
                     </tr>
                 </thead>
@@ -36,7 +40,6 @@
         </div>
     </div>
 </div>
-
 @section Scripts
 {
     <script src="~/js/book.js"></script>

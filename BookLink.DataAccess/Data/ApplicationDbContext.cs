@@ -117,7 +117,12 @@ public class ApplicationDbContext : IdentityDbContext<IdentityUser>
 			}
 
 			);
-		
+		modelBuilder.Entity<Book>()
+		.HasOne(b => b.Borrower)
+		.WithMany()
+		.HasForeignKey(b => b.BorrowerId)
+		.OnDelete(DeleteBehavior.Restrict);
+
 	}
 
 }

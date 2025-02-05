@@ -5,7 +5,10 @@
 	<div class="card-header bg-secondary bg-gradient ml-0 py-3">
 		<div class="row">
 			<div class="col-12 text-center">
-				<h2 class="text-white py-2">@(Model.Book.BookId != 0 ? "Update" : "Create") Book</h2>
+				<h2 class="text-white py-2">
+					@(Model.Book.BookId != 0 ? "Update" : "Create")
+					@(Model.Book.TransactionType.ToString() == "Sell" ? "Sell Book" : "Lend Book")
+				</h2>
 			</div>
 		</div>
 	</div>
@@ -15,7 +18,8 @@
 		<form method="post" class="row" enctype="multipart/form-data">
 			@Html.AntiForgeryToken() <!-- Add CSRF Protection -->
 			<input type="hidden" asp-for="Book.BookId">
-			<input type="hidden" asp-for="Book.ImageUrl">
+			<input type="hidden" asp-for="Book.ImageUrl" />
+			<input type="hidden" asp-for="Book.TransactionType" />
 
 			<div class="row">
 				<div class="col-10">
@@ -40,30 +44,49 @@
 							<label asp-for="Book.Author"></label>
 							<span asp-validation-for="Book.Author" class="text-danger"></span>
 						</div>
+						@if (Model.Book.TransactionType == TransactionType.Sell)
+						{
+							<!-- Prices -->
+							<div class="row">
+								<div class="form-floating py-2 col-md-6">
+									<input asp-for="Book.ListPrice" class="form-control border-0 shadow" />
+									<label asp-for="Book.ListPrice"></label>
+									<span asp-validation-for="Book.ListPrice" class="text-danger"></span>
+								</div>
+								<div class="form-floating py-2 col-md-6">
+									<input asp-for="Book.Price" class="form-control border-0 shadow" />
+									<label asp-for="Book.Price"></label>
+									<span asp-validation-for="Book.Price" class="text-danger"></span>
+								</div>
+								<div class="form-floating py-2 col-md-6">
+									<input asp-for="Book.Price3" class="form-control border-0 shadow" />
+									<label asp-for="Book.Price3"></label>
+									<span asp-validation-for="Book.Price3" class="text-danger"></span>
+								</div>
+								<div class="form-floating py-2 col-md-6">
+									<input asp-for="Book.Price5" class="form-control border-0 shadow" />
+									<label asp-for="Book.Price5"></label>
+									<span asp-validation-for="Book.Price5" class="text-danger"></span>
+								</div>
+							</div>
+						}
+						else
+						{
+							<div class="form-floating py-2 col-12">
+								<input asp-for="Book.MaxLendDurationDays" class="form-control border-0 shadow" />
+								<label asp-for="Book.MaxLendDurationDays"></label>
+								<span asp-validation-for="Book.MaxLendDurationDays" class="text-danger"></span>
+							</div>
 
-						<!-- Prices -->
-						<div class="row">
-							<div class="form-floating py-2 col-md-6">
-								<input asp-for="Book.ListPrice" class="form-control border-0 shadow" />
-								<label asp-for="Book.ListPrice"></label>
-								<span asp-validation-for="Book.ListPrice" class="text-danger"></span>
+							<div class="form-floating py-2 col-12">
+								<input asp-for="Book.DueDate" class="form-control border-0 shadow"
+									   type="date"
+									   required />
+								<label asp-for="Book.DueDate"></label>
+								<span asp-validation-for="Book.DueDate" class="text-danger"></span>
 							</div>
-							<div class="form-floating py-2 col-md-6">
-								<input asp-for="Book.Price" class="form-control border-0 shadow" />
-								<label asp-for="Book.Price"></label>
-								<span asp-validation-for="Book.Price" class="text-danger"></span>
-							</div>
-							<div class="form-floating py-2 col-md-6">
-								<input asp-for="Book.Price3" class="form-control border-0 shadow" />
-								<label asp-for="Book.Price3"></label>
-								<span asp-validation-for="Book.Price3" class="text-danger"></span>
-							</div>
-							<div class="form-floating py-2 col-md-6">
-								<input asp-for="Book.Price5" class="form-control border-0 shadow" />
-								<label asp-for="Book.Price5"></label>
-								<span asp-validation-for="Book.Price5" class="text-danger"></span>
-							</div>
-						</div>
+						}
+
 
 						<!-- Category -->
 						<div class="form-floating py-2 col-md-6">
@@ -72,6 +95,17 @@
 							</select>
 							<label asp-for="Book.CategoryId">Book Category</label>
 							<span asp-validation-for="Book.CategoryId" class="text-danger"></span>
+						</div>
+
+						<!--Statues-->
+						<div class="form-floating py-2 col-6">
+							<select asp-for="Book.BookStatus" class="form-select border-0 shadow">
+								<option value="Available">Available</option>
+								<option value="Borrowed">Borrowed</option>
+								<option value="Sold">Sold</option>
+								<option value="Pending">Pending</option>
+							</select>
+							<label asp-for="Book.BookStatus">Book Status</label>
 						</div>
 
 						<!--File Upload-->
@@ -103,8 +137,7 @@
 					</div>
 				</div>
 				<div class="col-2">
-					<img src="@Model.Book.ImageUrl" width="100%"
-						 style="border-radius:5px; border:1px solid #bbb9b9" />
+					<img src="@Model.Book.ImageUrl" width="100%" style="border-radius:5px; border:1px solid #bbb9b9" />
 				</div>
 
 			</div>

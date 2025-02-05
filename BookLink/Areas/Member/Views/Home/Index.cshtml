@@ -51,12 +51,12 @@
 							<!-- Price details -->
 							<div class="pl-1 text-center">
 								<p class="text-dark text-opacity-75 mb-0">
-									List Price: <span class="text-decoration-line-through">@book.ListPrice.ToString("c")</span>
+									List Price: <span class="text-decoration-line-through">@book.ListPrice.GetValueOrDefault().ToString("c")</span>
 								</p>
 							</div>
 							<div class="pl-1 text-center">
 								<p class="text-dark text-opacity-75">
-									Special Price: <span>@book.Price5.ToString("c")</span>
+									Special Price: <span>@book.Price5.GetValueOrDefault().ToString(("c"))</span>
 								</p>
 							</div>
 						</div>

@@ -28,7 +28,7 @@ namespace BookLink.Areas.Admin.Controllers
 		}
 
 
-		public ActionResult Upsert(int? id)
+		public ActionResult Upsert(int? id, TransactionType? transactionType)
 		{
 			BookVM bookVM = new()
 			{
@@ -45,6 +45,7 @@ namespace BookLink.Areas.Admin.Controllers
 			if (id == null || id == 0)
 			{
 				// create
+				bookVM.Book.TransactionType = transactionType ?? TransactionType.Sell;
 				return View(bookVM);
 			}
 			else
@@ -60,6 +61,52 @@ namespace BookLink.Areas.Admin.Controllers
 		[ValidateAntiForgeryToken] // Prevents CSRF attacks
 		public IActionResult Upsert(BookVM bookVM, IFormFile? file)
 		{
+			if (bookVM.Book.TransactionType == TransactionType.Sell)
+			{
+				// Selling-specific validation
+				if (bookVM.Book.ListPrice == null || bookVM.Book.ListPrice <= 0)
+				{
+					ModelState.AddModelError("Book.ListPrice",
+						"List price is required for selling");
+				}
+
+				if (bookVM.Book.Price == null || bookVM.Book.Price <= 0)
+				{
+					ModelState.AddModelError("Book.Price",
+						"Price for 1-3 is required for selling");
+				}
+
+				if (bookVM.Book.Price3 == null || bookVM.Book.Price3 <= 0)
+				{
+					ModelState.AddModelError("Book.Price3",
+						"Price for 3+ is required for selling");
+				}
+
+				if (bookVM.Book.Price5 == null || bookVM.Book.Price5 <= 0)
+				{
+					ModelState.AddModelError("Book.Price5",
+						"Price for 5+ is required for selling");
+				}
+
+			}
+			else
+			{
+				// Lending-specific validation
+				if (bookVM.Book.MaxLendDurationDays == null)
+				{
+					ModelState.AddModelError("Book.MaxLendDurationDays",
+						"Max duration is required for lending");
+				}
+
+				if (bookVM.Book.BookStatus == BookStatus.Borrowed &&
+					!bookVM.Book.DueDate.HasValue)
+				{
+					ModelState.AddModelError("Book.DueDate",
+						"Due date is required for borrowed books");
+				}
+			}
+
+
 			if (!ModelState.IsValid)
 			{
 				bookVM.CategoryList = _unitOfWork.Category.GetAll().Select(
@@ -73,6 +120,7 @@ namespace BookLink.Areas.Admin.Controllers
 				return View(bookVM);
 
 			}
+
 
 			string wwwRootPath = _webHostEnvironment.WebRootPath; // Get the root path
 
@@ -122,7 +170,19 @@ namespace BookLink.Areas.Admin.Controllers
 		[HttpGet]
 		public IActionResult GetAll()
 		{
-			List<Book> books = _unitOfWork.Book.GetAll(includeProperties: "BookCategory").ToList();
+			var books = _unitOfWork.Book.GetAll(includeProperties: "BookCategory")
+				.Select(b => new {
+					b.BookId,
+					b.Title,
+					b.Author,
+					b.ListPrice,
+					TransactionType = b.TransactionType.ToString(),
+					MaxLendDurationDays = b.TransactionType == TransactionType.Lend ? b.MaxLendDurationDays : null,
+					DueDate = b.TransactionType == TransactionType.Lend && b.DueDate.HasValue
+						? b.DueDate.Value.ToString("yyyy-MM-dd") : null,
+					Category = new { b.BookCategory.CategoryName }
+				}).ToList();
+
 			return Json(new { data = books });
 		}
 

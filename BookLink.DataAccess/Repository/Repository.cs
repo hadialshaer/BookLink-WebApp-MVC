@@ -18,7 +18,10 @@ namespace BookLink.DataAccess.Repository
 		{
 			_context = context;
 			dbSet = _context.Set<T>();
-			_context.Books.Include(u => u.BookCategory).Include(u => u.CategoryId); // Category will automatically be populated when retreive all books based on foreign key relationship
+			_context.Books.Include(u => u.BookCategory)
+				.Include(u => u.CategoryId)
+				.Include(b => b.Borrower)
+				.Include(b => b.BorrowerId);
 		}
 		public void Add(T entity)
 		{

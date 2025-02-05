@@ -4,6 +4,7 @@ using BookLink.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookLink.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250204231727_AddBorrowerRelationShip")]
+    partial class AddBorrowerRelationShip
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -55,19 +58,19 @@ namespace BookLink.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double?>("ListPrice")
+                    b.Property<double>("ListPrice")
                         .HasColumnType("float");
 
                     b.Property<int?>("MaxLendDurationDays")
                         .HasColumnType("int");
 
-                    b.Property<double?>("Price")
+                    b.Property<double>("Price")
                         .HasColumnType("float");
 
-                    b.Property<double?>("Price3")
+                    b.Property<double>("Price3")
                         .HasColumnType("float");
 
-                    b.Property<double?>("Price5")
+                    b.Property<double>("Price5")
                         .HasColumnType("float");
 
                     b.Property<string>("Title")
