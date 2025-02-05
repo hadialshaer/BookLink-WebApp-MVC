@@ -20,6 +20,8 @@ public class ApplicationDbContext : IdentityDbContext<IdentityUser>
 
 	public DbSet<User> users { get; set; }
 
+	public DbSet<ShoppingCart> shoppingCarts { get; set; }
+
 	// Seed the database with initial data
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{

@@ -14,12 +14,14 @@ namespace BookLink.DataAccess.Repository
 
 		public ICategoryRepository Category { get; private set; }
 		public IBookRepository Book { get; private set; }
+		public IShoppingCartRepository ShoppingCart { get; private set; }
 
 		public UnitOfWork(ApplicationDbContext context)
 		{
 			_context = context;
 			Category = new CategoryRepository(_context);
 			Book = new BookRepository(_context);
+			ShoppingCart = new ShoppingCartRepository(_context);
 		}
 		
 		public void Save()
