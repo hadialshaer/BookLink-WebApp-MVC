@@ -1,11 +1,11 @@
-﻿@model Book
+﻿@model ShoppingCart
 <form method="post">
     <div class="card shadow border-0 mt-4 mb-4">
         <div class="card-header bg-secondary bg-gradient text-light py-4">
             <div class="row">
                 <div class="col-12 text-center">
-                    <h3 class="text-white text-uppercase">@Model.Title</h3>
-                    <p class="text-white-50 fw-semibold mb-0">by @Model.Author</p>
+                    <h3 class="text-white text-uppercase">@Model.Book.Title</h3>
+                    <p class="text-white-50 fw-semibold mb-0">by @Model.Book.Author</p>
                 </div>
             </div>
         </div>
@@ -20,23 +20,23 @@
                 </div>
                 <div class="row">
                     <div class="col-12 col-lg-3 offset-lg-1 text-center mb-3">
-                        <img src="@Model.ImageUrl" width="100%" class="rounded" />
+                        <img src="@Model.Book.ImageUrl" width="100%" class="rounded" />
                     </div>
                     <div class="col-12 col-lg-6 offset-lg-1">
                         <div class="col-12 col-md-6 pb-4">
-                            <span class="badge">@Model.BookCategory.CategoryName</span>
-                            @if (Model.TransactionType == TransactionType.Lend)
+                            <span class="badge">@Model.Book.BookCategory.CategoryName</span>
+                            @if (Model.Book.TransactionType == TransactionType.Lend)
                             {
                                 <span class="badge bg-warning ms-2 fw-bold">For Lending</span>
                             }
                         </div>
-                        @if (Model.TransactionType == TransactionType.Sell)
+                        @if (Model.Book.TransactionType == TransactionType.Sell)
                         {
                             <div class="row ps-2">
                                 <h6 class="text-dark text-opacity-50 pb-2">
                                     List Price:
                                     <span class="text-decoration-line-through">
-                                        @(Model.ListPrice?.ToString("c") ?? "N/A")
+                                        @(Model.Book.ListPrice?.ToString("c") ?? "N/A")
                                     </span>
                                 </h6>
                             </div>
@@ -56,36 +56,36 @@
                             </div>
                             <div class="row text-center ps-2">
                                 <div class="p-1 col-3 col-lg-2 bg-white text-warning fw-bold">
-                                    <div>@Model.Price.GetValueOrDefault().ToString("c")</div>
+                                    <div>@Model.Book.Price.GetValueOrDefault().ToString("c")</div>
                                 </div>
                                 <div class="p-1 col-3 col-lg-2 bg-white text-warning fw-bold">
-                                    <div>@Model.Price.GetValueOrDefault().ToString("c")</div>
+                                    <div>@Model.Book.Price.GetValueOrDefault().ToString("c")</div>
                                 </div>
                                 <div class="p-1 col-3 col-lg-2 bg-white text-warning fw-bold">
-                                    <div>@Model.Price3.GetValueOrDefault().ToString("c")</div>
+                                    <div>@Model.Book.Price3.GetValueOrDefault().ToString("c")</div>
                                 </div>
                                 <div class="p-1 col-3 col-lg-2 bg-white text-warning fw-bold">
-                                    <div>@Model.Price5.GetValueOrDefault().ToString("c")</div>
+                                    <div>@Model.Book.Price5.GetValueOrDefault().ToString("c")</div>
                                 </div>
                             </div>
                         }
-                        else if (Model.TransactionType == TransactionType.Lend)
+                        else if (Model.Book.TransactionType == TransactionType.Lend)
                         {
                             <div class="row ps-2">
                                 <h6 class="text-dark text-opacity-50 pb-2">
-                                    Max Lend Duration: <span class="text-warning">@Model.MaxLendDurationDays days</span>
+                                    Max Lend Duration: <span class="text-warning">@Model.Book.MaxLendDurationDays days</span>
                                 </h6>
                             </div>
                             <div class="row ps-2">
                                 <h6 class="text-dark text-opacity-50 pb-2">
-                                    Due Date: <span class="text-warning">@(Model.DueDate?.ToString("yyyy-MM-dd") ?? "N/A")</span>
+                                    Due Date: <span class="text-warning">@(Model.Book.DueDate?.ToString("yyyy-MM-dd") ?? "N/A")</span>
                                 </h6>
                             </div>
                         }
                         <div class="row pl-2 my-3">
-                            <p class="text-secondary lh-sm">@Html.Raw(@Model.Description)</p>
+                            <p class="text-secondary lh-sm">@Html.Raw(@Model.Book.Description)</p>
                         </div>
-                        @if (Model.TransactionType == TransactionType.Sell)
+                        @if (Model.Book.TransactionType == TransactionType.Sell)
                         {
                             <!--Count-->
                             <div class="row pl-2 mb-3">
@@ -95,7 +95,7 @@
                                               id="inputGroup-sizing-default">
                                             Count
                                         </span>
-                                        <input type="number" value="1" class="form-control text-end"
+                                        <input asp-for="Count" type="number" value="1" class="form-control text-end"
                                                aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" />
                                     </div>
                                 </div>
@@ -103,14 +103,14 @@
                             <!--Comming Soon-->
                             <div class="row">
                                 <div class="col-12 col-md-6 pb-1">
-                                    <button type="submit" disabled
+                                    <button type="submit"
                                             class="btn btn-primary bg-gradient w-100 py-2 text-uppercase fw-semibold">
                                         Add to Cart (Comming Soon...)
                                     </button>
                                 </div>
                             </div>
                         }
-                        else if (Model.TransactionType == TransactionType.Lend)
+                        else if (Model.Book.TransactionType == TransactionType.Lend)
                         {
                             <div class="row">
                                 <div class="col-12 col-md-6 pb-1">

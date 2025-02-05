@@ -29,12 +29,16 @@ namespace BookLink.Areas.Member.Controllers
 		}
 
 		// GET - Details
-		public IActionResult Details(int? id)
+		public IActionResult Details(int bookId)
 		{
+			ShoppingCart cart = new()
+			{
+				Book = _unitOfWork.Book.Get(u => u.BookId == bookId, includeProperties: "BookCategory"),
+				Count = 1,
+				BookId = bookId
+			};
 
-			Book book = _unitOfWork.Book.Get(u => u.BookId == id, includeProperties: "BookCategory");
-
-			return View(book);
+			return View(cart);
 		}
 
 		public IActionResult About()
