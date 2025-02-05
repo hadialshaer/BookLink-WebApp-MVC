@@ -59,23 +59,34 @@
                             @if (User.IsInRole(SD.Role_Admin))
                             {
                                 <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle text-dark" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Content Management
+                                    <a class="nav-link dropdown-toggle text-white bg-danger px-3 rounded shadow-sm" href="#"
+                                       role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="bi bi-gear"></i> Admin Panel
                                     </a>
-                                    <ul class="dropdown-menu">
-                                        <li class="nav-item">
-                                            <a class="dropdown-item" asp-area="Admin" asp-controller="Category" asp-action="Index">
-                                                <i class="bi bi-book"></i> Categories
+                                    <ul class="dropdown-menu shadow-sm rounded-3">
+                                        <li>
+                                            <a class="dropdown-item d-flex align-items-center py-2 px-3 rounded"
+                                               asp-area="Admin" asp-controller="Category" asp-action="Index">
+                                                <i class="bi bi-folder me-2 text-primary fs-5"></i> <strong>Manage Categories</strong>
                                             </a>
                                         </li>
-                                        <li class="nav-item">
-                                            <a class="dropdown-item" asp-area="Admin" asp-controller="Book" asp-action="Index">
-                                                <i class="bi bi-book"></i> Book
+                                        <li>
+                                            <a class="dropdown-item d-flex align-items-center py-2 px-3 rounded"
+                                               asp-area="Admin" asp-controller="Book" asp-action="Index">
+                                                <i class="bi bi-book me-2 text-success fs-5"></i> <strong>Manage Books</strong>
                                             </a>
                                         </li>
                                         <li><hr class="dropdown-divider"></li>
+                                        <li>
+                                            <a class="dropdown-item d-flex align-items-center py-2 px-3 rounded text-danger"
+                                               asp-area="Admin" asp-controller="User" asp-action="Index">
+                                                <i class="bi bi-people me-2 fs-5"></i> <strong>Manage Users</strong>
+                                            </a>
+                                        </li>
                                     </ul>
                                 </li>
+
+
                             }
                         </ul>
 
