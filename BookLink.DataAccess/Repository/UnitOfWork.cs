@@ -15,6 +15,7 @@ namespace BookLink.DataAccess.Repository
 		public ICategoryRepository Category { get; private set; }
 		public IBookRepository Book { get; private set; }
 		public IShoppingCartRepository ShoppingCart { get; private set; }
+		public IUserRepository User { get; private set; }
 
 		public UnitOfWork(ApplicationDbContext context)
 		{
@@ -22,6 +23,7 @@ namespace BookLink.DataAccess.Repository
 			Category = new CategoryRepository(_context);
 			Book = new BookRepository(_context);
 			ShoppingCart = new ShoppingCartRepository(_context);
+			User = new UserRepository(_context);
 		}
 		
 		public void Save()

@@ -8,9 +8,7 @@ using System.Threading.Tasks;
 
 namespace BookLink.DataAccess.Repository.IRepository
 {
-	public interface IShoppingCartRepository : IRepository<ShoppingCart>
+	public interface IUserRepository : IRepository<User> // User is a model
 	{
-		void Update(ShoppingCart shoppingCart);
-		
 	}
 }
