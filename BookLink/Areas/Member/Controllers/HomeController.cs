@@ -55,7 +55,23 @@ namespace BookLink.Areas.Member.Controllers
 			var claimsIdentity = (ClaimsIdentity)User.Identity;
 			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 			shoppingCart.UserId = userId;
-			_unitOfWork.ShoppingCart.Add(shoppingCart);
+
+			ShoppingCart cartFromDb = _unitOfWork.ShoppingCart.Get
+				( u => u.UserId == userId 
+				&& u.BookId == shoppingCart.BookId);
+			
+			if (cartFromDb!=null)
+				// Shopping cart already exists
+			{
+				cartFromDb.Count += shoppingCart.Count;
+				_unitOfWork.ShoppingCart.Update(cartFromDb);
+			}
+			else
+				// Shopping cart does not exist, ADD Cart
+			{
+				_unitOfWork.ShoppingCart.Add(shoppingCart);
+			}
+
 			_unitOfWork.Save();
 			return RedirectToAction(nameof(Index));
 		}
