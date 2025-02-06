@@ -11,6 +11,10 @@ namespace BookLink.DataAccess.Repository.IRepository
 		ICategoryRepository Category { get; }
 
 		IBookRepository Book { get; }
+
+		IShoppingCartRepository ShoppingCart { get; }
+
+		IUserRepository User { get; }
 		void Save();
 	}
 }
