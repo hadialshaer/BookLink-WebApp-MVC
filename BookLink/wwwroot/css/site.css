@@ -696,6 +696,7 @@ bg-success {
         background-color: #4b7147;
         border-color: #4b7147;
     }
+
 .book-card {
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
@@ -704,6 +705,7 @@ bg-success {
         transform: scale(1.05);
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
     }
+
 .form-control {
     transition: border-color 0.3s ease;
     border: 1px solid #ccc;
@@ -713,9 +715,13 @@ bg-success {
 
     .form-control:focus {
         border-color: #3CB371;
-        box-shadow: 0 0 5px rgba(46, 139, 87, 0.5);
+        box-shadow: 0 0 0 0.25rem rgba(46, 139, 87, 0.5);
     }
 
-.btn-info {
-    color: white;
+.card {
+    border-radius: 1rem;
+}
+
+.btn-lg {
+    border-radius: 0.75rem;
 }
