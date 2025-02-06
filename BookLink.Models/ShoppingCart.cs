@@ -29,5 +29,8 @@ namespace BookLink.Models
 		[ForeignKey("BookId")]
 		[ValidateNever]
 		public Book Book { get; set; }
+
+		[NotMapped]
+		public double Price { get; set; }
 	}
 }

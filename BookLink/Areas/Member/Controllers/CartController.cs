@@ -28,11 +28,36 @@ namespace BookLink.Areas.Member.Controllers
 
 			ShoppingCartVM = new ShoppingCartVM()
 			{
-				ListCart = _unitOfWork.ShoppingCart.GetAll(u => u.UserId == userId, includeProperties: "Book"),
-				OrderTotal = 0
+				ListCart = _unitOfWork.ShoppingCart.GetAll(u => u.UserId == userId,
+				includeProperties: "Book"),
 			};
 
+			foreach(var cart in ShoppingCartVM.ListCart)
+			{
+				double price = GetPriceBasedOnQuantity(cart);
+				ShoppingCartVM.OrderTotal += (price * cart.Count);
+			}
+
 			return View(ShoppingCartVM);
+		}
+
+		private double GetPriceBasedOnQuantity(ShoppingCart shoppingCart)
+		{
+			if (shoppingCart.Count <= 3)
+			{
+				return (double)shoppingCart.Book.Price;
+			}
+			else
+			{
+				if (shoppingCart.Count <= 5 )
+				{
+					return (double)shoppingCart.Book.Price3;
+				}
+				else
+				{
+					return (double)shoppingCart.Book.Price5;
+				}
+			}
 		}
 	}
 }
