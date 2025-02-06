@@ -1,0 +1,114 @@
+﻿<form method="post">
+    <div class="container py-5">
+        <div class="card shadow-lg border-0 rounded-3 overflow-hidden">
+            <!-- Card Header -->
+            <div class="card-header py-4" style="background-color: #4c686b;">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h2 class="text-uppercase mb-0" style="color: white;">
+                        <i class="bi bi-cart3 me-2"></i>Shopping Cart
+                    </h2>
+                    <a href="#" class="btn btn-link text-decoration-none" style="color: white;">
+                        <i class="bi bi-arrow-left me-2"></i>Continue Shopping
+                    </a>
+                </div>
+            </div>
+
+            <!-- Cart Items -->
+            <div class="card-body p-4 mt-4" style="background-color: #f8f9fa;">
+                <!-- Single Item -->
+                <div class="row g-4 mb-4 p-3 rounded-3" style="background-color: white;">
+                    <!-- Product Image -->
+                    <div class="col" style="margin-top:auto">
+                        <img src="https://placehold.co/600x400" class="img-fluid rounded-circle shadow" alt="Product">
+                    </div>
+
+                    <!-- Product Details -->
+                    <div class="col-md-6">
+                        <h4 class="text-uppercase" style="color: #613659;">Product Title</h4>
+                        <p class="text-muted mb-2">Product description goes here with some details about the item.</p>
+                        <div class="d-flex align-items-center">
+                            <span class="h5 mb-0" style="color: #57bedc;">$49.99</span>
+                            <span class="mx-3" style="color: #c197d2;">|</span>
+                            <span class="text-muted">Qty: 2</span>
+                        </div>
+                    </div>
+
+                    <!-- Quantity Controls -->
+                    <div class="col-md-4">
+                        <div class="d-flex align-items-center justify-content-end h-100">
+                            <div class="btn-group shadow-sm">
+                                <button class="btn btn-sm" style="background-color: #c197d2; color: white;">
+                                    <i class="bi bi-dash-lg"></i>
+                                </button>
+                                <span class="px-3" style="color: #613659;">2</span>
+                                <button class="btn btn-sm" style="background-color: #57bedc; color: white;">
+                                    <i class="bi bi-plus-lg"></i>
+                                </button>
+                            </div>
+                            <button class="btn btn-link text-danger ms-3">
+                                <i class="bi bi-trash-fill h5"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Single Item -->
+            </div>
+
+            <!-- Cart Footer -->
+            <div class="card-footer p-4">
+                <div class="row justify-content-between">
+                    <div class="col-md-5">
+                        <div class="bg-white p-4 rounded-3 shadow-sm">
+                            <h4 class="text-uppercase mb-4" style="color: #613659;">Order Summary</h4>
+                            <div class="d-flex justify-content-between mb-3">
+                                <span class="text-muted">Subtotal:</span>
+                                <span class="fw-bold" style="color: #57bedc;">$99.98</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-4">
+                                <span class="text-muted">Shipping:</span>
+                                <span class="fw-bold" style="color: #57bedc;">FREE</span>
+                            </div>
+                            <hr>
+                            <div class="d-flex justify-content-between">
+                                <h5 class="text-uppercase" style="color: #4c686b;">Total</h5>
+                                <h3 style="color: #211522;">$99.98</h3>
+                            </div>
+                            <button class="btn w-100 mt-4 text-uppercase fw-bold"
+                                    style="background: linear-gradient(45deg, #613659, #57bedc); color: white;">
+                                Checkout
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Related Products -->
+                    <div class="col-md-3">
+                        <div class="bg-light p-4 rounded-3 shadow-sm">
+                            <h5 class="text-uppercase" style="color: #613659;">Related Products</h5>
+                            <ul class="list-unstyled">
+                                <li><a href="#" class="text-decoration-none" style="color: #57bedc;">Product 1</a></li>
+                                <li><a href="#" class="text-decoration-none" style="color: #57bedc;">Product 2</a></li>
+                                <li><a href="#" class="text-decoration-none" style="color: #57bedc;">Product 3</a></li>
+                            </ul>
+                            <a href="#" class="btn btn-link text-decoration-none" style="color: #57bedc;">View More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<style>
+
+    .btn:hover, .btn:active {
+        background-color: #4c686b;
+    }
+
+    .rounded-circle {
+        transition: transform 0.3s ease;
+    }
+
+        .rounded-circle:hover {
+            transform: scale(1.05);
+        }
+</style>
