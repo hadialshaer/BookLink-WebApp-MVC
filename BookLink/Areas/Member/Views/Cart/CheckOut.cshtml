@@ -1,0 +1,141 @@
+﻿
+
+<form method="post" class="needs-validation" novalidate>
+  <div class="container py-5">
+    <!-- Main Card Container -->
+    <div class="card border-0 shadow-lg overflow-hidden">
+      <!-- Card Header with Gradient Background -->
+      <div class="card-header bg-primary bg-gradient text-white py-4">
+        <div class="d-flex justify-content-between align-items-center">
+          <h2 class="mb-0">Checkout Details</h2>
+          <a href="#" class="btn btn-light btn-sm rounded-pill">
+            <i class="fas fa-arrow-left me-2"></i>Back to Cart
+          </a>
+        </div>
+      </div>
+
+      <!-- Card Body -->
+      <div class="card-body p-4 p-md-5">
+        <div class="row g-5">
+          <!-- Shipping Details Section -->
+          <div class="col-lg-7">
+            <div class="pe-lg-4">
+              <h3 class="mb-4 text-primary">
+                <i class="fas fa-truck me-2"></i>Shipping Information
+              </h3>
+              
+              <!-- Enhanced Form Fields with Floating Labels -->
+              <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="name" placeholder="Full Name" required>
+                <label for="name" class="text-muted">Full Name</label>
+                <div class="invalid-feedback">Please enter your full name</div>
+              </div>
+
+              <div class="form-floating mb-3">
+                <input type="tel" class="form-control" id="phone" placeholder="Phone Number" required>
+                <label for="phone" class="text-muted">Phone Number</label>
+                <div>Please enter a valid phone number</div>
+              </div>
+
+              <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="address" placeholder="Street Address" required>
+                <label for="address" class="text-muted">Street Address</label>
+                <div class="invalid-feedback">Please enter your street address</div>
+              </div>
+
+              <div class="row g-3 mb-4">
+                <div class="col-md-5">
+                  <div class="form-floating">
+                    <input type="text" class="form-control" id="city" placeholder="City" required>
+                    <label for="city" class="text-muted">City</label>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-floating">
+                    <select class="form-select" id="state" required>
+                      <option value="">Choose...</option>
+                      <!-- State options here -->
+                    </select>
+                    <label for="state" class="text-muted">State</label>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="form-floating">
+                    <input type="text" class="form-control" id="zip" placeholder="Zip" required>
+                    <label for="zip" class="text-muted">Zip Code</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Order Summary Section -->
+          <div class="col-lg-5">
+            <div class="ps-lg-4">
+              <h3 class="mb-4 text-primary">
+                <i class="fas fa-receipt me-2"></i>Order Summary
+              </h3>
+              
+              <!-- Enhanced Product List -->
+              <div class="list-group mb-4">
+                <div class="list-group-item py-3">
+                  <div class="d-flex justify-content-between">
+                    <div>
+                      <h6 class="my-0">Product Title</h6>
+                      <small class="text-muted">Quantity: 2</small>
+                    </div>
+                    <span class="text-primary">$49.98</span>
+                  </div>
+                </div>
+                <!-- Repeat for other products -->
+              </div>
+
+              <!-- Total Price Section -->
+              <div class="card border-primary mb-4">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Total:</h5>
+                    <h4 class="mb-0 text-primary">$99.99</h4>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Estimated Delivery -->
+              <div class="alert alert-info mb-4">
+                <div class="d-flex align-items-center">
+                  <i class="fas fa-shipping-fast fa-lg me-3"></i>
+                  <div>
+                    <p class="mb-0">Estimated Delivery<br>
+                    <strong>Wednesday, 25 October</strong></p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Payment Button -->
+              <button type="submit" class="btn btn-primary btn-lg w-100 py-3">
+                <i class="fas fa-lock me-2"></i>Secure Checkout
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+<script>
+// Form validation script
+(() => {
+  'use strict'
+  const forms = document.querySelectorAll('.needs-validation')
+  Array.from(forms).forEach(form => {
+    form.addEventListener('submit', event => {
+      if (!form.checkValidity()) {
+        event.preventDefault()
+        event.stopPropagation()
+      }
+      form.classList.add('was-validated')
+    }, false)
+  })
+})()
+</script>
