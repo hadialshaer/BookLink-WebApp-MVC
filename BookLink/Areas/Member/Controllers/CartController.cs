@@ -18,7 +18,7 @@ namespace BookLink.Areas.Member.Controllers
 			_unitOfWork = unitOfWork;
 		}
 
-
+		// Get Shopping Cart items
 		[Area("Member")]
 		[Authorize]
 		public IActionResult Index()
@@ -34,8 +34,8 @@ namespace BookLink.Areas.Member.Controllers
 
 			foreach(var cart in ShoppingCartVM.ListCart)
 			{
-				double price = GetPriceBasedOnQuantity(cart);
-				ShoppingCartVM.OrderTotal += (price * cart.Count);
+				cart.Price = GetPriceBasedOnQuantity(cart);
+				ShoppingCartVM.OrderTotal += (cart.Price * cart.Count);
 			}
 
 			return View(ShoppingCartVM);
