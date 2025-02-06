@@ -70,12 +70,12 @@
 							<h4 class="text-uppercase mb-4" style="color: #613659;">Order:</h4>
 							<div class="d-flex justify-content-between mb-3">
 								<span class="text-muted">Subtotal:</span>
-								<span class="fw-bold" style="color: #57bedc;">@Model.OrderTotal.ToString("c")</span>
+								<span class="fw-bold" style="color: #57bedc;">@Model.OrderHeader.OrderTotal.ToString("c")</span>
 							</div>
 							<hr>
 							<div class="d-flex justify-content-between">
 								<h5 class="text-uppercase" style="color: #4c686b;">Total</h5>
-								<h3 style="color: #211522;">@Model.OrderTotal.ToString("c")</h3>
+								<h3 style="color: #211522;">@Model.OrderHeader.OrderTotal.ToString("c")</h3>
 							</div>
 							<a asp-action="CheckOut" class="btn btn-primary btn-lg w-100 py-3"
 							style="background: linear-gradient(45deg, #613659, #3CB371); color: white;">

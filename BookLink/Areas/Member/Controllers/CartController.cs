@@ -31,12 +31,13 @@ namespace BookLink.Areas.Member.Controllers
 			{
 				ListCart = _unitOfWork.ShoppingCart.GetAll(u => u.UserId == userId,
 				includeProperties: "Book"),
+				OrderHeader = new()
 			};
 
 			foreach (var cart in ShoppingCartVM.ListCart)
 			{
 				cart.Price = GetPriceBasedOnQuantity(cart);
-				ShoppingCartVM.OrderTotal += (cart.Price * cart.Count);
+				ShoppingCartVM.OrderHeader.OrderTotal += (cart.Price * cart.Count);
 			}
 
 			return View(ShoppingCartVM);
@@ -44,7 +45,32 @@ namespace BookLink.Areas.Member.Controllers
 
 		public IActionResult CheckOut()
 		{
-			return View();
+			var claimsIdentity = (ClaimsIdentity)User.Identity;
+			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+			ShoppingCartVM = new ShoppingCartVM()
+			{
+				ListCart = _unitOfWork.ShoppingCart.GetAll(u => u.UserId == userId,
+				includeProperties: "Book"),
+				OrderHeader = new()
+			};
+			ShoppingCartVM.OrderHeader.User = _unitOfWork.User.Get(u => u.Id == userId);
+
+
+			string name = ShoppingCartVM.OrderHeader.User.FirstName + " " + ShoppingCartVM.OrderHeader.User.LastName;
+			ShoppingCartVM.OrderHeader.Name = name;
+			ShoppingCartVM.OrderHeader.PhoneNumber = ShoppingCartVM.OrderHeader.User.PhoneNumber;
+			ShoppingCartVM.OrderHeader.Address = ShoppingCartVM.OrderHeader.User.Address;
+			ShoppingCartVM.OrderHeader.City = ShoppingCartVM.OrderHeader.User.City;
+			ShoppingCartVM.OrderHeader.PostalCode = ShoppingCartVM.OrderHeader.User.PostalCode;
+
+
+			foreach (var cart in ShoppingCartVM.ListCart)
+			{
+				cart.Price = GetPriceBasedOnQuantity(cart);
+				ShoppingCartVM.OrderHeader.OrderTotal += (cart.Price * cart.Count);
+			}
+			return View(ShoppingCartVM);
 		}
 
 		public IActionResult Plus(int cartId)
