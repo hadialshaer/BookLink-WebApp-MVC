@@ -17,6 +17,9 @@ namespace BookLink.DataAccess.Repository
 		public IShoppingCartRepository ShoppingCart { get; private set; }
 		public IUserRepository User { get; private set; }
 
+		public IOrderDetailRepository OrderDetail { get; private set; }
+		public IOrderHeaderRepository OrderHeader { get; private set; }
+
 		public UnitOfWork(ApplicationDbContext context)
 		{
 			_context = context;
