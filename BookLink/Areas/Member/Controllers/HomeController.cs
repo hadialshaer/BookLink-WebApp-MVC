@@ -1,8 +1,10 @@
 using BookLink.DataAccess.Repository;
 using BookLink.DataAccess.Repository.IRepository;
 using BookLink.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Security.Claims;
 
 namespace BookLink.Areas.Member.Controllers
 {
@@ -44,6 +46,18 @@ namespace BookLink.Areas.Member.Controllers
 		public IActionResult About()
 		{
 			return View();
+		}
+
+		[HttpPost] 
+		[Authorize]
+		public IActionResult Details(ShoppingCart shoppingCart)
+		{
+			var claimsIdentity = (ClaimsIdentity)User.Identity;
+			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+			shoppingCart.UserId = userId;
+			_unitOfWork.ShoppingCart.Add(shoppingCart);
+			_unitOfWork.Save();
+			return RedirectToAction(nameof(Index));
 		}
 
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
