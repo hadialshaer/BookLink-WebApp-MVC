@@ -65,12 +65,16 @@ namespace BookLink.Areas.Member.Controllers
 			{
 				cartFromDb.Count += shoppingCart.Count;
 				_unitOfWork.ShoppingCart.Update(cartFromDb);
+				TempData["success"] = "Item updated successfully!";
 			}
 			else
 				// Shopping cart does not exist, ADD Cart
 			{
 				_unitOfWork.ShoppingCart.Add(shoppingCart);
+				TempData["success"] = "Item added to cart successfully!";
 			}
+
+			
 
 			_unitOfWork.Save();
 			return RedirectToAction(nameof(Index));
