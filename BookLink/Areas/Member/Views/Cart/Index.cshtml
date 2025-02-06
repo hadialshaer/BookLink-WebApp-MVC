@@ -1,21 +1,5 @@
 ﻿@model ShoppingCartVM
 
-@section Styles {
-	<style>
-
-		.btn:hover, .btn:active {
-			background-color: #4c686b;
-		}
-
-		.rounded-circle {
-			transition: transform 0.3s ease;
-		}
-
-			.rounded-circle:hover {
-				transform: scale(1.05);
-			}
-	</style>
-}
 <form method="post">
 	<div class="container py-5">
 		<div class="card shadow-lg border-0 rounded-3 overflow-hidden">
@@ -83,22 +67,18 @@
 				<div class="row justify-content-between">
 					<div class="col-md-5">
 						<div class="bg-white p-4 rounded-3 shadow-sm">
-							<h4 class="text-uppercase mb-4" style="color: #613659;">Order Summary</h4>
+							<h4 class="text-uppercase mb-4" style="color: #613659;">Order:</h4>
 							<div class="d-flex justify-content-between mb-3">
 								<span class="text-muted">Subtotal:</span>
 								<span class="fw-bold" style="color: #57bedc;">@Model.OrderTotal.ToString("c")</span>
-							</div>
-							<div class="d-flex justify-content-between mb-4">
-								<span class="text-muted">Shipping:</span>
-								<span class="fw-bold" style="color: #57bedc;">FREE</span>
 							</div>
 							<hr>
 							<div class="d-flex justify-content-between">
 								<h5 class="text-uppercase" style="color: #4c686b;">Total</h5>
 								<h3 style="color: #211522;">@Model.OrderTotal.ToString("c")</h3>
 							</div>
-							<a asp-action="CheckOut" class="btn w-100 mt-4 text-uppercase fw-bold"
-									style="background: linear-gradient(45deg, #613659, #57bedc); color: white;">
+							<a asp-action="CheckOut" class="btn btn-primary btn-lg w-100 py-3"
+							style="background: linear-gradient(45deg, #613659, #3CB371); color: white;">
 								Checkout
 							</a>
 						</div>
