@@ -1,6 +1,7 @@
 ﻿using BookLink.DataAccess.Repository.IRepository;
 using BookLink.Models;
 using BookLink.Models.ViewModels;
+using BookLink.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -13,6 +14,8 @@ namespace BookLink.Areas.Member.Controllers
 	{
 
 		private readonly IUnitOfWork _unitOfWork;
+
+		[BindProperty]
 		public ShoppingCartVM ShoppingCartVM { get; set; }
 
 		public CartController(IUnitOfWork unitOfWork)
@@ -129,6 +132,50 @@ namespace BookLink.Areas.Member.Controllers
 					return (double)shoppingCart.Book.Price5;
 				}
 			}
+		}
+
+		[HttpPost]
+		[ActionName("CheckOut")]
+		public IActionResult CheckOutPost()
+		{
+			// Order Header
+			var claimsIdentity = (ClaimsIdentity)User.Identity;
+			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+			ShoppingCartVM.ListCart = _unitOfWork.ShoppingCart.GetAll(u => u.UserId == userId,
+				includeProperties: "Book");
+
+			ShoppingCartVM.OrderHeader.OrderDate = System.DateTime.Now;
+			ShoppingCartVM.OrderHeader.UserId = userId;
+
+
+			foreach (var cart in ShoppingCartVM.ListCart)
+			{
+				cart.Price = GetPriceBasedOnQuantity(cart);
+				ShoppingCartVM.OrderHeader.OrderTotal += (cart.Price * cart.Count);
+			}
+
+			ShoppingCartVM.OrderHeader.PaymentStatus = SD.PaymentStatusPending;
+			ShoppingCartVM.OrderHeader.OrderStatus = SD.StatusPending;
+
+			_unitOfWork.OrderHeader.Add(ShoppingCartVM.OrderHeader);
+			_unitOfWork.Save();
+
+			// Order Detail
+			foreach (var cart in ShoppingCartVM.ListCart)
+			{
+				OrderDetail orderDetail = new()
+				{
+					BookId = cart.BookId,
+					OrderHeaderId = ShoppingCartVM.OrderHeader.Id,
+					Price = cart.Price,
+					Count = cart.Count
+				};
+				_unitOfWork.OrderDetail.Add(orderDetail);
+				_unitOfWork.Save();
+			}
+
+				return View(ShoppingCartVM);
 		}
 
 		[HttpDelete]
