@@ -1,5 +1,21 @@
 ﻿@model ShoppingCartVM
 
+@section Styles {
+	<style>
+
+		.btn:hover, .btn:active {
+			background-color: #4c686b;
+		}
+
+		.rounded-circle {
+			transition: transform 0.3s ease;
+		}
+
+			.rounded-circle:hover {
+				transform: scale(1.05);
+			}
+	</style>
+}
 <form method="post">
 	<div class="container py-5">
 		<div class="card shadow-lg border-0 rounded-3 overflow-hidden">
@@ -42,15 +58,16 @@
 						<div class="col-md-4">
 							<div class="d-flex align-items-center justify-content-end h-100">
 								<div class="btn-group shadow-sm">
-									<button class="btn btn-sm" style="background-color: #c197d2; color: white;">
+									<a asp-action="Minus" asp-route-cartId="@item.Id" class="btn btn-sm" style="background-color: #c197d2; color: white;">
 										<i class="bi bi-dash-lg"></i>
-									</button>
-									<span class="px-3" style="color: #613659;">2</span>
-									<button class="btn btn-sm" style="background-color: #57bedc; color: white;">
+									</a>
+									<span class="px-3" style="color: #613659;">@item.Count</span>
+									<a asp-action="Plus" asp-route-cartId="@item.Id" class="btn btn-sm" style="background-color: #57bedc; color: white;">
 										<i class="bi bi-plus-lg"></i>
-									</button>
+									</a>
 								</div>
-								<button class="btn btn-link text-danger ms-3">
+								<button type="button" class="btn btn-link text-danger ms-3"
+										onclick="DeleteCartItem('@Url.Action("Remove", "Cart", new { area = "Member", cartId = item.Id })')">
 									<i class="bi bi-trash-fill h5"></i>
 								</button>
 							</div>
@@ -59,7 +76,7 @@
 					<!-- End Single Item -->
 				}
 			</div>
-				
+
 
 			<!-- Cart Footer -->
 			<div class="card-footer p-4">
@@ -105,17 +122,8 @@
 	</div>
 </form>
 
-<style>
+@section Scripts {
+	<script src="~/js/Cart.js"></script>
+	
+}
 
-	.btn:hover, .btn:active {
-		background-color: #4c686b;
-	}
-
-	.rounded-circle {
-		transition: transform 0.3s ease;
-	}
-
-		.rounded-circle:hover {
-			transform: scale(1.05);
-		}
-</style>

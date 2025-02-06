@@ -7,6 +7,7 @@ using System.Security.Claims;
 
 namespace BookLink.Areas.Member.Controllers
 {
+	[Area("Member")]
 	public class CartController : Controller
 	{
 
@@ -32,7 +33,7 @@ namespace BookLink.Areas.Member.Controllers
 				includeProperties: "Book"),
 			};
 
-			foreach(var cart in ShoppingCartVM.ListCart)
+			foreach (var cart in ShoppingCartVM.ListCart)
 			{
 				cart.Price = GetPriceBasedOnQuantity(cart);
 				ShoppingCartVM.OrderTotal += (cart.Price * cart.Count);
@@ -40,6 +41,35 @@ namespace BookLink.Areas.Member.Controllers
 
 			return View(ShoppingCartVM);
 		}
+
+		public IActionResult Plus(int cartId)
+		{
+			var cartFromDb = _unitOfWork.ShoppingCart.Get(u => u.Id == cartId);
+			cartFromDb.Count += 1;
+			_unitOfWork.ShoppingCart.Update(cartFromDb);
+			_unitOfWork.Save();
+			return RedirectToAction(nameof(Index));
+		}
+
+		public IActionResult Minus(int cartId)
+		{
+			var cartFromDb = _unitOfWork.ShoppingCart.Get(u => u.Id == cartId);
+
+			if (cartFromDb.Count <= 1)
+			{
+				// Remove the item from the cart
+				_unitOfWork.ShoppingCart.Remove(cartFromDb);
+			}
+			else
+			{
+				cartFromDb.Count -= 1;
+				_unitOfWork.ShoppingCart.Update(cartFromDb);
+			}
+			_unitOfWork.Save();
+			return RedirectToAction(nameof(Index));
+		}
+
+		
 
 		private double GetPriceBasedOnQuantity(ShoppingCart shoppingCart)
 		{
@@ -49,7 +79,7 @@ namespace BookLink.Areas.Member.Controllers
 			}
 			else
 			{
-				if (shoppingCart.Count <= 5 )
+				if (shoppingCart.Count <= 5)
 				{
 					return (double)shoppingCart.Book.Price3;
 				}
@@ -59,5 +89,22 @@ namespace BookLink.Areas.Member.Controllers
 				}
 			}
 		}
+
+		[HttpDelete]
+		public IActionResult Remove(int cartId)
+		{
+			var cartFromDb = _unitOfWork.ShoppingCart.Get(u => u.Id == cartId);
+			if (cartFromDb == null)
+			{
+				return Json(new { success = false, message = "Cart item not found" });
+			}
+
+			_unitOfWork.ShoppingCart.Remove(cartFromDb);
+			_unitOfWork.Save();
+
+			return Json(new { success = true, message = "Cart item removed successfully" });
+		}
+
+
 	}
 }
