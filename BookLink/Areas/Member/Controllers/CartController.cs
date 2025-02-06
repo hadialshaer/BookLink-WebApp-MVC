@@ -113,7 +113,7 @@ namespace BookLink.Areas.Member.Controllers
 			return RedirectToAction(nameof(Index));
 		}
 
-		
+
 
 		private double GetPriceBasedOnQuantity(ShoppingCart shoppingCart)
 		{
@@ -148,6 +148,7 @@ namespace BookLink.Areas.Member.Controllers
 			ShoppingCartVM.OrderHeader.OrderDate = System.DateTime.Now;
 			ShoppingCartVM.OrderHeader.UserId = userId;
 
+			User user = _unitOfWork.User.Get(u => u.Id == userId);
 
 			foreach (var cart in ShoppingCartVM.ListCart)
 			{
@@ -155,6 +156,7 @@ namespace BookLink.Areas.Member.Controllers
 				ShoppingCartVM.OrderHeader.OrderTotal += (cart.Price * cart.Count);
 			}
 
+			// Statuses
 			ShoppingCartVM.OrderHeader.PaymentStatus = SD.PaymentStatusPending;
 			ShoppingCartVM.OrderHeader.OrderStatus = SD.StatusPending;
 
@@ -169,14 +171,18 @@ namespace BookLink.Areas.Member.Controllers
 					BookId = cart.BookId,
 					OrderHeaderId = ShoppingCartVM.OrderHeader.Id,
 					Price = cart.Price,
-					Count = cart.Count
+					Count = cart.Count,
+					Title = cart.Book.Title
 				};
 				_unitOfWork.OrderDetail.Add(orderDetail);
 				_unitOfWork.Save();
 			}
 
-				return View(ShoppingCartVM);
+
+			return RedirectToAction(nameof(OrderConfirmation), new { id = ShoppingCartVM.OrderHeader.Id});
 		}
+
+
 
 		[HttpDelete]
 		public IActionResult Remove(int cartId)
@@ -192,6 +198,18 @@ namespace BookLink.Areas.Member.Controllers
 
 			return Json(new { success = true, message = "Cart item removed successfully" });
 		}
+
+
+
+		public IActionResult OrderConfirmation(int id)
+		{
+			return View(id);
+		}
+
+
+
+
+
 
 
 	}
