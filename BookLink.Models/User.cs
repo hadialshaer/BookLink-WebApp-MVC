@@ -31,6 +31,7 @@ namespace BookLink.Models
 
 		public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 		public string Address { get; set; }
+		public string State { get; set; }
 	}
 
 	public enum Gender{

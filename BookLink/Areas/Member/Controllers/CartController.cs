@@ -3,6 +3,7 @@ using BookLink.Models;
 using BookLink.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Security.Claims;
 
 namespace BookLink.Areas.Member.Controllers
@@ -63,6 +64,15 @@ namespace BookLink.Areas.Member.Controllers
 			ShoppingCartVM.OrderHeader.Address = ShoppingCartVM.OrderHeader.User.Address;
 			ShoppingCartVM.OrderHeader.City = ShoppingCartVM.OrderHeader.User.City;
 			ShoppingCartVM.OrderHeader.PostalCode = ShoppingCartVM.OrderHeader.User.PostalCode;
+
+			ShoppingCartVM.StateList = new List<SelectListItem>
+			{
+				new SelectListItem { Value = "", Text = "Choose..." },
+				new SelectListItem { Value = "Beirut", Text = "Beirut" },
+				new SelectListItem { Value = "South", Text = "South" },
+				new SelectListItem { Value = "North", Text = "North" },
+				new SelectListItem { Value = "Baalbek-Hermel", Text = "Baalbek-Hermel" }
+			};
 
 
 			foreach (var cart in ShoppingCartVM.ListCart)

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,7 @@ namespace BookLink.Models.ViewModels
 	{
 		public IEnumerable<ShoppingCart> ListCart { get; set; }
 		public OrderHeader OrderHeader { get; set; }
+		public IEnumerable<SelectListItem> StateList { get; set; }
 
 	}
 }

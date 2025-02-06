@@ -1,4 +1,7 @@
-﻿
+﻿	@model ShoppingCartVM
+@{
+	ViewData["Title"] = "Checkout";
+}
 
 <form method="post" class="needs-validation" novalidate>
 	<div class="container py-5">
@@ -8,7 +11,7 @@
 			<div class="card-header bg-primary bg-gradient text-white py-4">
 				<div class="d-flex justify-content-between align-items-center">
 					<h2 class="mb-0">Checkout Details</h2>
-					<a href="#" class="btn btn-light btn-sm rounded-pill">
+					<a asp-action="Index" class="btn btn-light btn-sm rounded-pill">
 						<i class="fas fa-arrow-left me-2"></i>Back to Cart
 					</a>
 				</div>
@@ -24,50 +27,68 @@
 								<i class="fas fa-truck me-2"></i>Shipping Information
 							</h3>
 
-							<!-- Enhanced Form Fields with Floating Labels -->
+							<!-- Full Name -->
 							<div class="form-floating mb-3">
-								<input type="text" class="form-control" id="name" placeholder="Full Name" required>
+								<input type="text" class="form-control" id="name" placeholder="Full Name"
+									   name="OrderHeader.Name" value="@Model.OrderHeader.Name" required>
 								<label for="name" class="text-muted">Full Name</label>
 								<div class="invalid-feedback">Please enter your full name</div>
 							</div>
 
+							<!-- Phone Number -->
 							<div class="form-floating mb-3">
-								<input type="tel" class="form-control" id="phone" placeholder="Phone Number" required>
+								<input type="tel" class="form-control" id="phone" placeholder="Phone Number"
+									   name="OrderHeader.PhoneNumber" value="@Model.OrderHeader.PhoneNumber" required>
 								<label for="phone" class="text-muted">Phone Number</label>
 								<div class="invalid-feedback">Please enter a valid phone number</div>
-              </div>
+							</div>
 
-              <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="address" placeholder="Street Address" required>
-                <label for="address" class="text-muted">Street Address</label>
-                <div class="invalid-feedback">Please enter your street address</div>
-              </div>
+							<!-- Street Address -->
+							<div class="form-floating mb-3">
+								<input type="text" class="form-control" id="address" placeholder="Street Address"
+									   name="OrderHeader.Address" value="@Model.OrderHeader.Address" required>
+								<label for="address" class="text-muted">Street Address</label>
+								<div class="invalid-feedback">Please enter your street address</div>
+							</div>
 
-              <div class="row g-3 mb-4">
-                <div class="col-md-5">
-                  <div class="form-floating">
-                    <input type="text" class="form-control" id="city" placeholder="City" required>
-                    <label for="city" class="text-muted">City</label>
-                  </div>
-                </div>
-                <div class="col-md-4">
-                  <div class="form-floating">
-                    <select class="form-select" id="state" required>
-                      <option value="">Choose...</option>
-                      <!-- State options here -->
-                    </select>
-                    <label for="state" class="text-muted">State</label>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                  <div class="form-floating">
-                    <input type="text" class="form-control" id="zip" placeholder="Zip" required>
-                    <label for="zip" class="text-muted">Zip Code</label>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+							<!-- City, State, and Zip Code -->
+							<div class="row g-3 mb-4">
+								<!-- City -->
+								<div class="col-md-5">
+									<div class="form-floating">
+										<input type="text" class="form-control" id="city" placeholder="City"
+											   name="OrderHeader.City" value="@Model.OrderHeader.City" required>
+										<label for="city" class="text-muted">City</label>
+										<div class="invalid-feedback">Please enter your city</div>
+									</div>
+								</div>
+
+								<!-- State -->
+								<div class="col-md-4">
+									<div class="form-floating">
+										<select asp-for="OrderHeader.State"
+												asp-items="Model.StateList"
+												class="form-select"
+												id="state"
+												required>
+										</select>
+										<label for="state" class="text-muted">State</label>
+										<div class="invalid-feedback">Please select a state</div>
+									</div>
+								</div>
+
+								<!-- Zip Code -->
+								<div class="col-md-3">
+									<div class="form-floating">
+										<input type="text" class="form-control" id="zip" placeholder="Zip"
+											   name="OrderHeader.PostalCode" value="@Model.OrderHeader.PostalCode" required>
+										<label for="zip" class="text-muted">Zip Code</label>
+										<div class="invalid-feedback">Please enter your zip code</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
 
 					<!-- Order Summary Section -->
 					<div class="col-lg-5">
@@ -75,51 +96,57 @@
 							<h3 class="mb-4" style="color: #613659;">
 								<i class="fas fa-receipt me-2"></i>Order Summary
 							</h3>
-
-							<!-- Enhanced Product List -->
 							<div class="list-group mb-4">
-								<div class="list-group-item py-3">
-									<div class="d-flex justify-content-between">
-										<div>
-											<div style="color: #613659;">
-											<h6 class="my-0">Product Title</h6>
-											<small class="text-muted">Quantity: 2</small>
+								@* Loop through each cart item *@
+								@foreach (var cart in Model.ListCart)
+								{
+									<div class="list-group-item py-3">
+										<div class="d-flex justify-content-between">
+											<div>
+												<div style="color: #613659;">
+													<h6 class="my-0">@cart.Book.Title</h6>
+													<small class="text-muted">Quantity: @cart.Count</small>
+												</div>
+												<span class="text-primary">@cart.Price.ToString("C")</span>
+											</div>
 										</div>
-										<span class="text-primary">$49.98</span>
+									</div>
+								}
+
+								<!-- Total Price Section -->
+								<div class="card border-primary mb-4">
+									<div class="card-body">
+										<div class="d-flex justify-content-between align-items-center">
+											<h5 class="mb-0" style="color: #613659;">Total:</h5>
+											<h4 class="mb-0" style="color: #613659;">@Model.OrderHeader.OrderTotal.ToString("C")</h4>
+										</div>
 									</div>
 								</div>
-								<!-- Repeat for other products -->
-							</div>
 
-							<!-- Total Price Section -->
-							<div class="card border-primary mb-4">
-								<div class="card-body">
-									<div class="d-flex justify-content-between align-items-center">
-										<h5 class="mb-0" style="color: #613659;">Total:</h5>
-										<h4 class="mb-0" style="color: #613659;">$99.99</h4>
+								<!-- Estimated Delivery -->
+								<div class="alert alert-info mb-4">
+									<div class="d-flex align-items-center">
+										<i class="fas fa-shipping-fast fa-lg me-3"></i>
+										<div>
+											<p class="mb-0" style="color: #613659;">
+												Estimated Delivery<br>
+												<strong>
+													@DateTime.Now.AddDays(7).ToShortDateString()
+													- @DateTime.Now.AddDays(14).ToShortDateString()
+												</strong>
+											</p>
+										</div>
 									</div>
 								</div>
-							</div>
 
-							<!-- Estimated Delivery -->
-							<div class="alert alert-info mb-4">
-								<div class="d-flex align-items-center">
-									<i class="fas fa-shipping-fast fa-lg me-3"></i>
-									<div>
-										<p class="mb-0" style=" color: #613659;">
-											Estimated Delivery<br>
-											<strong>Wednesday, 25 October</strong>
-										</p>
-                  </div>
-                </div>
-              </div>
-
-							<!-- Payment Button -->
+								<!-- Payment Button -->
 								<button type="submit" class="btn btn-primary btn-lg w-100 py-3" style="background: linear-gradient(45deg, #613659, #3CB371); color: white;">
-								<i class="fas fa-lock me-2"></i>Secure Checkout
-							</button>
+									<i class="fas fa-lock me-2"></i>Secure Checkout
+								</button>
+							</div>
 						</div>
 					</div>
+
 				</div>
 			</div>
 		</div>

@@ -46,6 +46,8 @@ namespace BookLink.Models
 		public string PostalCode { get; set; }
 		[Required]
 		public string Name { get; set; }
+		[Required]
+		public string State { get; set; }
 
 	}
 }
