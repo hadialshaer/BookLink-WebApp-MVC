@@ -27,6 +27,8 @@ namespace BookLink.DataAccess.Repository
 			Book = new BookRepository(_context);
 			ShoppingCart = new ShoppingCartRepository(_context);
 			User = new UserRepository(_context);
+			OrderDetail = new OrderDetailRepository(_context);
+			OrderHeader = new OrderHeaderRepository(_context);
 		}
 		
 		public void Save()
