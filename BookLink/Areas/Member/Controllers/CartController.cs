@@ -5,6 +5,7 @@ using BookLink.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Stripe.Checkout;
 using System.Security.Claims;
 
 namespace BookLink.Areas.Member.Controllers
@@ -178,26 +179,64 @@ namespace BookLink.Areas.Member.Controllers
 				_unitOfWork.Save();
 			}
 
+			var domain = "https://localhost:7110/";
 
-			return RedirectToAction(nameof(OrderConfirmation), new { id = ShoppingCartVM.OrderHeader.Id});
-		}
-
-
-
-		[HttpDelete]
-		public IActionResult Remove(int cartId)
-		{
-			var cartFromDb = _unitOfWork.ShoppingCart.Get(u => u.Id == cartId);
-			if (cartFromDb == null)
+			// Option configuration
+			var options = new SessionCreateOptions
 			{
-				return Json(new { success = false, message = "Cart item not found" });
+				SuccessUrl = domain + $"member/cart/OrderConfirmation?id{ShoppingCartVM.OrderHeader.Id}",
+				CancelUrl = domain + "member/cart/index",
+				LineItems = new List<SessionLineItemOptions>(),
+				Mode = "payment",
+			};
+			// End of option configuration
+
+			foreach (var item in ShoppingCartVM.ListCart)
+			{
+				var sessionLineItem = new SessionLineItemOptions
+				{
+					PriceData = new SessionLineItemPriceDataOptions
+					{
+						UnitAmount = (long)item.Price * 100,
+						Currency = "usd",
+						ProductData = new SessionLineItemPriceDataProductDataOptions
+						{
+							Name = item.Book.Title,
+							Description = item.Book.Description
+						}
+					},
+					Quantity = item.Count
+
+				};
+				options.LineItems.Add(sessionLineItem);
+
+				var service = new SessionService(); // create new session service
+				Session session = service.Create(options);
+				_unitOfWork.OrderHeader.UpdateStripePaymentId(ShoppingCartVM.OrderHeader.Id, session.Id ,session.PaymentIntentId);
+				_unitOfWork.Save();
+
+				Response.Headers.Append("Location", session.Url);
+				return new StatusCodeResult(303);
 			}
-
-			_unitOfWork.ShoppingCart.Remove(cartFromDb);
-			_unitOfWork.Save();
-
-			return Json(new { success = true, message = "Cart item removed successfully" });
+			return RedirectToAction(nameof(OrderConfirmation), new { id = ShoppingCartVM.OrderHeader.Id });
 		}
+
+
+
+			[HttpDelete]
+			public IActionResult Remove(int cartId)
+			{
+				var cartFromDb = _unitOfWork.ShoppingCart.Get(u => u.Id == cartId);
+				if (cartFromDb == null)
+				{
+					return Json(new { success = false, message = "Cart item not found" });
+				}
+
+				_unitOfWork.ShoppingCart.Remove(cartFromDb);
+				_unitOfWork.Save();
+
+				return Json(new { success = true, message = "Cart item removed successfully" });
+			}
 
 
 
