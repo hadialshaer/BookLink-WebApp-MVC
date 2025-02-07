@@ -714,9 +714,10 @@ bg-success {
 }
 
     .form-control:focus {
-        border-color: #3CB371;
-        box-shadow: 0 0 0 0.25rem rgba(46, 139, 87, 0.5);
+        border-color: rgba(60, 179, 113, 0.75); 
+        box-shadow: 0 0 0 0.15rem rgba(60, 179, 113, 0.25);
     }
+
 
 .card {
     border-radius: 1rem;

@@ -1,0 +1,269 @@
+﻿@model OrderVM
+@{
+	ViewData["Title"] = "Order Details";
+}
+
+<form method="post">
+	<div class="container py-4">
+		<div class="card shadow-lg border-0">
+			<!-- Card Header -->
+			<div class="card-header bg-primary bg-gradient text-white py-3">
+				<div class="d-flex justify-content-between align-items-center">
+					<h2 class="h4 mb-0">
+						<i class="fas fa-file-invoice me-2"></i>Order Details #@Model.OrderHeader.Id
+					</h2>
+					<a asp-action="Index" class="btn btn-outline-light btn-sm rounded-pill">
+						<i class="fas fa-arrow-left me-2"></i>Back to Orders
+					</a>
+				</div>
+			</div>
+
+			<!-- Card Body -->
+			<div class="card-body p-4">
+				<div class="row g-4">
+					<!-- Order Information Column -->
+					<div class="col-lg-6">
+						<div class="pe-lg-3">
+							<!-- Shipping Details Card -->
+							<div class="card border-primary mb-4">
+								<div class="card-header bg-soft-primary">
+									<h5 class="mb-0 text-primary">
+										<i class="fas fa-truck me-2"></i>Shipping Information
+									</h5>
+								</div>
+								<div class="card-body">
+									<div class="row g-3">
+										<!-- Editable Fields with Role Check -->
+										@{
+											bool isAdmin = User.IsInRole(SD.Role_Admin);
+										}
+
+										<div class="col-md-6">
+											<div class="form-floating">
+												<input asp-for="OrderHeader.Name" class="form-control"
+													   readonly="@(!isAdmin)" />
+												<label>Full Name</label>
+												<span asp-validation-for="OrderHeader.Name" class="text-danger"></span>
+											</div>
+										</div>
+
+										<div class="col-md-6">
+											<div class="form-floating">
+												<input asp-for="OrderHeader.PhoneNumber" class="form-control"
+													   readonly="@(!isAdmin)" />
+												<label>Phone Number</label>
+												<span asp-validation-for="OrderHeader.PhoneNumber" class="text-danger"></span>
+											</div>
+										</div>
+
+										<div class="col-12">
+											<div class="form-floating">
+												<input asp-for="OrderHeader.Address" class="form-control"
+													   readonly="@(!isAdmin)" />
+												<label>Street Address</label>
+												<span asp-validation-for="OrderHeader.Address" class="text-danger"></span>
+											</div>
+										</div>
+
+										<div class="col-md-4">
+											<div class="form-floating">
+												<input asp-for="OrderHeader.City" class="form-control"
+													   readonly="@(!isAdmin)" />
+												<label>City</label>
+												<span asp-validation-for="OrderHeader.City" class="text-danger"></span>
+											</div>
+										</div>
+
+										<div class="col-md-4">
+											<div class="form-floating">
+												<input asp-for="OrderHeader.State" class="form-control"
+													   readonly="@(!isAdmin)" />
+												<label>State</label>
+												<span asp-validation-for="OrderHeader.State" class="text-danger"></span>
+											</div>
+										</div>
+
+										<!-- Additional Fields -->
+										<div class="col-12">
+											<div class="form-floating">
+												<input asp-for="OrderHeader.User.Email"
+													   class="form-control" readonly />
+												<label>Email</label>
+											</div>
+										</div>
+
+										<div class="col-md-6">
+											<div class="form-floating">
+												<input value="@Model.OrderHeader.OrderDate.ToShortDateString()"
+													   class="form-control" readonly />
+												<label>Order Date</label>
+											</div>
+										</div>
+
+										@if (isAdmin)
+										{
+											<div class="col-md-6">
+												<div class="form-floating">
+													<input asp-for="OrderHeader.Carrier" class="form-control" />
+													<label>Carrier</label>
+												</div>
+											</div>
+
+											<div class="col-md-6">
+												<div class="form-floating">
+													<input value="@Model.OrderHeader.ShippingDate.ToShortDateString()"
+														   class="form-control" readonly />
+													<label>Shipping Date</label>
+												</div>
+											</div>
+										}
+									</div>
+								</div>
+							</div>
+
+							<!-- Payment Details Card -->
+							<div class="card border-primary mb-4">
+								<div class="card-header bg-soft-primary">
+									<h5 class="mb-0 text-primary">
+										<i class="fas fa-credit-card me-2"></i>Payment Details
+									</h5>
+								</div>
+								<div class="card-body">
+									<div class="row g-3">
+										@if (isAdmin)
+										{
+											<div class="col-12">
+												<div class="form-floating">
+													<input asp-for="OrderHeader.SessionId"
+														   class="form-control" readonly />
+													<label>Session ID</label>
+												</div>
+											</div>
+
+											<div class="col-12">
+												<div class="form-floating">
+													<input asp-for="OrderHeader.PaymentIntentId"
+														   class="form-control" readonly />
+													<label>Payment Intent ID</label>
+												</div>
+											</div>
+										}
+
+										@if (Model.OrderHeader.SessionId != null)
+										{
+
+											<div class="col-md-6">
+												<div class="form-floating">
+													<input value="@Model.OrderHeader.PaymentDate.ToShortDateString()"
+														   class="form-control" readonly />
+													<label>Payment Date</label>
+												</div>
+											</div>
+										}
+
+										<div class="col-12">
+											<div class="form-floating">
+												<input asp-for="OrderHeader.PaymentStatus"
+													   class="form-control" readonly />
+												<label>Payment Status</label>
+											</div>
+										</div>
+
+										@if (isAdmin)
+										{
+											<div class="col-12">
+												<button type="submit" class="btn btn-warning w-100 py-3">
+													<i class="fas fa-save me-2"></i>Update Order Details
+												</button>
+											</div>
+										}
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Order Summary Column -->
+					<div class="col-lg-6">
+						<div class="ps-lg-3">
+							<!-- Order Status Card -->
+							<div class="card border-primary mb-4">
+								<div class="card-header bg-soft-primary">
+									<h5 class="mb-0 text-primary">
+										<i class="fas fa-clipboard-list me-2"></i>Order Summary
+									</h5>
+								</div>
+								<div class="card-body">
+									<div class="alert alert-primary mb-4">
+										<div class="d-flex align-items-center">
+											<i class="fas fa-info-circle fa-lg me-3"></i>
+											<div>
+												<h6 class="mb-1">Current Status</h6>
+												<p class="mb-0 fw-bold">@Model.OrderHeader.OrderStatus</p>
+											</div>
+										</div>
+									</div>
+
+									<!-- Order Items -->
+									<div class="list-group mb-4">
+										@foreach (var detail in Model.OrderDetail)
+										{
+											<div class="list-group-item py-3">
+												<div class="d-flex justify-content-between align-items-center">
+													<div>
+														<h6 class="my-0 text-primary">@detail.Book.Title</h6>
+														<small class="text-muted">Qty: @detail.Count</small>
+													</div>
+													<span class="text-primary">@((detail.Price * detail.Count).ToString("C"))</span>
+												</div>
+											</div>
+										}
+									</div>
+
+									<!-- Total Price -->
+									<div class="card bg-primary text-white mb-4">
+										<div class="card-body">
+											<div class="d-flex justify-content-between align-items-center">
+												<h5 class="mb-0">Total Amount</h5>
+												<h4 class="mb-0">@Model.OrderHeader.OrderTotal.ToString("C")</h4>
+											</div>
+										</div>
+									</div>
+
+									<!-- Action Buttons with Conditions -->
+									<div class="d-grid gap-2">
+										@if (isAdmin)
+										{
+											<button type="submit" class="btn btn-primary btn-lg">
+												<i class="fas fa-tasks me-2"></i>Start Processing
+											</button>
+
+											<button type="submit" class="btn btn-warning btn-lg">
+												<i class="fas fa-shipping-fast me-2"></i>Ship Order
+											</button>
+
+
+
+											<button type="submit" class="btn btn-danger btn-lg">
+												<i class="fas fa-times-circle me-2"></i>Cancel Order
+											</button>
+										}
+										else
+										{
+											if (Model.OrderHeader.OrderStatus == SD.StatusShipped)
+											{
+												<button type="submit" class="btn btn-success btn-lg">
+													<i class="fas fa-check-circle me-2"></i>Pay Now
+												</button>
+											}
+										}
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</form>
