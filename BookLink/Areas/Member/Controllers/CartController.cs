@@ -187,19 +187,19 @@ namespace BookLink.Areas.Member.Controllers
 				SuccessUrl = domain + $"member/cart/OrderConfirmation?id{ShoppingCartVM.OrderHeader.Id}",
 				CancelUrl = domain + "member/cart/index",
 				LineItems = new List<SessionLineItemOptions>(),
-				Mode = "payment",
+				Mode = "payment"
 			};
 			// End of option configuration
 
 			foreach (var item in ShoppingCartVM.ListCart)
 			{
-				var sessionLineItem = new SessionLineItemOptions
+				var sessionLineItem = new SessionLineItemOptions()
 				{
-					PriceData = new SessionLineItemPriceDataOptions
+					PriceData = new SessionLineItemPriceDataOptions()
 					{
 						UnitAmount = (long)item.Price * 100,
 						Currency = "usd",
-						ProductData = new SessionLineItemPriceDataProductDataOptions
+						ProductData = new SessionLineItemPriceDataProductDataOptions()
 						{
 							Name = item.Book.Title,
 							Description = item.Book.Description
@@ -209,16 +209,15 @@ namespace BookLink.Areas.Member.Controllers
 
 				};
 				options.LineItems.Add(sessionLineItem);
-
-				var service = new SessionService(); // create new session service
-				Session session = service.Create(options);
-				_unitOfWork.OrderHeader.UpdateStripePaymentId(ShoppingCartVM.OrderHeader.Id, session.Id ,session.PaymentIntentId);
-				_unitOfWork.Save();
-
-				Response.Headers.Append("Location", session.Url);
-				return new StatusCodeResult(303);
 			}
-			return RedirectToAction(nameof(OrderConfirmation), new { id = ShoppingCartVM.OrderHeader.Id });
+
+			var service = new SessionService(); // create new session service
+			Session session = service.Create(options);
+			_unitOfWork.OrderHeader.UpdateStripePaymentId(ShoppingCartVM.OrderHeader.Id, session.Id, session.PaymentIntentId);
+			_unitOfWork.Save();
+
+			Response.Headers.Append("Location", session.Url);
+			return new StatusCodeResult(303);
 		}
 
 
@@ -242,6 +241,24 @@ namespace BookLink.Areas.Member.Controllers
 
 		public IActionResult OrderConfirmation(int id)
 		{
+			OrderHeader orderHeader = _unitOfWork.OrderHeader.Get(u => u.Id == id, includeProperties:"User");
+
+			var service = new SessionService();
+			var session = service.Get(orderHeader.SessionId);
+
+			if (session.PaymentStatus.ToLower() == "paid")
+			{
+				_unitOfWork.OrderHeader.UpdateStripePaymentId(id, session.Id, session.PaymentIntentId);
+				_unitOfWork.OrderHeader.UpdateStatus(id, SD.StatusApproved ,SD.PaymentStatusApproved);
+				_unitOfWork.Save();
+			}
+			
+			List<ShoppingCart> shoppingCarts = _unitOfWork.ShoppingCart
+				.GetAll(u => u.UserId == orderHeader.UserId).ToList();
+
+			_unitOfWork.ShoppingCart.RemoveRange(shoppingCarts);
+			_unitOfWork.Save();
+
 			return View(id);
 		}
 
