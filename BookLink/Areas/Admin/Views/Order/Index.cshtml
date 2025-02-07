@@ -1,31 +1,68 @@
-﻿<div class="card shadow border-0 mt-4">
-    <!-- Header -->
-    <div class="card-header bg-primary bg-gradient text-white py-4">
-        <h2 class="text-white text-center mb-0">Order List</h2>
-    </div>
-    <!-- Card Body -->
-    <div class="card-body p-4">
-       
-        <!-- Table Section -->
-        <div class="table-responsive-sm">
-            <!-- Ensures table responsiveness on small screens -->
-            <table id="tableData" class="table table-bordered table-striped table-hover align-middle text-center" style="width:100%">
-                <thead class="table-dark">
-                    <tr>
-                        <th class="text-center align-middle">Id</th>
-                        <th class="text-center align-middle">Name</th>
-                        <th class="text-center align-middle">Phone Number</th>
-                        <th class="text-center align-middle">Email</th>
-                        <th class="text-center align-middle">Status</th>
-                        <th class="text-center align-middle">Total</th>
-                        <th class="text-center align-middle"></th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
-    </div>
+﻿@section Styles {
+	<style>
+
+		.btn-outline-primary.active {
+			background: linear-gradient(45deg, #613659, #3CB371);
+		}
+	</style>
+}
+
+<div class="card shadow border-0 mt-4">
+	<!-- Header -->
+	<div class="card-header bg-primary bg-gradient text-white py-4">
+		<h2 class="text-white text-center mb-0">Order List</h2>
+	</div>
+
+	<!-- Filter Section -->
+	@{
+		var status = Context.Request.Query["status"];
+		var currentStatus = string.IsNullOrEmpty(status) ? "all" : status.ToString().ToLower();
+	}
+
+	<!-- Card Body -->
+	<div class="card-body p-4">
+		<div class="row align-items-center g-3">
+			<div class="d-flex justify-content-center gap-2">
+				<a class="btn btn-outline-primary @(currentStatus == "all" ? "active" : "")"
+				   asp-controller="Order" asp-action="Index" asp-route-status="all">
+					All
+				</a>
+				<a class="btn btn-outline-primary @(currentStatus == "inprocess" ? "active" : "")"
+				   asp-controller="Order" asp-action="Index" asp-route-status="inprocess">
+					In Process
+				</a>
+				<a class="btn btn-outline-primary @(currentStatus == "pending" ? "active" : "")"
+				   asp-controller="Order" asp-action="Index" asp-route-status="pending">
+					Pending
+				</a>
+				<a class="btn btn-outline-primary @(currentStatus == "completed" ? "active" : "")"
+				   asp-controller="Order" asp-action="Index" asp-route-status="completed">
+					Completed
+				</a>
+				<a class="btn btn-outline-primary @(currentStatus == "approved" ? "active" : "")"
+				   asp-controller="Order" asp-action="Index" asp-route-status="approved">
+					Approved
+				</a>
+			</div>
+		</div>
+		<div class="table-responsive-sm">
+			<table id="tableData" class="table table-bordered table-striped table-hover align-middle text-center">
+				<thead class="table-dark">
+					<tr>
+						<th>Id</th>
+						<th>Name</th>
+						<th>Phone</th>
+						<th>Email</th>
+						<th>Status</th>
+						<th>Total</th>
+						<th>Actions</th>
+					</tr>
+				</thead>
+			</table>
+		</div>
+	</div>
 </div>
 @section Scripts
 {
-    <script src="~/js/order.js"></script>
+	<script src="~/js/order.js"></script>
 }
