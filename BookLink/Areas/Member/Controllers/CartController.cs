@@ -146,7 +146,7 @@ namespace BookLink.Areas.Member.Controllers
 			ShoppingCartVM.ListCart = _unitOfWork.ShoppingCart.GetAll(u => u.UserId == userId,
 				includeProperties: "Book");
 
-			
+			// Check if the cart is empty
 			if (ShoppingCartVM.ListCart == null || !ShoppingCartVM.ListCart.Any())
 			{
 				TempData["Error"] = "Your cart is empty. Add items before proceeding to checkout.";
