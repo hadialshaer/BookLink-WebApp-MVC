@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BookLink.Areas.Admin.Controllers
 {
+	[Area("Admin")]
 	public class OrderController : Controller
 	{
 
@@ -28,7 +29,6 @@ namespace BookLink.Areas.Admin.Controllers
 
 			return Json(new { data = objOrderHeaders });
 		}
-		}
-		#endregion
 	}
+	#endregion
 }
