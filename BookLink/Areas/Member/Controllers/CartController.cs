@@ -146,6 +146,13 @@ namespace BookLink.Areas.Member.Controllers
 			ShoppingCartVM.ListCart = _unitOfWork.ShoppingCart.GetAll(u => u.UserId == userId,
 				includeProperties: "Book");
 
+			
+			if (ShoppingCartVM.ListCart == null || !ShoppingCartVM.ListCart.Any())
+			{
+				TempData["Error"] = "Your cart is empty. Add items before proceeding to checkout.";
+				return RedirectToAction("Index"); // Redirect back to the cart page
+			}
+
 			ShoppingCartVM.OrderHeader.OrderDate = System.DateTime.Now;
 			ShoppingCartVM.OrderHeader.UserId = userId;
 
@@ -184,7 +191,7 @@ namespace BookLink.Areas.Member.Controllers
 			// Option configuration
 			var options = new SessionCreateOptions
 			{
-				SuccessUrl = domain + $"member/cart/OrderConfirmation?id{ShoppingCartVM.OrderHeader.Id}",
+				SuccessUrl = domain + $"member/cart/OrderConfirmation?id={ShoppingCartVM.OrderHeader.Id}",
 				CancelUrl = domain + "member/cart/index",
 				LineItems = new List<SessionLineItemOptions>(),
 				Mode = "payment"
@@ -215,6 +222,7 @@ namespace BookLink.Areas.Member.Controllers
 			Session session = service.Create(options);
 			_unitOfWork.OrderHeader.UpdateStripePaymentId(ShoppingCartVM.OrderHeader.Id, session.Id, session.PaymentIntentId);
 			_unitOfWork.Save();
+
 
 			Response.Headers.Append("Location", session.Url);
 			return new StatusCodeResult(303);
@@ -261,12 +269,6 @@ namespace BookLink.Areas.Member.Controllers
 
 			return View(id);
 		}
-
-
-
-
-
-
 
 	}
 }
