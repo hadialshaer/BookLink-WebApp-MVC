@@ -20,6 +20,8 @@ namespace BookLink.DataAccess.Repository.IRepository
 
 		IOrderHeaderRepository OrderHeader { get; }
 
+		IBorrowRequestRepository BorrowRequest { get; }
+
 		void Save();
 	}
 }

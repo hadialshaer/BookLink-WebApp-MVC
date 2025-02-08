@@ -4,6 +4,7 @@ using BookLink.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookLink.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250208213627_MatchForeignKeydataTypeForBook")]
+    partial class MatchForeignKeydataTypeForBook
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -662,7 +665,8 @@ namespace BookLink.DataAccess.Migrations
                 {
                     b.HasOne("BookLink.Models.User", "Borrower")
                         .WithMany()
-                        .HasForeignKey("BorrowerId");
+                        .HasForeignKey("BorrowerId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("BookLink.Models.Category", "BookCategory")
                         .WithMany()
@@ -672,8 +676,7 @@ namespace BookLink.DataAccess.Migrations
 
                     b.HasOne("BookLink.Models.User", "Lender")
                         .WithMany()
-                        .HasForeignKey("LenderId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .HasForeignKey("LenderId");
 
                     b.Navigation("BookCategory");
 
@@ -693,13 +696,13 @@ namespace BookLink.DataAccess.Migrations
                     b.HasOne("BookLink.Models.User", "Borrower")
                         .WithMany()
                         .HasForeignKey("BorrowerId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("BookLink.Models.User", "Lender")
                         .WithMany()
                         .HasForeignKey("LenderId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Book");

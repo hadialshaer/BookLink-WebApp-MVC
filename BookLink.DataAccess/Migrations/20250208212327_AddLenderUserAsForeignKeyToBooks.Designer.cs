@@ -4,6 +4,7 @@ using BookLink.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookLink.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250208212327_AddLenderUserAsForeignKeyToBooks")]
+    partial class AddLenderUserAsForeignKeyToBooks
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -182,51 +185,6 @@ namespace BookLink.DataAccess.Migrations
                             Title = "The Lord of the Rings",
                             TransactionType = 0
                         });
-                });
-
-            modelBuilder.Entity("BookLink.Models.BorrowRequest", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime?>("ApprovalDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("BookId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("BorrowerId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime?>("DueDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("LenderId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("RequestDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("ReturnDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BookId");
-
-                    b.HasIndex("BorrowerId");
-
-                    b.HasIndex("LenderId");
-
-                    b.ToTable("BorrowRequests");
                 });
 
             modelBuilder.Entity("BookLink.Models.Category", b =>
@@ -662,7 +620,8 @@ namespace BookLink.DataAccess.Migrations
                 {
                     b.HasOne("BookLink.Models.User", "Borrower")
                         .WithMany()
-                        .HasForeignKey("BorrowerId");
+                        .HasForeignKey("BorrowerId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("BookLink.Models.Category", "BookCategory")
                         .WithMany()
@@ -672,37 +631,9 @@ namespace BookLink.DataAccess.Migrations
 
                     b.HasOne("BookLink.Models.User", "Lender")
                         .WithMany()
-                        .HasForeignKey("LenderId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .HasForeignKey("LenderId");
 
                     b.Navigation("BookCategory");
-
-                    b.Navigation("Borrower");
-
-                    b.Navigation("Lender");
-                });
-
-            modelBuilder.Entity("BookLink.Models.BorrowRequest", b =>
-                {
-                    b.HasOne("BookLink.Models.Book", "Book")
-                        .WithMany()
-                        .HasForeignKey("BookId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BookLink.Models.User", "Borrower")
-                        .WithMany()
-                        .HasForeignKey("BorrowerId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("BookLink.Models.User", "Lender")
-                        .WithMany()
-                        .HasForeignKey("LenderId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("Book");
 
                     b.Navigation("Borrower");
 

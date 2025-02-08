@@ -26,6 +26,8 @@ public class ApplicationDbContext : IdentityDbContext<IdentityUser>
 
 	public DbSet<OrderDetail> orderDetails { get; set; }
 
+	public DbSet<BorrowRequest> BorrowRequests { get; set; }
+
 	// Seed the database with initial data
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
@@ -123,12 +125,27 @@ public class ApplicationDbContext : IdentityDbContext<IdentityUser>
 			}
 
 			);
-		modelBuilder.Entity<Book>()
-		.HasOne(b => b.Borrower)
-		.WithMany()
-		.HasForeignKey(b => b.BorrowerId)
-		.OnDelete(DeleteBehavior.Restrict);
 
+		// Configurations
+		// BorrowRequest configuration
+        modelBuilder.Entity<BorrowRequest>()
+            .HasOne(br => br.Lender)
+            .WithMany()
+            .HasForeignKey(br => br.LenderId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        modelBuilder.Entity<BorrowRequest>()
+            .HasOne(br => br.Borrower)
+            .WithMany()
+            .HasForeignKey(br => br.BorrowerId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        // Book configuration
+        modelBuilder.Entity<Book>()
+            .HasOne(b => b.Lender)
+            .WithMany()
+            .HasForeignKey(b => b.LenderId)
+            .OnDelete(DeleteBehavior.NoAction);
 	}
 
 }
