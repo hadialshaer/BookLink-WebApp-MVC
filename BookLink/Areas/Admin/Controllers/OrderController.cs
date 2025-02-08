@@ -5,6 +5,7 @@ using BookLink.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Stripe;
 using System.Security.Claims;
 
 namespace BookLink.Areas.Admin.Controllers
@@ -91,7 +92,37 @@ namespace BookLink.Areas.Admin.Controllers
 			_unitOfWork.Save();
 			TempData["Success"] = "Order Shipped Succcesfuly";
 
-			return RedirectToAction(nameof(Details), new { orderId = OrderVM.OrderHeader.Id });
+			return RedirectToAction(nameof(Details), new { orderId = orderHeaderFromDb.Id });
+		}
+
+		[HttpPost]
+		[Authorize(Roles = SD.Role_Admin)]
+		public IActionResult CancelOrder()
+		{
+			var orderHeaderFromDb = _unitOfWork.OrderHeader.Get(u => u.Id == OrderVM.OrderHeader.Id);
+
+			if(orderHeaderFromDb.PaymentStatus == SD.PaymentStatusApproved)
+			{
+				var options = new RefundCreateOptions
+				{
+					Reason = RefundReasons.RequestedByCustomer,
+					PaymentIntent = orderHeaderFromDb.PaymentIntentId
+				};
+
+				var service = new RefundService();
+				Refund refund = service.Create(options);
+
+				_unitOfWork.OrderHeader.UpdateStatus(orderHeaderFromDb.Id, SD.StatusCancelled, SD.StatusRefunded);
+			}
+			else
+			{
+				_unitOfWork.OrderHeader.UpdateStatus(orderHeaderFromDb.Id, SD.StatusCancelled, SD.StatusCancelled);
+			}
+
+			_unitOfWork.Save();
+			TempData["Success"] = "Order Cancelled Succcesfuly";
+
+			return RedirectToAction(nameof(Details), new { orderId = orderHeaderFromDb.Id });
 		}
 
 		#region API CALLS
