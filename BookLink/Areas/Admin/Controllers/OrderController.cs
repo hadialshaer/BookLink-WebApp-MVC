@@ -10,6 +10,7 @@ using System.Security.Claims;
 namespace BookLink.Areas.Admin.Controllers
 {
 	[Area("Admin")]
+	[Authorize]
 	public class OrderController : Controller
 	{
 
@@ -61,6 +62,36 @@ namespace BookLink.Areas.Admin.Controllers
 			TempData["Success"] = "Order Details Updated Succcesfuly";
 
 			return RedirectToAction(nameof(Details), new {orderId = orderHeaderFromDb.Id});
+		}
+
+		[HttpPost]
+		[Authorize(Roles = SD.Role_Admin)]
+		public IActionResult StartProcessing()
+		{
+			_unitOfWork.OrderHeader.UpdateStatus(OrderVM.OrderHeader.Id, SD.StatusInProcess);
+			_unitOfWork.Save();
+
+			TempData["Success"] = "Order Processed Succcesfuly";
+
+			return RedirectToAction(nameof(Details), new { orderId = OrderVM.OrderHeader.Id });
+		}
+
+		[HttpPost]
+		[Authorize(Roles = SD.Role_Admin)]
+		public IActionResult ShipOrder()
+		{
+			var orderHeaderFromDb = _unitOfWork.OrderHeader.Get(u => u.Id == OrderVM.OrderHeader.Id);
+
+			orderHeaderFromDb.Carrier = OrderVM.OrderHeader.Carrier;
+			orderHeaderFromDb.ShippingDate = DateTime.Now;
+			orderHeaderFromDb.OrderStatus = SD.StatusShipped;
+
+
+			_unitOfWork.OrderHeader.Update(orderHeaderFromDb);
+			_unitOfWork.Save();
+			TempData["Success"] = "Order Shipped Succcesfuly";
+
+			return RedirectToAction(nameof(Details), new { orderId = OrderVM.OrderHeader.Id });
 		}
 
 		#region API CALLS
