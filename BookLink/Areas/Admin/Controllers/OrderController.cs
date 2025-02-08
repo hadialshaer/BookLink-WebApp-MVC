@@ -2,6 +2,7 @@
 using BookLink.Models;
 using BookLink.Models.ViewModels;
 using BookLink.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,6 +13,9 @@ namespace BookLink.Areas.Admin.Controllers
 	{
 
 		private readonly IUnitOfWork _unitOfWork;
+
+		[BindProperty]
+		public OrderVM OrderVM { get; set; }
 		public OrderController(IUnitOfWork unitOfWork)
 		{
 			_unitOfWork = unitOfWork;
@@ -24,12 +28,38 @@ namespace BookLink.Areas.Admin.Controllers
 
 		public IActionResult Details(int orderId)
 		{
-			OrderVM orderVM = new()
+			OrderVM = new()
 			{
 				OrderHeader = _unitOfWork.OrderHeader.Get(u => u.Id == orderId, includeProperties: "User"),
 				OrderDetail = _unitOfWork.OrderDetail.GetAll(o => o.OrderHeaderId == orderId, includeProperties: "Book")
 			};
-			return View(orderVM);
+			return View(OrderVM);
+		}
+
+		[HttpPost]
+		[Authorize(Roles = SD.Role_Admin)]
+		public IActionResult UpdateOrderDetail()
+		{
+			var orderHeaderFromDb = _unitOfWork.OrderHeader.Get(u => u.Id == OrderVM.OrderHeader.Id);
+
+			orderHeaderFromDb.Name = OrderVM.OrderHeader.Name;
+			orderHeaderFromDb.PhoneNumber = OrderVM.OrderHeader.PhoneNumber;
+			orderHeaderFromDb.Address = OrderVM.OrderHeader.Address;
+			orderHeaderFromDb.City = OrderVM.OrderHeader.City;
+			orderHeaderFromDb.State = OrderVM.OrderHeader.State;
+
+
+			if(!string.IsNullOrEmpty(OrderVM.OrderHeader.Carrier))
+			{
+				orderHeaderFromDb.Carrier = OrderVM.OrderHeader.Carrier;
+			}
+
+			_unitOfWork.OrderHeader.Update(orderHeaderFromDb);
+			_unitOfWork.Save();
+
+			TempData["Success"] = "Order Details Updated Succcesfuly";
+
+			return RedirectToAction(nameof(Details), new {orderId = orderHeaderFromDb.Id});
 		}
 
 		#region API CALLS
