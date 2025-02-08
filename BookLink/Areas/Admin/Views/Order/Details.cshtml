@@ -236,19 +236,29 @@
 									<div class="d-grid gap-2">
 										@if (isAdmin)
 										{
-											<button type="submit" class="btn btn-primary btn-lg">
-												<i class="fas fa-tasks me-2"></i>Start Processing
-											</button>
+											if (Model.OrderHeader.OrderStatus == SD.StatusApproved)
+											{
+												<button type="submit" class="btn btn-primary btn-lg">
+													<i class="fas fa-tasks me-2"></i>Start Processing
+												</button>
+											}
+											if (Model.OrderHeader.OrderStatus == SD.StatusInProcess)
+											{
 
-											<button type="submit" class="btn btn-warning btn-lg">
-												<i class="fas fa-shipping-fast me-2"></i>Ship Order
-											</button>
+												<button type="submit" class="btn btn-warning btn-lg">
+													<i class="fas fa-shipping-fast me-2"></i>Ship Order
+												</button>
+											}
+											if (Model.OrderHeader.OrderStatus != SD.StatusRefunded
+											&& Model.OrderHeader.OrderStatus != SD.StatusCancelled
+											&& Model.OrderHeader.OrderStatus != SD.StatusShipped
+											)
+											{
 
-
-
-											<button type="submit" class="btn btn-danger btn-lg">
-												<i class="fas fa-times-circle me-2"></i>Cancel Order
-											</button>
+												<button type="submit" class="btn btn-danger btn-lg">
+													<i class="fas fa-times-circle me-2"></i>Cancel Order
+												</button>
+											}
 										}
 										else
 										{
