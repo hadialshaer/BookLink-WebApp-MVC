@@ -5,6 +5,7 @@ using BookLink.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace BookLink.Areas.Admin.Controllers
 {
@@ -67,7 +68,19 @@ namespace BookLink.Areas.Admin.Controllers
 		[HttpGet]
 		public IActionResult GetAll(string status)
 		{
-			IEnumerable<OrderHeader> objOrderHeaders = _unitOfWork.OrderHeader.GetAll(includeProperties: "User").ToList();
+			IEnumerable<OrderHeader> objOrderHeaders;
+
+			if(User.IsInRole(SD.Role_Admin))
+			{
+				objOrderHeaders = _unitOfWork.OrderHeader.GetAll(includeProperties: "User").ToList();
+			}
+			else
+			{
+				var calaimsIdentity = (ClaimsIdentity)User.Identity;
+				var userId = calaimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+				objOrderHeaders = _unitOfWork.OrderHeader.GetAll(u => u.UserId == userId, includeProperties: "User").ToList();
+			}
 
 			switch (status)
 			{
