@@ -106,7 +106,7 @@
 										{
 											<div class="col-md-6">
 												<div class="form-floating">
-													<input asp-for="OrderHeader.Carrier" class="form-control" />
+													<input asp-for="OrderHeader.Carrier" id="carrier" class="form-control" />
 													<label>Carrier</label>
 												</div>
 											</div>
@@ -238,14 +238,14 @@
 										{
 											if (Model.OrderHeader.OrderStatus == SD.StatusApproved)
 											{
-												<button type="submit" class="btn btn-primary btn-lg">
+												<button type="submit" asp-action="StartProcessing" class="btn btn-primary btn-lg">
 													<i class="fas fa-tasks me-2"></i>Start Processing
 												</button>
 											}
 											if (Model.OrderHeader.OrderStatus == SD.StatusInProcess)
 											{
 
-												<button type="submit" class="btn btn-warning btn-lg">
+												<button type="submit" asp-action="ShipOrder" onclick="return ValidateInput()" class="btn btn-warning btn-lg">
 													<i class="fas fa-shipping-fast me-2"></i>Ship Order
 												</button>
 											}
@@ -255,7 +255,7 @@
 											)
 											{
 
-												<button type="submit" class="btn btn-danger btn-lg">
+												<button type="submit" asp-action="CancelOrder" class="btn btn-danger btn-lg">
 													<i class="fas fa-times-circle me-2"></i>Cancel Order
 												</button>
 											}
@@ -264,7 +264,7 @@
 										{
 											if (Model.OrderHeader.OrderStatus == SD.StatusShipped)
 											{
-												<button type="submit" class="btn btn-success btn-lg">
+												<button type="submit" asp-action="PayNow" class="btn btn-success btn-lg">
 													<i class="fas fa-check-circle me-2"></i>Pay Now
 												</button>
 											}
@@ -279,3 +279,23 @@
 		</div>
 	</div>
 </form>
+
+@section Scripts
+{
+	<partial name="_ValidationScriptsPartial" />
+
+	<script>
+		function ValidateInput() {
+			var carrier = document.getElementById("carrier").value;
+			if (carrier == "") {
+				Swal.fire({
+					icon: 'error',
+					title: 'Oops...',
+					text: 'Please provide the carrier information.',
+				})
+				return false;
+			}
+			return true;
+		}
+	</script>
+}

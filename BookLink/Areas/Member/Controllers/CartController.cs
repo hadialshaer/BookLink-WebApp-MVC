@@ -67,7 +67,6 @@ namespace BookLink.Areas.Member.Controllers
 			ShoppingCartVM.OrderHeader.PhoneNumber = ShoppingCartVM.OrderHeader.User.PhoneNumber;
 			ShoppingCartVM.OrderHeader.Address = ShoppingCartVM.OrderHeader.User.Address;
 			ShoppingCartVM.OrderHeader.City = ShoppingCartVM.OrderHeader.User.City;
-			ShoppingCartVM.OrderHeader.PostalCode = ShoppingCartVM.OrderHeader.User.PostalCode;
 
 			ShoppingCartVM.StateList = new List<SelectListItem>
 			{

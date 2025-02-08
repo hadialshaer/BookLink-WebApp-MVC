@@ -54,7 +54,7 @@
 							<!-- City, State, and Zip Code -->
 							<div class="row g-3 mb-4">
 								<!-- City -->
-								<div class="col-md-5">
+								<div class="col-md-6">
 									<div class="form-floating">
 										<input type="text" class="form-control" id="city" placeholder="City"
 											   name="OrderHeader.City" value="@Model.OrderHeader.City" required>
@@ -64,7 +64,7 @@
 								</div>
 
 								<!-- State -->
-								<div class="col-md-4">
+								<div class="col-md-6">
 									<div class="form-floating">
 										<select asp-for="OrderHeader.State"
 												asp-items="Model.StateList"
@@ -74,16 +74,6 @@
 										</select>
 										<label for="state" class="text-muted">State</label>
 										<div class="invalid-feedback">Please select a state</div>
-									</div>
-								</div>
-
-								<!-- Zip Code -->
-								<div class="col-md-3">
-									<div class="form-floating">
-										<input type="text" class="form-control" id="zip" placeholder="Zip"
-											   name="OrderHeader.PostalCode" value="@Model.OrderHeader.PostalCode" required>
-										<label for="zip" class="text-muted">Zip Code</label>
-										<div class="invalid-feedback">Please enter your zip code</div>
 									</div>
 								</div>
 							</div>
