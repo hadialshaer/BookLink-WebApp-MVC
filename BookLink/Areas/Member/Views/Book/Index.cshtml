@@ -1,21 +1,19 @@
 ﻿@model List<Book>
+
 <div class="card shadow border-0 mt-4">
-    <!-- Header -->
-    <div class="card-header bg-primary bg-gradient text-white py-4">
-        <h2 class="text-white text-center mb-0">Books List</h2>
+    <div class="card-header bg-success bg-gradient text-white py-4">
+        <h2 class="text-white text-center mb-0">My Listed Books</h2>
     </div>
-    <!-- Card Body -->
     <div class="card-body p-4">
-        <!-- Header Row -->
         <div class="row pb-3">
             <div class="col-md-6"></div>
             <div class="col-md-6 text-md-end">
-                <!-- Sell button -->
-                <a asp-controller="Book" asp-action="Upsert" asp-route-transactionType="Sell" class="btn btn-secondary me-2">
+                <a asp-controller="Book" asp-action="Upsert"
+                   asp-route-transactionType="Sell" class="btn btn-secondary me-2">
                     <i class="bi bi-plus-circle"></i> Sell New Book
                 </a>
-                <!-- Lend button -->
-                <a asp-controller="Book" asp-action="Upsert" asp-route-transactionType="Lend" class="btn btn-success">
+                <a asp-controller="Book" asp-action="Upsert"
+                   asp-route-transactionType="Lend" class="btn btn-info">
                     <i class="bi bi-arrow-repeat"></i> Lend New Book
                 </a>
             </div>
@@ -40,7 +38,8 @@
         </div>
     </div>
 </div>
+
 @section Scripts
 {
-    <script src="~/js/book_admin.js"></script>
+    <script src="~/js/book _member.js"></script>
 }

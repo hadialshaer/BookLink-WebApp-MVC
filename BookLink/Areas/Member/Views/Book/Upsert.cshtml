@@ -1,0 +1,169 @@
+﻿@model BookVM
+
+<div class="card-header bg-success bg-gradient text-white py-4">
+    <!-- Card Header -->
+    <div class="row">
+        <div class="col-12 text-center">
+            <h2 class="text-white py-2">
+                @(Model.Book.BookId != 0 ? "Update" : "Create")
+                @(Model.Book.TransactionType.ToString() == "Sell" ?
+                    "Book for Sale" : "Book for Lending")
+            </h2>
+        </div>
+    </div>
+</div>
+<!-- Card Body -->
+<div class="card-body p-4">
+	<form method="post" class="row" enctype="multipart/form-data">
+		@Html.AntiForgeryToken() <!-- Add CSRF Protection -->
+		<input type="hidden" asp-for="Book.BookId">
+		<input type="hidden" asp-for="Book.ImageUrl" />
+		<input type="hidden" asp-for="Book.TransactionType" />
+
+		<div class="row">
+			<div class="col-10">
+				<div class="border p-3">
+					<!-- Title -->
+					<div class="form-floating py-2 col-12">
+						<input asp-for="Book.Title" class="form-control border-0 shadow" />
+						<label asp-for="Book.Title"></label>
+						<span asp-validation-for="Book.Title" class="text-danger"></span>
+					</div>
+
+					<!-- Description -->
+					<div class="py-2 col-12">
+						<label asp-for="Book.Description" class="text-muted"></label>
+						<textarea asp-for="Book.Description" class="form-control border-0 shadow"></textarea>
+						<span asp-validation-for="Book.Description" class="text-danger"></span>
+					</div>
+
+					<!-- Author -->
+					<div class="form-floating py-2 col-12">
+						<input asp-for="Book.Author" class="form-control border-0 shadow" />
+						<label asp-for="Book.Author"></label>
+						<span asp-validation-for="Book.Author" class="text-danger"></span>
+					</div>
+					@if (Model.Book.TransactionType == TransactionType.Sell)
+					{
+						<!-- Prices -->
+						<div class="row">
+							<div class="form-floating py-2 col-md-6">
+								<input asp-for="Book.ListPrice" class="form-control border-0 shadow" />
+								<label asp-for="Book.ListPrice"></label>
+								<span asp-validation-for="Book.ListPrice" class="text-danger"></span>
+							</div>
+							<div class="form-floating py-2 col-md-6">
+								<input asp-for="Book.Price" class="form-control border-0 shadow" />
+								<label asp-for="Book.Price"></label>
+								<span asp-validation-for="Book.Price" class="text-danger"></span>
+							</div>
+							<div class="form-floating py-2 col-md-6">
+								<input asp-for="Book.Price3" class="form-control border-0 shadow" />
+								<label asp-for="Book.Price3"></label>
+								<span asp-validation-for="Book.Price3" class="text-danger"></span>
+							</div>
+							<div class="form-floating py-2 col-md-6">
+								<input asp-for="Book.Price5" class="form-control border-0 shadow" />
+								<label asp-for="Book.Price5"></label>
+								<span asp-validation-for="Book.Price5" class="text-danger"></span>
+							</div>
+						</div>
+					}
+					else
+					{
+						<div class="form-floating py-2 col-12">
+							<input asp-for="Book.MaxLendDurationDays" class="form-control border-0 shadow" />
+							<label asp-for="Book.MaxLendDurationDays"></label>
+							<span asp-validation-for="Book.MaxLendDurationDays" class="text-danger"></span>
+						</div>
+
+						<div class="form-floating py-2 col-12">
+							<input asp-for="Book.DueDate" class="form-control border-0 shadow"
+								   type="date"
+								   required />
+							<label asp-for="Book.DueDate"></label>
+							<span asp-validation-for="Book.DueDate" class="text-danger"></span>
+						</div>
+					}
+
+
+					<!-- Category -->
+					<div class="form-floating py-2 col-md-6">
+						<select asp-for="@Model.Book.CategoryId" asp-items="@Model.CategoryList" class="form-select border-0 shadow">
+							<option disabled selected>--Select Category--</option>
+						</select>
+						<label asp-for="Book.CategoryId">Book Category</label>
+						<span asp-validation-for="Book.CategoryId" class="text-danger"></span>
+					</div>
+
+					<!--Statues-->
+					<div class="form-floating py-2 col-6">
+						<select asp-for="Book.BookStatus" class="form-select border-0 shadow">
+							<option value="Available">Available</option>
+							<option value="Borrowed">Borrowed</option>
+							<option value="Sold">Sold</option>
+							<option value="Pending">Pending</option>
+						</select>
+						<label asp-for="Book.BookStatus">Book Status</label>
+					</div>
+
+					<!--File Upload-->
+					<div class="form-floating py-2 col-md-6">
+						<input type="file" name="file" class="form-control border-0 shadow" />
+						<label asp-for="Book.ImageUrl"></label>
+						<span asp-validation-for="Book.ImageUrl" class="text-danger"></span>
+					</div>
+
+
+					<!-- Buttons -->
+					<div class="row pt-3">
+						<div class="col-6 col-md-3">
+							@if (Model.Book.BookId != 0)
+							{
+								<button type="submit" class="btn btn-success form-control">Update</button>
+							}
+							else
+							{
+								<button type="submit" class="btn btn-primary form-control">Create</button>
+							}
+						</div>
+						<div class="col-6 col-md-3">
+							<a asp-controller="Book" asp-action="Index" class="btn btn-outline-primary border form-control">
+								Back to List
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-2">
+				<img src="@Model.Book.ImageUrl" width="100%" style="border-radius:5px; border:1px solid #bbb9b9" />
+			</div>
+
+		</div>
+
+
+	</form>
+</div>
+
+@section Scripts {
+	
+	<partial name="_ValidationScriptsPartial" />
+	<script>
+		tinymce.init({
+		  selector: 'textarea',
+		  plugins: [
+			// Core editing features
+			'anchor', 'autolink', 'charmap', 'codesample', 'emoticons', 'lists', 'table', 'visualblocks', 'wordcount'
+		  ],
+		  toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent',
+		  tinycomments_mode: 'embedded',
+		  tinycomments_author: 'Author name',
+		  mergetags_list: [
+			{ value: 'First.Name', title: 'First Name' },
+			{ value: 'Email', title: 'Email' },
+		  ],
+		  ai_request: (request, respondWith) => respondWith.string(() => Promise.reject('See docs to implement AI Assistant')),
+		});
+	</script>
+
+}
