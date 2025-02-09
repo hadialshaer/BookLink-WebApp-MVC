@@ -22,5 +22,23 @@ namespace BookLink.DataAccess.Repository
 		{
 			_context.BorrowRequests.Update(borrowRequest);
 		}
+
+		public void UpdateStatus(int id, BorrowRequestStatus status)
+		{
+			var request = _context.BorrowRequests.FirstOrDefault(r => r.Id == id);
+			if (request != null)
+			{
+				request.Status = status;
+				if (status == BorrowRequestStatus.Approved)
+				{
+					request.ApprovalDate = DateTime.UtcNow;
+					request.DueDate = DateTime.UtcNow.AddDays((double)request.Book.MaxLendDurationDays);
+				}
+				else if (status == BorrowRequestStatus.Returned)
+				{
+					request.ReturnDate = DateTime.UtcNow;
+				}
+			}
+		}
 	}
 }

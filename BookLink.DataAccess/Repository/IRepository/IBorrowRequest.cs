@@ -11,6 +11,7 @@ namespace BookLink.DataAccess.Repository.IRepository
 	public interface IBorrowRequestRepository : IRepository<BorrowRequest>
 	{
 		void Update(BorrowRequest borrowRequest);
-		
+		void UpdateStatus(int id, BorrowRequestStatus status);
+
 	}
 }
