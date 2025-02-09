@@ -117,6 +117,11 @@ namespace BookLink.Areas.Member.Controllers
 
 		private double GetPriceBasedOnQuantity(ShoppingCart shoppingCart)
 		{
+			if (shoppingCart.Book == null || shoppingCart.Book.Price == null)
+			{
+				return 0; // Default price if null
+			}
+
 			if (shoppingCart.Count <= 3)
 			{
 				return (double)shoppingCart.Book.Price;
@@ -125,11 +130,11 @@ namespace BookLink.Areas.Member.Controllers
 			{
 				if (shoppingCart.Count <= 5)
 				{
-					return (double)shoppingCart.Book.Price3;
+					return shoppingCart.Book.Price3 ?? shoppingCart.Book.Price.Value;
 				}
 				else
 				{
-					return (double)shoppingCart.Book.Price5;
+					return shoppingCart.Book.Price5 ?? shoppingCart.Book.Price.Value;
 				}
 			}
 		}

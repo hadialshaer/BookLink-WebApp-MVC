@@ -1,131 +1,341 @@
 ﻿@model ShoppingCart
-<form method="post">
-	<input type="hidden" name="BookId" value="@Model.BookId" />
 
-	<div class="card shadow border-0 mt-4 mb-4">
-		<div class="card-header bg-primary bg-gradient text-white py-4">
-			<div class="row">
-				<div class="col-12 text-center">
-					<h3 class="text-white text-uppercase">@Model.Book.Title</h3>
-					<p class="text-white-50 fw-semibold mb-0">by @Model.Book.Author</p>
-				</div>
-			</div>
-		</div>
-		<div class="card-body">
-			<div class="py-3">
-				<div class="row">
-					<div class="col-6 col-md-2 offset-lg-1 pb-1">
-						<a asp-action="Index" class="btn btn-secondary bg-gradient mb-5 fw-semibold btn-sm text-uppercase">
-							<small>Back to home</small>
-						</a>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-12 col-lg-3 offset-lg-1 text-center mb-3">
-						<img src="@Model.Book.ImageUrl" width="100%" class="rounded" />
-					</div>
-					<div class="col-12 col-lg-6 offset-lg-1">
-						<div class="col-12 col-md-6 pb-4">
-							<span class="badge">@Model.Book.BookCategory.CategoryName</span>
-							@if (Model.Book.TransactionType == TransactionType.Lend)
-							{
-								<span class="badge bg-warning ms-2 fw-bold">For Lending</span>
-							}
-						</div>
-						@if (Model.Book.TransactionType == TransactionType.Sell)
-						{
-							<div class="row ps-2">
-								<h6 class="text-dark text-opacity-50 pb-2">
-									List Price:
-									<span class="text-decoration-line-through">
-										@(Model.Book.ListPrice?.ToString("c") ?? "N/A")
-									</span>
-								</h6>
-							</div>
-							<div class="row text-center ps-2">
-								<div class="p-1 col-3 col-lg-2 bg-white border-bottom">
-									<div class="text-dark text-opacity-50 fw-semibold">Quantity</div>
-								</div>
-								<div class="p-1 col-3 col-lg-2 bg-white border-bottom">
-									<div class="text-dark text-opacity-50 fw-semibold">1-3</div>
-								</div>
-								<div class="p-1 col-3 col-lg-2 bg-white border-bottom">
-									<div class="text-dark text-opacity-50 fw-semibold">3-5</div>
-								</div>
-								<div class="p-1 col-3 col-lg-2 bg-white border-bottom">
-									<div class="text-dark text-opacity-50 fw-semibold">5+</div>
-								</div>
-							</div>
-							<div class="row text-center ps-2">
-								<div class="p-1 col-3 col-lg-2 bg-white text-warning fw-bold">
-									<div>@Model.Book.Price.GetValueOrDefault().ToString("c")</div>
-								</div>
-								<div class="p-1 col-3 col-lg-2 bg-white text-warning fw-bold">
-									<div>@Model.Book.Price.GetValueOrDefault().ToString("c")</div>
-								</div>
-								<div class="p-1 col-3 col-lg-2 bg-white text-warning fw-bold">
-									<div>@Model.Book.Price3.GetValueOrDefault().ToString("c")</div>
-								</div>
-								<div class="p-1 col-3 col-lg-2 bg-white text-warning fw-bold">
-									<div>@Model.Book.Price5.GetValueOrDefault().ToString("c")</div>
-								</div>
-							</div>
-						}
-						else if (Model.Book.TransactionType == TransactionType.Lend)
-						{
-							<div class="row ps-2">
-								<h6 class="text-dark text-opacity-50 pb-2">
-									Max Lend Duration: <span class="text-warning">@Model.Book.MaxLendDurationDays days</span>
-								</h6>
-							</div>
-							<div class="row ps-2">
-								<h6 class="text-dark text-opacity-50 pb-2">
-									Due Date: <span class="text-warning">@(Model.Book.DueDate?.ToString("yyyy-MM-dd") ?? "N/A")</span>
-								</h6>
-							</div>
-						}
-						<div class="row pl-2 my-3">
-							<p class="text-secondary lh-sm">@Html.Raw(@Model.Book.Description)</p>
-						</div>
-						@if (Model.Book.TransactionType == TransactionType.Sell)
-						{
-							<!--Count-->
-							<div class="row pl-2 mb-3">
-								<div class="col-md-4">
-									<div class="input-group mb-3">
-										<span class="input-group-text bg-primary rounded text-white border-0 fw-semibold"
-											  id="inputGroup-sizing-default">
-											Count
-										</span>
-										<input asp-for="Count" type="number" value="1" class="form-control text-end"
-											   aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" />
-									</div>
-								</div>
-							</div>
-							<!--Add To Cart-->
-							<div class="row">
-								<div class="col-12 col-md-6 pb-1">
-									<button type="submit"
-											class="btn btn-primary bg-gradient w-100 py-2 text-uppercase fw-semibold">
-										Add to Cart
-									</button>
-								</div>
-							</div>
-						}
-						else if (Model.Book.TransactionType == TransactionType.Lend)
-						{
-							<div class="row">
-								<div class="col-12 col-md-6 pb-1">
-									<button type="submit" disabled
-											class="btn btn-primary bg-gradient w-100 py-2 text-uppercase fw-semibold">
-										Borrow Book
-									</button>
-								</div>
-							</div>
-						}
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</form>
+@if (Model.Book.TransactionType == TransactionType.Sell)
+{
+    <!-- Purchase Form -->
+    <form method="post">
+        <input type="hidden" name="BookId" value="@Model.BookId" />
+
+        <div class="card shadow border-0 mt-4 mb-4 animate__animated animate__fadeIn">
+            <!-- Header -->
+            <div class="card-header bg-primary bg-gradient text-white py-4 text-center">
+                <div class="row align-items-center">
+                    <div class="col-auto">
+                        <a asp-action="Index" class="btn btn-outline-light rounded-pill">
+                            <i class="fas fa-chevron-left me-2"></i>Back to Books
+                        </a>
+                    </div>
+                    <div class="col text-center">
+                        <h3 class="text-white text-uppercase mb-0">@Model.Book.Title</h3>
+                        <p class="text-white-50 fw-semibold mb-0 mt-2">by @Model.Book.Author</p>
+                    </div>
+                    <div class="col-auto"></div>
+                </div>
+            </div>
+
+            <!-- Body -->
+            <div class="card-body">
+                <div class="row">
+                    <!-- Image Section -->
+                    <div class="col-12 col-lg-4 text-center mb-4">
+                        <div class="position-relative">
+                            <img src="@Model.Book.ImageUrl"
+                                 class="img-fluid rounded shadow-lg book-image"
+                                 alt="@Model.Book.Title cover"
+                                 style="max-height: 400px; transition: transform 0.3s ease;"
+                                 onmouseover="this.style.transform='scale(1.03)'"
+                                 onmouseout="this.style.transform='scale(1)'">
+                            <div class="position-absolute top-0 start-0 mt-2 ms-2">
+                                <span class="badge bg-info fs-6">
+                                    <i class="fas fa-book-open me-2"></i>@Model.Book.BookCategory.CategoryName
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Details Section -->
+                    <div class="col-12 col-lg-8">
+                        <!-- Transaction Type Badge -->
+                        <div class="mb-4">
+                            <div class="d-inline-block bg-success p-2 rounded-pill shadow-sm">
+                                <i class="fas fa-tag me-2"></i>
+                                <span class="fw-bold">Available for Purchase</span>
+                            </div>
+                        </div>
+
+                        <!-- Book Status Indicator -->
+                        <div class="alert @(Model.Book.BookStatus == BookStatus.Available ? "alert-success" : "alert-warning")
+                                    animate__animated animate__pulse" role="alert">
+                            <h5 class="mb-0">
+                                <i class="fas fa-info-circle me-2"></i>
+                                @(Model.Book.BookStatus == BookStatus.Available ?
+                                    "Available Now" : $"Borrowed until {Model.Book.DueDate?.ToString("MMM dd, yyyy")}")
+                            </h5>
+                        </div>
+
+                        <!-- Pricing Section -->
+                        <div class="bg-light p-4 rounded-3 mb-4">
+                            <div class="row ps-2">
+                                <h6 class="text-dark text-opacity-50 pb-2">
+                                    List Price:
+                                    <span class="text-decoration-line-through">
+                                        @(Model.Book.ListPrice?.ToString("c") ?? "N/A")
+                                    </span>
+                                </h6>
+                            </div>
+                            <div class="row text-center ps-2">
+                                <div class="p-1 col-3 col-lg-2 bg-white border-bottom">
+                                    <div class="text-dark text-opacity-50 fw-semibold">Quantity</div>
+                                </div>
+                                <div class="p-1 col-3 col-lg-2 bg-white border-bottom">
+                                    <div class="text-dark text-opacity-50 fw-semibold">1-3</div>
+                                </div>
+                                <div class="p-1 col-3 col-lg-2 bg-white border-bottom">
+                                    <div class="text-dark text-opacity-50 fw-semibold">3-5</div>
+                                </div>
+                                <div class="p-1 col-3 col-lg-2 bg-white border-bottom">
+                                    <div class="text-dark text-opacity-50 fw-semibold">5+</div>
+                                </div>
+                            </div>
+                            <div class="row text-center ps-2">
+                                <div class="p-1 col-3 col-lg-2 bg-white text-warning fw-bold">
+                                    <div>@Model.Book.Price.GetValueOrDefault().ToString("c")</div>
+                                </div>
+                                <div class="p-1 col-3 col-lg-2 bg-white text-warning fw-bold">
+                                    <div>@Model.Book.Price.GetValueOrDefault().ToString("c")</div>
+                                </div>
+                                <div class="p-1 col-3 col-lg-2 bg-white text-warning fw-bold">
+                                    <div>@Model.Book.Price3.GetValueOrDefault().ToString("c")</div>
+                                </div>
+                                <div class="p-1 col-3 col-lg-2 bg-white text-warning fw-bold">
+                                    <div>@Model.Book.Price5.GetValueOrDefault().ToString("c")</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Add to Cart Button -->
+                        <div class="d-grid gap-3">
+                            <div class="row mb-4">
+                                <div class="col-md-8">
+                                    <div class="d-flex gap-5 align-items-center">
+                                        <div class="input-group flex-nowrap" style="width: 200px;">
+                                            <span class="input-group-text bg-primary text-white border-0">Qty</span>
+                                            <input asp-for="Count" type="number" value="1"
+                                                   class="form-control text-end" min="1" max="100">
+                                        </div>
+                                        <button type="submit" class="btn btn-success btn-lg w-100 py-3 text-uppercase fw-bold
+                                                       animate__animated animate__pulse animate__infinite">
+                                            <i class="fas fa-cart-plus me-2"></i>Add to Cart
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Description Section -->
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-primary bg-gradient text-white border-bottom-0 pb-0">
+                                <h4 class="mb-3">Book Description</h4>
+                            </div>
+                            <div class="card-body px-0">
+                                <div class="lh-lg" style="font-size: 1.1rem; line-height: 1.8; padding-left: 20px;">
+                                    @Html.Raw(Model.Book.Description)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+}
+else if (Model.Book.TransactionType == TransactionType.Lend)
+{
+    <!-- Borrow Form -->
+    <form asp-area="Member" asp-controller="Borrow" asp-action="RequestBorrow" method="post">
+        <input type="hidden" name="bookId" value="@Model.Book.BookId" />
+
+        <div class="card shadow border-0 mt-4 mb-4 animate__animated animate__fadeIn">
+            <!-- Header -->
+            <div class="card-header bg-primary bg-gradient text-white py-4 text-center">
+                <div class="row align-items-center">
+                    <div class="col-auto">
+                        <a asp-action="Index" class="btn btn-outline-light rounded-pill">
+                            <i class="fas fa-chevron-left me-2"></i>Back to Books
+                        </a>
+                    </div>
+                    <div class="col text-center">
+                        <h3 class="text-white text-uppercase mb-0">@Model.Book.Title</h3>
+                        <p class="text-white-50 fw-semibold mb-0 mt-2">by @Model.Book.Author</p>
+                    </div>
+                    <div class="col-auto"></div>
+                </div>
+            </div>
+
+            <!-- Body -->
+            <div class="card-body">
+                <div class="row">
+                    <!-- Image Section -->
+                    <div class="col-12 col-lg-4 text-center mb-4">
+                        <div class="position-relative">
+                            <img src="@Model.Book.ImageUrl"
+                                 class="img-fluid rounded shadow-lg book-image"
+                                 alt="@Model.Book.Title cover"
+                                 style="max-height: 400px; transition: transform 0.3s ease;"
+                                 onmouseover="this.style.transform='scale(1.03)'"
+                                 onmouseout="this.style.transform='scale(1)'">
+                            <div class="position-absolute top-0 start-0 mt-2 ms-2">
+                                <span class="badge bg-info fs-6">
+                                    <i class="fas fa-book-open me-2"></i>@Model.Book.BookCategory.CategoryName
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Details Section -->
+                    <div class="col-12 col-lg-8">
+                        <!-- Transaction Type Badge -->
+                        <div class="mb-4">
+                            <div class="d-inline-block bg-warning p-2 rounded-pill shadow-sm">
+                                <i class="fas fa-hand-holding-usd me-2"></i>
+                                <span class="fw-bold">Available for Lending</span>
+                            </div>
+                        </div>
+
+                        <!-- Book Status Indicator -->
+                        <div class="alert @(Model.Book.BookStatus == BookStatus.Available ? "alert-success" : "alert-warning")
+                                    animate__animated animate__pulse" role="alert">
+                            <h5 class="mb-0">
+                                <i class="fas fa-info-circle me-2"></i>
+                                @(Model.Book.BookStatus == BookStatus.Available ?
+                                    "Available Now" : $"Borrowed until {Model.Book.DueDate?.ToString("MMM dd, yyyy")}")
+                            </h5>
+                        </div>
+
+                        <!-- Lending Details -->
+                        <div class="bg-light p-4 rounded-3 mb-4">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="d-flex align-items-center bg-white p-3 rounded shadow-sm">
+                                        <i class="fas fa-clock fa-2x text-primary me-3"></i>
+                                        <div>
+                                            <h6 class="mb-0">Max Lend Duration</h6>
+                                            <p class="mb-0 text-muted">@Model.Book.MaxLendDurationDays days</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @if (Model.Book.BookStatus == BookStatus.Borrowed)
+                                {
+                                    <div class="col-md-6">
+                                        <div class="d-flex align-items-center bg-white p-3 rounded shadow-sm">
+                                            <i class="fas fa-calendar-check fa-2x text-success me-3"></i>
+                                            <div>
+                                                <h6 class="mb-0">Due Date</h6>
+                                                <p class="mb-0 text-muted">
+                                                    @Model.Book.DueDate?.ToString("MMM dd, yyyy")
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+                        <!-- Borrow Request Button -->
+                        <div class="d-grid gap-3">
+                            <div class="mt-4">
+                                @if (Model.Book.BookStatus == BookStatus.Available)
+                                {
+                                    <button type="submit"
+                                            class="btn btn-success btn-lg w-100 py-3 text-uppercase fw-bold
+                                                       animate__animated animate__pulse animate__infinite">
+                                        <i class="fas fa-handshake me-2"></i>Request to Borrow
+                                    </button>
+                                }
+                                else
+                                {
+                                    <div class="alert alert-info">
+                                        <h5 class="mb-0">
+                                            <i class="fas fa-info-circle me-2"></i>
+                                            This book is currently borrowed and will be available after
+                                            @Model.Book.DueDate?.ToString("MMM dd, yyyy")
+                                        </h5>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Description Section -->
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-primary bg-gradient text-white border-bottom-0 pb-0">
+                                <h4 class="mb-3">Book Description</h4>
+                            </div>
+                            <div class="card-body px-0">
+                                <div class="lh-lg" style="font-size: 1.1rem; line-height: 1.8; padding-left: 20px;">
+                                    @Html.Raw(Model.Book.Description)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+}
+
+@section Styles {
+    <style>
+        .book-image {
+            border: 3px solid #fff;
+            box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
+        }
+
+        .animate__pulse {
+            animation-duration: 2s;
+        }
+
+        .card-header {
+            transition: all 0.3s ease;
+        }
+
+        .card:hover .card-header {
+            background: linear-gradient(45deg, var(--primary-color), #3CB371) !important;
+        }
+
+        .badge {
+            font-size: 0.9em;
+            padding: 0.6em 1em;
+            background-color: var(--primary-color) !important;
+        }
+
+        .description-card {
+            transition: all 0.3s ease;
+            border: 1px solid transparent !important;
+        }
+
+            .description-card:hover {
+                transform: translateY(-3px);
+                border-color: var(--primary-color) !important;
+                box-shadow: 0 4px 15px rgba(42, 47, 79, 0.15) !important;
+            }
+
+        .bg-white.text-warning {
+            color: var(--primary-color) !important;
+        }
+
+        .alert-warning {
+            background-color: rgba(233, 196, 106, 0.15);
+            border-color: #e9c46a;
+        }
+
+        .alert-success {
+            background-color: rgba(42, 157, 143, 0.15);
+            border-color: #2a9d8f;
+        }
+    </style>
+}
+
+@section Scripts {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+}
