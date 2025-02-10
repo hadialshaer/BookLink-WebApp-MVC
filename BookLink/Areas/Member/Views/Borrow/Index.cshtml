@@ -1,18 +1,21 @@
 ﻿@model IEnumerable<BorrowRequest>
-
 <div class="card shadow border-0 mt-4">
-    <div class="card-header bg-primary text-white py-3">
-        <h4 class="mb-0">Borrowing Requests</h4>
+    <div class="card-header bg-secondary bg-gradient text-light py-3">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h2>Borrowing Requests</h2>
+            </div>
+        </div>
     </div>
-    <div class="card-body">
-        <table class="table table-striped">
+    <div class="card-body p-4">
+        <table class="table table-bordered table-striped">
             <thead>
                 <tr>
                     <th>Book</th>
-                    <th>Requester</th>
-                    <th>Status</th>
+                    <th>Borrower</th>
+                    <th>Contact</th>
                     <th>Request Date</th>
-                    <th>Due Date</th>
+                    <th>Status</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -21,22 +24,34 @@
                 {
                     <tr>
                         <td>@request.Book.Title</td>
-                        <td>@request.Borrower.UserName</td>
-                        <td>@request.Status</td>
+                        <td>@($"{request.Borrower.FirstName} {request.Borrower.LastName}")</td>
+                        <td>@request.Borrower.PhoneNumber</td>
                         <td>@request.RequestDate.ToString("d")</td>
-                        <td>@(request.DueDate?.ToString("d") ?? "-")</td>
+                        <td>@request.Status</td>
                         <td>
-                            @if (User.Identity.Name == request.Lender.UserName && request.Status == BorrowRequestStatus.Pending)
+                            @if (User.IsInRole(SD.Role_Admin) || User.Identity.Name == request.Lender.UserName)
                             {
-                                <form asp-action="ApproveRequest" method="post">
-                                    <input type="hidden" name="id" value="@request.Id" />
-                                    <button type="submit" class="btn btn-success btn-sm">Approve</button>
-                                </form>
+                                @if (request.Status == BorrowRequestStatus.Pending)
+                                {
+                                    <form method="post" asp-action="ApproveRequest" class="d-inline">
+                                        <input type="hidden" name="requestId" value="@request.Id" />
+                                        <button type="submit" class="btn btn-success btn-sm">Approve</button>
+                                    </form>
+                                    <form method="post" asp-action="RejectRequest" class="d-inline">
+                                        <input type="hidden" name="requestId" value="@request.Id" />
+                                        <button type="submit" class="btn btn-danger btn-sm">Reject</button>
+                                    </form>
+                                }
+                                else if (request.Status == BorrowRequestStatus.Approved)
+                                {
+                                    <span class="text-muted">Due @request.DueDate?.ToString("d")</span>
+                                }
                             }
+
                             @if (request.Status == BorrowRequestStatus.Approved && User.Identity.Name == request.Borrower.UserName)
                             {
-                                <form asp-action="ReturnBook" method="post">
-                                    <input type="hidden" name="id" value="@request.Id" />
+                                <form method="post" asp-action="ReturnBook">
+                                    <input type="hidden" name="requestId" value="@request.Id" />
                                     <button type="submit" class="btn btn-info btn-sm">Mark Returned</button>
                                 </form>
                             }
