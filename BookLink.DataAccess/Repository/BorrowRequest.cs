@@ -32,7 +32,7 @@ namespace BookLink.DataAccess.Repository
 				if (status == BorrowRequestStatus.Approved)
 				{
 					request.ApprovalDate = DateTime.UtcNow;
-					request.DueDate = DateTime.UtcNow.AddDays((double)request.Book.MaxLendDurationDays);
+					request.DueDate = DateTime.UtcNow.AddDays(request.Book.MaxLendDurationDays ?? 14);
 				}
 				else if (status == BorrowRequestStatus.Returned)
 				{
