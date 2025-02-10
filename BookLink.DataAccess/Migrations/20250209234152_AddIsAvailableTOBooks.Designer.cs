@@ -4,6 +4,7 @@ using BookLink.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookLink.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250209234152_AddIsAvailableTOBooks")]
+    partial class AddIsAvailableTOBooks
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -89,7 +92,7 @@ namespace BookLink.DataAccess.Migrations
 
                     b.HasIndex("LenderId");
 
-                    b.ToTable("Books", (string)null);
+                    b.ToTable("Books");
 
                     b.HasData(
                         new
@@ -226,7 +229,7 @@ namespace BookLink.DataAccess.Migrations
 
                     b.HasIndex("LenderId");
 
-                    b.ToTable("BorrowRequests", (string)null);
+                    b.ToTable("BorrowRequests");
                 });
 
             modelBuilder.Entity("BookLink.Models.Category", b =>
@@ -243,7 +246,7 @@ namespace BookLink.DataAccess.Migrations
 
                     b.HasKey("CategoryId");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
 
                     b.HasData(
                         new
@@ -318,7 +321,7 @@ namespace BookLink.DataAccess.Migrations
 
                     b.HasIndex("OrderHeaderId");
 
-                    b.ToTable("orderDetails", (string)null);
+                    b.ToTable("orderDetails");
                 });
 
             modelBuilder.Entity("BookLink.Models.OrderHeader", b =>
@@ -384,7 +387,7 @@ namespace BookLink.DataAccess.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("orderHeaders", (string)null);
+                    b.ToTable("orderHeaders");
                 });
 
             modelBuilder.Entity("BookLink.Models.ShoppingCart", b =>
@@ -411,7 +414,7 @@ namespace BookLink.DataAccess.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("shoppingCarts", (string)null);
+                    b.ToTable("shoppingCarts");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

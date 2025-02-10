@@ -69,13 +69,15 @@ public class Book
 	[ValidateNever]
 	public User? Borrower { get; set; }
 
-	public BookStatus? BookStatus { get; set; } = Models.BookStatus.Available;
+	public BookStatus BookStatus { get; set; } = Models.BookStatus.Available;
 
 	public string? LenderId { get; set; }
 
 	[ForeignKey("LenderId")]
 	[ValidateNever]
 	public User? Lender { get; set; }
+
+	public bool IsAvailable => BookStatus == BookStatus.Available;
 
 }
 public enum TransactionType
