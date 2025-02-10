@@ -96,11 +96,11 @@ namespace BookLink.Areas.Member.Controllers
 		}
 
 		[HttpPost]
-		public IActionResult ApproveRequest(int id)
+		public IActionResult ApproveRequest(int requestId)
 		{
 			try
 			{
-				var request = _unitOfWork.BorrowRequest.Get(r => r.Id == id);
+				var request = _unitOfWork.BorrowRequest.Get(r => r.Id == requestId);
 				if (request == null)
 				{
 					TempData["error"] = "Request not found";
@@ -117,12 +117,10 @@ namespace BookLink.Areas.Member.Controllers
 				// Update book status
 				book.BookStatus = BookStatus.Borrowed;
 				book.BorrowerId = request.BorrowerId;
-				book.DueDate = DateTime.Now.AddDays(14); // 2 weeks borrowing period
+				book.DueDate = request.DueDate; // 2 weeks borrowing period
 
 				// Update request
-				request.Status = BorrowRequestStatus.Approved;
-				request.ApprovalDate = DateTime.Now;
-				_unitOfWork.BorrowRequest.Update(request);
+				_unitOfWork.BorrowRequest.UpdateStatus(requestId, BorrowRequestStatus.Approved);
 				_unitOfWork.Save();
 
 				TempData["success"] = "Request approved successfully";
@@ -136,19 +134,19 @@ namespace BookLink.Areas.Member.Controllers
 		}
 
 		[HttpPost]
-		public IActionResult RejectRequest(int id)
+		public IActionResult RejectRequest(int requestId)
 		{
 			try
 			{
-				var request = _unitOfWork.BorrowRequest.Get(r => r.Id == id);
+				var request = _unitOfWork.BorrowRequest.Get(r => r.Id == requestId);
 				if (request == null)
 				{
 					TempData["error"] = "Request not found";
 					return RedirectToAction(nameof(Index));
 				}
 
-				request.Status = BorrowRequestStatus.Rejected;
-				_unitOfWork.BorrowRequest.Update(request);
+
+				_unitOfWork.BorrowRequest.UpdateStatus(requestId, BorrowRequestStatus.Rejected);
 				_unitOfWork.Save();
 
 				TempData["success"] = "Request rejected successfully";
@@ -162,11 +160,11 @@ namespace BookLink.Areas.Member.Controllers
 		}
 
 		[HttpPost]
-		public IActionResult ReturnBook(int id)
+		public IActionResult ReturnBook(int requestId)
 		{
 			try
 			{
-				var request = _unitOfWork.BorrowRequest.Get(r => r.Id == id);
+				var request = _unitOfWork.BorrowRequest.Get(r => r.Id == requestId);
 				if (request == null)
 				{
 					TempData["error"] = "Request not found";
@@ -186,9 +184,7 @@ namespace BookLink.Areas.Member.Controllers
 				book.DueDate = null;
 
 				// Update request
-				request.Status = BorrowRequestStatus.Returned;
-				request.ReturnDate = DateTime.Now;
-				_unitOfWork.BorrowRequest.Update(request);
+				_unitOfWork.BorrowRequest.UpdateStatus(requestId, BorrowRequestStatus.Returned);
 				_unitOfWork.Save();
 
 				TempData["success"] = "Book marked as returned";
