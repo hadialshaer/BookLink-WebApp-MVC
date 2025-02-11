@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
@@ -33,7 +34,24 @@ namespace BookLink.Models
 		[ForeignKey("BorrowerId")]
 		[ValidateNever]
 		public User Borrower { get; set; }
-	
+
+		// Borrowing properties
+		public int LocationId { get; set; }
+
+		[Required(ErrorMessage = "Please enter Borrower Phone Number")]
+		[Phone(ErrorMessage = "Please enter a Valid Phone Number")]
+		public string Phone { get; set; }
+
+		[EmailAddress(ErrorMessage = "Please enter a Email Address")]
+		public string BorrowerEmail { get; set; }
+
+		[Required(ErrorMessage = "Please enter your Name")]
+		public string BorroweName { get; set; } 
+
+		[ForeignKey("LocationId")]
+		[ValidateNever]
+		public Location Location { get; set; }  
+
 	}
 
 	public enum BorrowRequestStatus

@@ -4,6 +4,7 @@ using BookLink.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookLink.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250211174948_AddLocationsTableAndAddedPopulatedToDb")]
+    partial class AddLocationsTableAndAddedPopulatedToDb
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -198,14 +201,6 @@ namespace BookLink.DataAccess.Migrations
                     b.Property<int>("BookId")
                         .HasColumnType("int");
 
-                    b.Property<string>("BorroweName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("BorrowerEmail")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("BorrowerId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -216,13 +211,6 @@ namespace BookLink.DataAccess.Migrations
                     b.Property<string>("LenderId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("LocationId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("RequestDate")
                         .HasColumnType("datetime2");
@@ -240,8 +228,6 @@ namespace BookLink.DataAccess.Migrations
                     b.HasIndex("BorrowerId");
 
                     b.HasIndex("LenderId");
-
-                    b.HasIndex("LocationId");
 
                     b.ToTable("BorrowRequests");
                 });
@@ -796,19 +782,11 @@ namespace BookLink.DataAccess.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("BookLink.Models.Location", "Location")
-                        .WithMany()
-                        .HasForeignKey("LocationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Book");
 
                     b.Navigation("Borrower");
 
                     b.Navigation("Lender");
-
-                    b.Navigation("Location");
                 });
 
             modelBuilder.Entity("BookLink.Models.OrderDetail", b =>
