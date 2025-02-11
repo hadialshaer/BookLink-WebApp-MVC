@@ -21,6 +21,7 @@ namespace BookLink.DataAccess.Repository.IRepository
 		IOrderHeaderRepository OrderHeader { get; }
 
 		IBorrowRequestRepository BorrowRequest { get; }
+		ILocationRepository Location { get; }
 
 		void Save();
 	}

@@ -20,6 +20,7 @@ namespace BookLink.DataAccess.Repository
 		public IOrderDetailRepository OrderDetail { get; private set; }
 		public IOrderHeaderRepository OrderHeader { get; private set; }
 		public IBorrowRequestRepository BorrowRequest { get; private set; }
+		public ILocationRepository Location { get; private set; }
 
 		public UnitOfWork(ApplicationDbContext context)
 		{
@@ -31,6 +32,7 @@ namespace BookLink.DataAccess.Repository
 			OrderDetail = new OrderDetailRepository(_context);
 			OrderHeader = new OrderHeaderRepository(_context);
 			BorrowRequest = new BorrowRequestRepository(_context);
+			Location = new LocationRepository(_context);
 		}
 		
 		public void Save()
