@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,8 +10,7 @@ namespace BookLink.Models.ViewModels
 	public class BorrowRequestVM
 	{
 		public BorrowRequest BorrowRequest { get; set; }
-		public Book Book { get; set; }
-		public User Lender { get; set; }
-		public User Borrower { get; set; }
+
+		public IEnumerable<SelectListItem> Loactions { get; set; }
 	}
 }
