@@ -121,6 +121,18 @@ namespace BookLink.Areas.Member.Controllers
 
 				// Update request
 				_unitOfWork.BorrowRequest.UpdateStatus(requestId, BorrowRequestStatus.Approved);
+
+				// Find and reject all other pending requests for the same book
+				var otherPendingRequests = _unitOfWork.BorrowRequest.GetAll(r =>
+					r.BookId == request.BookId &&
+					r.Status == BorrowRequestStatus.Pending &&
+					r.Id != requestId);
+
+				foreach (var pendingRequest in otherPendingRequests)
+				{
+					_unitOfWork.BorrowRequest.UpdateStatus(pendingRequest.Id, BorrowRequestStatus.Rejected);
+				}
+
 				_unitOfWork.Save();
 
 				TempData["success"] = "Request approved successfully";
