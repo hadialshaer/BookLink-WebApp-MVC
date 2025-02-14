@@ -5,7 +5,6 @@ using BookLink.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 
 namespace BookLink.Areas.Member.Controllers
@@ -98,13 +97,6 @@ namespace BookLink.Areas.Member.Controllers
 			}
 			else
 			{
-				// Lending-specific validation
-				if (bookVM.Book.MaxLendDurationDays == null)
-				{
-					ModelState.AddModelError("Book.MaxLendDurationDays",
-						"Max duration is required for lending");
-				}
-
 				if (bookVM.Book.BookStatus == BookStatus.Borrowed &&
 					!bookVM.Book.DueDate.HasValue)
 				{
@@ -186,7 +178,7 @@ namespace BookLink.Areas.Member.Controllers
 					b.Author,
 					b.ListPrice,
 					TransactionType = b.TransactionType.ToString(),
-					MaxLendDurationDays = b.TransactionType == TransactionType.Lend ? b.MaxLendDurationDays : null,
+					MaxLendDurationDays = b.TransactionType == TransactionType.Lend ? (int?)b.MaxLendDurationDays : null,
 					DueDate = b.TransactionType == TransactionType.Lend && b.DueDate.HasValue
 						? b.DueDate.Value.ToString("yyyy-MM-dd") : null,
 					Category = new { b.BookCategory.CategoryName }

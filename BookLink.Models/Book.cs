@@ -58,10 +58,10 @@ public class Book
 	public TransactionType TransactionType { get; set; }
 
 	// Lending and Borrowing properties
+	[Required]
 	[Display(Name = "Max Lend Duration (Days)")]
-	[Range(1, 365, ErrorMessage = "Duration must be between 1 and 365 days")]
-	public int? MaxLendDurationDays { get; set; }
-
+	[Range(1, 60, ErrorMessage = "Duration must be between 1 and 60 days")]
+	public int MaxLendDurationDays { get; set; } = 14;
 	public DateTime? DueDate { get; set; }
 	public string? BorrowerId { get; set; }
 
@@ -70,6 +70,7 @@ public class Book
 	public User? Borrower { get; set; }
 
 	public BookStatus BookStatus { get; set; } = Models.BookStatus.Available;
+
 
 	public string? LenderId { get; set; }
 

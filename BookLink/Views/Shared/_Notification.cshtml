@@ -1,6 +1,8 @@
 ﻿@if (TempData["success"] != null)
 {
+	<!-- Include jQuery -->
 	<script src="~/lib/jquery/dist/jquery.min.js"></script>
+	<!-- Include Toastr JS -->
 	<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 	<script type="text/javascript">
 		toastr.success('@TempData["success"]');
@@ -10,7 +12,9 @@
 @if (TempData["error"] != null)
 
 {
+	<!-- Include jQuery -->
 	<script src="~/lib/jquery/dist/jquery.min.js"></script>
+	<!-- Include Toastr JS -->
 	<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 	<script type="text/javascript">
 		toastr.error('@TempData["error"]');

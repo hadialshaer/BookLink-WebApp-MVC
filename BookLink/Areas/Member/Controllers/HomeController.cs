@@ -2,6 +2,7 @@ using BookLink.DataAccess.Repository;
 using BookLink.DataAccess.Repository.IRepository;
 using BookLink.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Security.Claims;
@@ -14,12 +15,14 @@ namespace BookLink.Areas.Member.Controllers
 		private readonly ILogger<HomeController> _logger;
 
 		private readonly IUnitOfWork _unitOfWork;
+		private readonly UserManager<User> _userManager;
 
 
-		public HomeController(ILogger<HomeController> logger, IUnitOfWork unitOfWork)
+		public HomeController(ILogger<HomeController> logger, IUnitOfWork unitOfWork, UserManager<User> userManager)
 		{
 			_logger = logger;
 			_unitOfWork = unitOfWork;
+			_userManager = userManager;
 		}
 
 		public IActionResult Index()
@@ -33,11 +36,14 @@ namespace BookLink.Areas.Member.Controllers
 		// GET - Details
 		public IActionResult Details(int bookId)
 		{
+			var book = _unitOfWork.Book.Get(b => b.BookId == bookId, includeProperties: "BookCategory");
+
+
 			ShoppingCart cart = new()
 			{
-				Book = _unitOfWork.Book.Get(u => u.BookId == bookId, includeProperties: "BookCategory"),
+				Book = book,
 				Count = 1,
-				BookId = bookId
+				BookId = bookId,
 			};
 
 			return View(cart);

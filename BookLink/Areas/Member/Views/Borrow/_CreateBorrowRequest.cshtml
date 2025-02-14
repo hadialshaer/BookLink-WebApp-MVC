@@ -1,0 +1,65 @@
+﻿@using System.Security.Claims
+@model BorrowRequestVM
+
+<div class="modal-header bg-secondary bg-gradient text-white">
+	<h3 class="modal-title">Request to Borrow - @Model.BorrowRequest.Book.Title</h3>
+	<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+</div>
+
+@if (Model?.BorrowRequest?.Book == null)
+{
+	<div class="alert alert-danger">
+		Book information could not be loaded
+	</div>
+}
+else
+{
+	<form id="borrowForm" asp-area="Member" asp-controller="Borrow" asp-action="SubmitBorrowRequest" method="post">
+		@Html.AntiForgeryToken()
+		<!--Hidden fields to store the BorrowRequest properties-->
+		<input type="hidden" asp-for="BorrowRequest.BookId" />
+		<input type="hidden" asp-for="BorrowRequest.BorrowerId"
+			   value="@User.FindFirst(ClaimTypes.NameIdentifier).Value" />
+		<input type="hidden" asp-for="BorrowRequest.LenderId" value="@Model.BorrowRequest.LenderId" />
+
+		<div class="modal-body">
+			<div asp-validation-summary="All" class="text-danger"></div>
+			<div class="mb-3">
+				<div class="alert alert-info">
+					<i class="fas fa-info-circle me-2"></i>
+					Maximum lending period: @Model.BorrowRequest.Book.MaxLendDurationDays days
+				</div>
+			</div>
+			<div class="mb-3">
+				<label asp-for="BorrowRequest.BorrowerName" class="form-label">Full Name</label>
+				<input type="text" asp-for="BorrowRequest.BorrowerName" class="form-control" placeholder="Enter your full name" required />
+				<span asp-validation-for="BorrowRequest.BorrowerName" class="text-danger"></span>
+			</div>
+
+			<div class="mb-3">
+				<label asp-for="BorrowRequest.BorrowerEmail" class="form-label">Email</label>
+				<input type="email" asp-for="BorrowRequest.BorrowerEmail" class="form-control" placeholder="Enter your email" required />
+				<span asp-validation-for="BorrowRequest.BorrowerEmail" class="text-danger"></span>
+			</div>
+
+			<div class="mb-3">
+				<label asp-for="BorrowRequest.Phone" class="form-label">Phone Number</label>
+				<input type="tel" asp-for="BorrowRequest.Phone" class="form-control" placeholder="Enter your phone number" required />
+				<span asp-validation-for="BorrowRequest.Phone" class="text-danger"></span>
+			</div>
+
+			<div class="mb-3">
+				<label asp-for="BorrowRequest.LocationId" class="form-label">Pickup Location</label>
+				<select asp-for="BorrowRequest.LocationId" asp-items="@Model.LocationList" class="form-select">
+					<option value="">-- Select Location --</option>
+				</select>
+				<span asp-validation-for="BorrowRequest.LocationId" class="text-danger"></span>
+			</div>
+		</div>
+
+		<div class="modal-footer">
+			<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+			<button type="submit" class="btn btn-primary">Request Borrow</button>
+		</div>
+	</form>
+}

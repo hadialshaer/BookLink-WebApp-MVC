@@ -19,10 +19,10 @@ namespace BookLink.DataAccess.Repository
 		{
 			_context = context;
 			dbSet = _context.Set<T>();
-			_context.Books.Include(u => u.BookCategory)
-				.Include(u => u.CategoryId)
-				.Include(b => b.Borrower)
-				.Include(b => b.BorrowerId);
+			_context.Books
+			.Include(u => u.BookCategory)
+			.Include(b => b.Borrower)
+			.Include(b => b.Lender);
 		}
 		public void Add(T entity)
 		{

@@ -84,7 +84,7 @@ namespace BookLink.Areas.Admin.Controllers
 			var orderHeaderFromDb = _unitOfWork.OrderHeader.Get(u => u.Id == OrderVM.OrderHeader.Id);
 
 			orderHeaderFromDb.Carrier = OrderVM.OrderHeader.Carrier;
-			orderHeaderFromDb.ShippingDate = DateTime.Now;
+			orderHeaderFromDb.ShippingDate = DateTime.UtcNow;
 			orderHeaderFromDb.OrderStatus = SD.StatusShipped;
 
 

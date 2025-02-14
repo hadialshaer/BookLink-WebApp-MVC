@@ -4,6 +4,7 @@ using BookLink.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookLink.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250212001817_UpdateColumnName")]
+    partial class UpdateColumnName
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -319,6 +322,10 @@ namespace BookLink.DataAccess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -331,46 +338,55 @@ namespace BookLink.DataAccess.Migrations
                         new
                         {
                             Id = 1,
+                            Address = "",
                             Name = "Beirut"
                         },
                         new
                         {
                             Id = 2,
+                            Address = "",
                             Name = "South"
                         },
                         new
                         {
                             Id = 3,
+                            Address = "",
                             Name = "North"
                         },
                         new
                         {
                             Id = 4,
+                            Address = "",
                             Name = "Sidon"
                         },
                         new
                         {
                             Id = 5,
+                            Address = "",
                             Name = "Tyre"
                         },
                         new
                         {
                             Id = 6,
+                            Address = "",
                             Name = "Tripoli"
                         },
                         new
                         {
                             Id = 7,
+                            Address = "",
                             Name = "Zahle"
                         },
                         new
                         {
                             Id = 8,
+                            Address = "",
                             Name = "Baalbek"
                         },
                         new
                         {
                             Id = 9,
+                            Address = "",
                             Name = "Nabatiye"
                         });
                 });

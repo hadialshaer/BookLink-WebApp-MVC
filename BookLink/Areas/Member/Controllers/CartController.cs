@@ -157,7 +157,7 @@ namespace BookLink.Areas.Member.Controllers
 				return RedirectToAction("Index"); // Redirect back to the cart page
 			}
 
-			ShoppingCartVM.OrderHeader.OrderDate = System.DateTime.Now;
+			ShoppingCartVM.OrderHeader.OrderDate = System.DateTime.UtcNow;
 			ShoppingCartVM.OrderHeader.UserId = userId;
 
 			User user = _unitOfWork.User.Get(u => u.Id == userId);

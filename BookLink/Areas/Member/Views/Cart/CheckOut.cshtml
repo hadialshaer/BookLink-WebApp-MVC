@@ -121,8 +121,8 @@
 											<p class="mb-0" style="color: #613659;">
 												Estimated Delivery<br>
 												<strong>
-													@DateTime.Now.AddDays(7).ToShortDateString()
-													- @DateTime.Now.AddDays(14).ToShortDateString()
+													@DateTime.UtcNow.AddDays(7).ToShortDateString()
+													- @DateTime.UtcNow.AddDays(14).ToShortDateString()
 												</strong>
 											</p>
 										</div>

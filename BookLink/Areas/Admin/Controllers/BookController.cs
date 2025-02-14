@@ -92,12 +92,6 @@ namespace BookLink.Areas.Admin.Controllers
 			else
 			{
 				// Lending-specific validation
-				if (bookVM.Book.MaxLendDurationDays == null)
-				{
-					ModelState.AddModelError("Book.MaxLendDurationDays",
-						"Max duration is required for lending");
-				}
-
 				if (bookVM.Book.BookStatus == BookStatus.Borrowed &&
 					!bookVM.Book.DueDate.HasValue)
 				{
@@ -171,16 +165,18 @@ namespace BookLink.Areas.Admin.Controllers
 		public IActionResult GetAll()
 		{
 			var books = _unitOfWork.Book.GetAll(includeProperties: "BookCategory")
-				.Select(b => new {
+				.Select(b => new
+				{
 					b.BookId,
 					b.Title,
 					b.Author,
 					b.ListPrice,
 					TransactionType = b.TransactionType.ToString(),
-					MaxLendDurationDays = b.TransactionType == TransactionType.Lend ? b.MaxLendDurationDays : null,
+					MaxLendDurationDays = b.TransactionType == TransactionType.Lend ? (int?)b.MaxLendDurationDays : null,
 					DueDate = b.TransactionType == TransactionType.Lend && b.DueDate.HasValue
 						? b.DueDate.Value.ToString("yyyy-MM-dd") : null,
-					Category = new { b.BookCategory.CategoryName }
+					Category = new { b.BookCategory.CategoryName },
+					BookStatus = b.BookStatus.ToString()
 				}).ToList();
 
 			return Json(new { data = books });
@@ -190,7 +186,7 @@ namespace BookLink.Areas.Admin.Controllers
 		[HttpDelete]
 		public IActionResult Delete(int? id)
 		{
-			Book bookToDelete = _unitOfWork.Book.Get(u => u.BookId == id);
+			var bookToDelete = _unitOfWork.Book.Get(u => u.BookId == id);
 
 			if (bookToDelete == null)
 			{
@@ -204,6 +200,13 @@ namespace BookLink.Areas.Admin.Controllers
 			if (System.IO.File.Exists(oldImagePath))
 			{
 				System.IO.File.Delete(oldImagePath);
+			}
+
+			// Delete related borrow requests first
+			var borrowRequests = _unitOfWork.BorrowRequest.GetAll(b => b.BookId == id);
+			foreach (var request in borrowRequests)
+			{
+				_unitOfWork.BorrowRequest.Remove(request);
 			}
 
 			_unitOfWork.Book.Remove(bookToDelete);

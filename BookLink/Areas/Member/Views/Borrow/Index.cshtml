@@ -14,8 +14,10 @@
                     <th>Book</th>
                     <th>Borrower</th>
                     <th>Contact</th>
+                    <th>Location</th>
                     <th>Request Date</th>
                     <th>Status</th>
+                    <th>Due Date</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -23,13 +25,15 @@
                 @foreach (var request in Model)
                 {
                     <tr>
-                        <td>@request.Book.Title</td>
-                        <td>@($"{request.Borrower.FirstName} {request.Borrower.LastName}")</td>
-                        <td>@request.Borrower.PhoneNumber</td>
+                        <td>@request.Book?.Title</td>
+                        <td>@request.BorrowerName</td>
+                        <td>@request.Phone</td>
+						<td>@request.Location.Name</td>
                         <td>@request.RequestDate.ToString("d")</td>
                         <td>@request.Status</td>
+                        <td>@(request.DueDate?.ToString("d") ?? "-")</td>
                         <td>
-                            @if (User.IsInRole(SD.Role_Admin) || User.Identity.Name == request.Lender.UserName)
+                            @if (User.IsInRole(SD.Role_Admin) || request.Lender != null && User.Identity.Name == request.Lender.UserName)
                             {
                                 @if (request.Status == BorrowRequestStatus.Pending)
                                 {
@@ -39,7 +43,11 @@
                                     </form>
                                     <form method="post" asp-action="RejectRequest" class="d-inline">
                                         <input type="hidden" name="requestId" value="@request.Id" />
-                                        <button type="submit" class="btn btn-danger btn-sm">Reject</button>
+                                        <button type="submit" class="btn btn-danger btn-sm"
+                                                onclick="return confirm('Are you sure you want to reject this request?')">
+                                            Reject
+                                        </button>
+
                                     </form>
                                 }
                                 else if (request.Status == BorrowRequestStatus.Approved)
@@ -62,3 +70,7 @@
         </table>
     </div>
 </div>
+@section Scripts
+{
+	<partial name="_ValidationScriptsPartial" />
+}

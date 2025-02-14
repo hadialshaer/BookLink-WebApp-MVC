@@ -36,6 +36,8 @@ namespace BookLink.Models
 		public User Borrower { get; set; }
 
 		// Borrowing properties
+
+		[Required(ErrorMessage = "Please select a location")]
 		public int LocationId { get; set; }
 
 		[Required(ErrorMessage = "Please enter Borrower Phone Number")]
@@ -46,7 +48,7 @@ namespace BookLink.Models
 		public string BorrowerEmail { get; set; }
 
 		[Required(ErrorMessage = "Please enter your Name")]
-		public string BorroweName { get; set; } 
+		public string BorrowerName { get; set; } 
 
 		[ForeignKey("LocationId")]
 		[ValidateNever]

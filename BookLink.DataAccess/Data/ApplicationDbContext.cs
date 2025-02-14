@@ -129,15 +129,15 @@ public class ApplicationDbContext : IdentityDbContext<IdentityUser>
 			);
 
 		modelBuilder.Entity<Location>().HasData(
-			new Location { Id = 1, Name = "Beirut", Address = "" },
-			new Location { Id = 2, Name = "South", Address = "" },
-			new Location { Id = 3, Name = "North", Address = "" },
-			new Location { Id = 4, Name = "Sidon", Address = "" },
-			new Location { Id = 5, Name = "Tyre", Address = "" },
-			new Location { Id = 6, Name = "Tripoli", Address = "" },
-			new Location { Id = 7, Name = "Zahle", Address = "" },
-			new Location { Id = 8, Name = "Baalbek", Address = "" },
-			new Location { Id = 9, Name = "Nabatiye", Address = "" }
+			new Location { Id = 1, Name = "Beirut" },
+			new Location { Id = 2, Name = "South" },
+			new Location { Id = 3, Name = "North" },
+			new Location { Id = 4, Name = "Sidon", },
+			new Location { Id = 5, Name = "Tyre" },
+			new Location { Id = 6, Name = "Tripoli" },
+			new Location { Id = 7, Name = "Zahle" },
+			new Location { Id = 8, Name = "Baalbek" },
+			new Location { Id = 9, Name = "Nabatiye" }
 
 			);
 
