@@ -33,11 +33,19 @@ namespace BookLink.DataAccess.Repository
 				bookFromDb.Price5 = book.Price5;			
 				bookFromDb.CategoryId = book.CategoryId;
 
+				// Update image only if provided
 				if (book.ImageUrl != null)
 				{
 					bookFromDb.ImageUrl = book.ImageUrl;
 				}
 
+				// Additional properties related to lending/borrowing
+				bookFromDb.TransactionType = book.TransactionType;
+				bookFromDb.MaxLendDurationDays = book.MaxLendDurationDays;
+				bookFromDb.DueDate = book.DueDate;
+				bookFromDb.BorrowerId = book.BorrowerId;
+				bookFromDb.LenderId = book.LenderId;
+				bookFromDb.BookStatus = book.BookStatus;
 			}
 		}
 	}
