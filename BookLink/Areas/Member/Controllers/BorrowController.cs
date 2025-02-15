@@ -64,9 +64,6 @@ namespace BookLink.Areas.Member.Controllers
 					includeProperties: "BookCategory,Lender"
 				);
 
-				if (book == null || book.BookStatus != BookStatus.Available)
-					return Json(new { success = false, error = "Book not found or not available" });
-
 				// Ensure critical navigation properties exist.
 				if (book.Lender == null || book.BookCategory == null)
 					return Json(new { success = false, error = "Critical data missing" });
@@ -112,8 +109,7 @@ namespace BookLink.Areas.Member.Controllers
 			}
 			catch (Exception ex)
 			{
-				TempData["error"] = $"Error: {ex.Message}";
-				return RedirectToAction("Details", "Home");
+				return Json(new { success = false, error = $"Error: {ex.Message}" });
 			}
 		}
 
@@ -158,9 +154,6 @@ namespace BookLink.Areas.Member.Controllers
 					return RedirectToAction("Details", "Home");
 				}
 
-				if (book == null || book.BookStatus != BookStatus.Available)
-					return NotFound();
-
 				// Assign the current user's ID as the BorrowerId.
 				borrowRequestVM.BorrowRequest.BorrowerId = userId;
 				// Populate other required fields.
@@ -200,8 +193,7 @@ namespace BookLink.Areas.Member.Controllers
 
 				if (borrowRequest == null)
 				{
-					TempData["error"] = "Request not found";
-					return RedirectToAction(nameof(Index));
+					return Json(new { success = false, error = "Request not found" });
 				}
 
 				var book = _unitOfWork.Book.Get(b => b.BookId == borrowRequest.BookId);
@@ -211,15 +203,13 @@ namespace BookLink.Areas.Member.Controllers
 				// Allow approval only if the book is currently pending.
 				if (book.BookStatus != BookStatus.Pending)
 				{
-					TempData["error"] = "Book is not in a state that can be approved.";
-					return RedirectToAction(nameof(Index));
+					return Json(new { success = false, error = "Book is no longer pending" });
 				}
 
 				// Only the lender is allowed to approve the request.
 				if (borrowRequest.LenderId != userId)
 				{
-					TempData["error"] = "Unauthorized action";
-					return RedirectToAction(nameof(Index));
+					return Json(new { success = false, error = "Unauthorized action" });
 				}
 
 				// Update the book's status to Borrowed.
@@ -244,13 +234,11 @@ namespace BookLink.Areas.Member.Controllers
 
 				_unitOfWork.Save();
 
-				TempData["success"] = "Request approved successfully";
-				return RedirectToAction(nameof(Index));
+				return Json(new { success = true, message = "Request approved successfully" });
 			}
 			catch (Exception ex)
 			{
-				TempData["error"] = $"Error approving request: {ex}";
-				return RedirectToAction(nameof(Index));
+				return Json(new { success = false, error = $"Error approving request: {ex}" });
 			}
 		}
 
@@ -267,8 +255,7 @@ namespace BookLink.Areas.Member.Controllers
 
 				if (borrowRequest == null)
 				{
-					TempData["error"] = "Request not found";
-					return RedirectToAction(nameof(Index));
+					return Json(new { success = false, error = "Request not found" });
 				}
 
 				var book = _unitOfWork.Book.Get(b => b.BookId == borrowRequest.BookId);
@@ -276,29 +263,25 @@ namespace BookLink.Areas.Member.Controllers
 					return Json(new { success = false, error = "Book not found" });
 
 				// Check if the book is available (should be available for rejection).
-				if (book.BookStatus != BookStatus.Available)
+				if (book.BookStatus != BookStatus.Available && book.BookStatus != BookStatus.Pending)
 				{
-					TempData["error"] = "Book is no longer available";
-					return RedirectToAction(nameof(Index));
+					return Json(new { success = false, error = "Book is not available for rejection" });
 				}
 
 				// Only the lender can reject a request.
 				if (borrowRequest.LenderId != userId)
 				{
-					TempData["error"] = "Unauthorized action";
-					return RedirectToAction(nameof(Index));
+					return Json(new { success = false, error = "Unauthorized action" });
 				}
 
 				_unitOfWork.BorrowRequest.UpdateStatus(requestId, BorrowRequestStatus.Rejected);
 				_unitOfWork.Save();
 
-				TempData["success"] = "Request rejected successfully";
-				return RedirectToAction(nameof(Index));
+				return Json(new { success = true, message = "Request rejected successfully" });
 			}
 			catch (Exception ex)
 			{
-				TempData["error"] = $"Error rejecting request: {ex}";
-				return RedirectToAction(nameof(Index));
+				return Json(new { success = false, error = $"Error rejecting request: {ex}" });
 			}
 		}
 
@@ -315,28 +298,24 @@ namespace BookLink.Areas.Member.Controllers
 
 				if (borrowRequest == null)
 				{
-					TempData["error"] = "Request not found";
-					return RedirectToAction(nameof(Index));
+					return Json(new { success = false, error = "Request not found" });
 				}
 
 				var book = _unitOfWork.Book.Get(b => b.BookId == borrowRequest.BookId);
 				if (book == null)
 				{
-					TempData["error"] = "Book not found";
-					return RedirectToAction(nameof(Index));
+					return Json(new { success = false, error = "Book not found" });
 				}
 
 				if (book.BookStatus == BookStatus.Available)
 				{
-					TempData["error"] = "This book is already available (returned).";
-					return RedirectToAction(nameof(Index));
+					return Json(new { success = false, error = "Book is already available" });
 				}
 
 				// Only the borrower or lender can mark the book as returned.
 				if (borrowRequest.BorrowerId != userId && borrowRequest.LenderId != userId)
 				{
-					TempData["error"] = "Unauthorized return attempt";
-					return RedirectToAction(nameof(Index));
+					return Json(new { success = false, error = "Unauthorized action" });
 				}
 
 				// Update the book status to Available.
@@ -349,14 +328,53 @@ namespace BookLink.Areas.Member.Controllers
 				_unitOfWork.BorrowRequest.UpdateStatus(requestId, BorrowRequestStatus.Returned);
 				_unitOfWork.Save();
 
-				TempData["success"] = "Book marked as returned";
-				return RedirectToAction(nameof(Index));
+				return Json(new { success = true, message = "Book returned successfully" });
 			}
 			catch (Exception ex)
 			{
-				TempData["error"] = $"Error processing return: {ex}";
-				return RedirectToAction(nameof(Index));
+				return Json(new { success = false, error = $"Error returning book: {ex}" });
 			}
 		}
+
+		#region API CALLS
+		/// <summary>
+		/// Get: Returns all borrow requests for current user in JSON format
+		/// </summary>
+		[HttpGet]
+		public IActionResult GetAll()
+		{
+			try
+			{
+				var userId = _userManager.GetUserId(User);
+				if (string.IsNullOrEmpty(userId))
+				{
+					return Json(new { success = false, error = "User not authenticated." });
+				}
+
+				var requests = _unitOfWork.BorrowRequest.GetAll(
+					r => r.BorrowerId == userId || r.LenderId == userId,
+					includeProperties: "Book,Lender,Borrower,Location"
+					).Select(r => new
+					{
+						id = r.Id,
+						bookTitle = r.Book.Title,
+						borrowerName = r.BorrowerName,
+						phone = r.Phone,
+						location = r.Location.Name,
+						requestDate = r.RequestDate.ToString("yyyy-MM-dd"),
+						status = r.Status.ToString(),
+						dueDate = r.DueDate.HasValue ? r.DueDate.Value.ToString("yyyy-MM-dd") : null,
+						isLender = r.LenderId == userId,
+						isBorrower = r.BorrowerId == userId
+					}).ToList();
+
+				return Json(new { success = true, data = requests });
+			}
+			catch (Exception ex)
+			{
+				return Json(new { success = false, error = $"Error fetching requests: {ex.Message}" });
+			}
+		}
+		#endregion
 	}
 }
