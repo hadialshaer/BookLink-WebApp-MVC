@@ -359,13 +359,34 @@ else if (Model.Book?.TransactionType == TransactionType.Lend)
 
 
 @section Scripts {
+	<!-- Include Toastr JS -->
+	<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 	<partial name="_ValidationScriptsPartial" />
 	<script>
 		$(document).ready(function () {
 			$('.btn-borrow-request').click(function () {
 				var bookId = $(this).data('bookid');
-				$('#modalContent').load('/Member/Borrow/RequestBorrow?bookId=' + bookId, function () {
-					$('#borrowModal').modal('show');
+				$.ajax({
+					url: '/Member/Borrow/RequestBorrow?bookId=' + bookId,
+					type: 'GET',
+					success: function (response) {
+						// If the response is JSON with an error, display it using toastr
+						if (typeof response === 'object' && response.success === false) {
+							toastr.error(response.error);
+						} else {
+							// Otherwise, assume the response is HTML (partial view) and load it into the modal
+							$('#modalContent').html(response);
+							$('#borrowModal').modal('show');
+						}
+					},
+					error: function (xhr) {
+						if (xhr.status === 401) {
+							// Redirect to login if unauthorized
+							window.location.href = '/Identity/Account/Login'; // Adjust the URL if necessary
+						} else {
+							toastr.error('An error occurred: ' + xhr.statusText);
+						}
+					}
 				});
 			});
 
@@ -388,10 +409,16 @@ else if (Model.Book?.TransactionType == TransactionType.Lend)
 						}
 					},
 					error: function (xhr) {
-						alert('An error occurred: ' + xhr.statusText);
+						if (xhr.status === 401) {
+							// Redirect to login if unauthorized
+							window.location.href = '/Account/Login'; // Adjust the URL if necessary
+						} else {
+							alert('An error occurred: ' + xhr.statusText);
+						}
 					}
 				});
 			});
 		});
 	</script>
+
 }
