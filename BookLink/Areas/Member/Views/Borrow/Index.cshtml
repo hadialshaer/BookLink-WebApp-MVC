@@ -1,76 +1,45 @@
 ﻿@model IEnumerable<BorrowRequest>
+
 <div class="card shadow border-0 mt-4">
     <div class="card-header bg-secondary bg-gradient text-light py-3">
         <div class="row">
             <div class="col-12 text-center">
-                <h2>Borrowing Requests</h2>
+                <h2 class="text-white">Borrowing Requests</h2>
             </div>
         </div>
     </div>
     <div class="card-body p-4">
-        <table class="table table-bordered table-striped">
-            <thead>
-                <tr>
-                    <th>Book</th>
-                    <th>Borrower</th>
-                    <th>Contact</th>
-                    <th>Location</th>
-                    <th>Request Date</th>
-                    <th>Status</th>
-                    <th>Due Date</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var request in Model)
-                {
-                    <tr>
-                        <td>@request.Book?.Title</td>
-                        <td>@request.BorrowerName</td>
-                        <td>@request.Phone</td>
-						<td>@request.Location.Name</td>
-                        <td>@request.RequestDate.ToString("d")</td>
-                        <td>@request.Status</td>
-                        <td>@(request.DueDate?.ToString("d") ?? "-")</td>
-                        <td>
-                            @if (User.IsInRole(SD.Role_Admin) || request.Lender != null && User.Identity.Name == request.Lender.UserName)
-                            {
-                                @if (request.Status == BorrowRequestStatus.Pending)
-                                {
-                                    <form method="post" asp-action="ApproveRequest" class="d-inline">
-                                        <input type="hidden" name="requestId" value="@request.Id" />
-                                        <button type="submit" class="btn btn-success btn-sm">Approve</button>
-                                    </form>
-                                    <form method="post" asp-action="RejectRequest" class="d-inline">
-                                        <input type="hidden" name="requestId" value="@request.Id" />
-                                        <button type="submit" class="btn btn-danger btn-sm"
-                                                onclick="return confirm('Are you sure you want to reject this request?')">
-                                            Reject
-                                        </button>
-
-                                    </form>
-                                }
-                                else if (request.Status == BorrowRequestStatus.Approved)
-                                {
-                                    <span class="text-muted">Due @request.DueDate?.ToString("d")</span>
-                                }
-                            }
-
-                            @if (request.Status == BorrowRequestStatus.Approved && User.Identity.Name == request.Borrower.UserName)
-                            {
-                                <form method="post" asp-action="ReturnBook">
-                                    <input type="hidden" name="requestId" value="@request.Id" />
-                                    <button type="submit" class="btn btn-info btn-sm">Mark Returned</button>
-                                </form>
-                            }
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+        <div id="loadingSpinner" class="text-center" style="display: none;">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+        <div id="noDataMessage" class="alert alert-info mt-4" style="display: none;">
+            <h5 class="mb-0">
+                <i class="fas fa-info-circle me-2"></i>
+                No borrowing requests found
+            </h5>
+        </div>
+        <div class="table-responsive-sm">
+            <table id="borrowTable" class="table table-bordered table-striped table-hover align-middle text-center" style="width:100%">
+                    <thead class="table-dark">
+                        <tr>
+                            <th class="text-center align-middle">Book</th>
+                            <th class="text-center align-middle">Borrower</th>
+                            <th class="text-center align-middle">Contact</th>
+                            <th class="text-center align-middle">Location</th>
+                            <th class="text-center align-middle">Request Date</th>
+                            <th class="text-center align-middle">Status</th>
+                            <th class="text-center align-middle">Due Date</th>
+                            <th class="text-center align-middle">Actions</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
     </div>
 </div>
-@section Scripts
-{
-	<partial name="_ValidationScriptsPartial" />
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="~/js/borrow_member.js"></script>
 }

@@ -1,10 +1,11 @@
 ﻿@using System.Security.Claims
 @model BorrowRequestVM
 
-<div class="modal-header bg-secondary bg-gradient text-white">
-	<h3 class="modal-title">Request to Borrow - @Model.BorrowRequest.Book.Title</h3>
-	<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+<div class="modal-header bg-secondary bg-gradient text-white d-flex justify-content-center text-center position-relative">
+	<h3 class="modal-title text-white">Request to Borrow <br /> <span class="text-warning">@Model.BorrowRequest.Book.Title</span></h3>
+	<button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal" style="margin-top: 5px; margin-right: 5px;"></button>
 </div>
+
 
 @if (Model?.BorrowRequest?.Book == null)
 {
@@ -16,7 +17,6 @@ else
 {
 	<form id="borrowForm" asp-area="Member" asp-controller="Borrow" asp-action="SubmitBorrowRequest" method="post">
 		@Html.AntiForgeryToken()
-		<!--Hidden fields to store the BorrowRequest properties-->
 		<input type="hidden" asp-for="BorrowRequest.BookId" />
 		<input type="hidden" asp-for="BorrowRequest.BorrowerId"
 			   value="@User.FindFirst(ClaimTypes.NameIdentifier).Value" />
@@ -63,3 +63,5 @@ else
 		</div>
 	</form>
 }
+
+
