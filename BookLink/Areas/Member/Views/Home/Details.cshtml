@@ -262,11 +262,11 @@ else if (Model.Book?.TransactionType == TransactionType.Lend)
 					</div>
 
 					<!-- Book Status Indicator -->
-					<div class="alert @(Model.Book.BookStatus == BookStatus.Available ? "alert-success" : "alert-warning")
+					<div class="alert @(Model.Book.BookStatus == BookStatus.Available || Model.Book.BookStatus == BookStatus.Pending ? "alert-success" : "alert-warning")
                                     animate__animated animate__pulse" role="alert">
 						<h5 class="mb-0">
 							<i class="fas fa-info-circle me-2"></i>
-							@(Model.Book.BookStatus == BookStatus.Available ?
+							@(Model.Book.BookStatus == BookStatus.Available || Model.Book.BookStatus == BookStatus.Pending ?
 														"Available Now" : $"Borrowed until {Model.Book.DueDate?.ToString("MMM dd, yyyy")}")
 						</h5>
 					</div>
@@ -304,7 +304,7 @@ else if (Model.Book?.TransactionType == TransactionType.Lend)
 					<!-- Borrow Request Button -->
 					<div class="d-grid gap-3">
 						<div class="mt-4">
-							@if (Model.Book.BookStatus == BookStatus.Available)
+							@if (Model.Book.BookStatus == BookStatus.Available || Model.Book.BookStatus == BookStatus.Pending)
 							{
 								<button type="button"
 										class="btn btn-borrow-request btn-success btn-lg w-100 py-3 text-uppercase fw-bold animate__animated animate__pulse animate__infinite"
