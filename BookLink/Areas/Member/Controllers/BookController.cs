@@ -50,7 +50,11 @@ namespace BookLink.Areas.Member.Controllers
 			if (id == null || id == 0)
 			{
 				bookVM.Book.TransactionType = transactionType ?? TransactionType.Sell;
-				bookVM.Book.LenderId = userId; // Set current user as lender
+				if (bookVM.Book.TransactionType == TransactionType.Lend)
+				{
+					// Set Member as the lender
+					bookVM.Book.LenderId = userId;
+				}
 				return View(bookVM);
 			}
 			else

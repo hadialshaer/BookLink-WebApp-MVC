@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,6 +28,8 @@ namespace BookLink.Utility
 		public const string PaymentStatusPending = "Pending";
 		public const string PaymentStatusApproved = "Approved";
 		public const string PaymentStatusRejected = "Rejected";
+
+		public const string SessionCart = "SessionShoppingCart";
 		
 	}
 }

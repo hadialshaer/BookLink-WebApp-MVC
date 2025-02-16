@@ -49,6 +49,11 @@ namespace BookLink.Areas.Admin.Controllers
 			{
 				// create
 				bookVM.Book.TransactionType = transactionType ?? TransactionType.Sell;
+				if (bookVM.Book.TransactionType == TransactionType.Lend)
+				{
+
+					bookVM.Book.LenderId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+				}
 				return View(bookVM);
 			}
 			else
