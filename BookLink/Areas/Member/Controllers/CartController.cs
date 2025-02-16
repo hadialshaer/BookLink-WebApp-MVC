@@ -98,7 +98,7 @@ namespace BookLink.Areas.Member.Controllers
 
 		public IActionResult Minus(int cartId)
 		{
-			var cartFromDb = _unitOfWork.ShoppingCart.Get(u => u.Id == cartId);
+			var cartFromDb = _unitOfWork.ShoppingCart.Get(u => u.Id == cartId, tracked: true);
 
 			if (cartFromDb.Count <= 1)
 			{
@@ -240,7 +240,7 @@ namespace BookLink.Areas.Member.Controllers
 		[HttpDelete]
 		public IActionResult Remove(int cartId)
 		{
-			var cartFromDb = _unitOfWork.ShoppingCart.Get(u => u.Id == cartId);
+			var cartFromDb = _unitOfWork.ShoppingCart.Get(u => u.Id == cartId, tracked:true);
 			if (cartFromDb == null)
 			{
 				return Json(new { success = false, message = "Cart item not found" });
