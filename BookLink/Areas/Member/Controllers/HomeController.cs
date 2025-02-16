@@ -1,6 +1,7 @@
 using BookLink.DataAccess.Repository;
 using BookLink.DataAccess.Repository.IRepository;
 using BookLink.Models;
+using BookLink.Models.ViewModels;
 using BookLink.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -15,7 +16,6 @@ namespace BookLink.Areas.Member.Controllers
 	public class HomeController : Controller
 	{
 		private readonly ILogger<HomeController> _logger;
-
 		private readonly IUnitOfWork _unitOfWork;
 		private readonly UserManager<User> _userManager;
 
@@ -29,9 +29,15 @@ namespace BookLink.Areas.Member.Controllers
 
 		public IActionResult Index()
 		{
+			var userId = _userManager.GetUserId(User);
+
+			if (userId != null)
+			{
+				HttpContext.Session.SetInt32(SD.SessionCart,
+					_unitOfWork.ShoppingCart.GetAll(u => u.UserId == userId).Count());
+			}
 
 			IEnumerable<Book> bookList = _unitOfWork.Book.GetAll(includeProperties: "BookCategory").ToList();
-
 			return View(bookList);
 		}
 
@@ -60,8 +66,7 @@ namespace BookLink.Areas.Member.Controllers
 		[Authorize]
 		public IActionResult Details(ShoppingCart shoppingCart)
 		{
-			var claimsIdentity = (ClaimsIdentity)User.Identity;
-			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+			var userId = _userManager.GetUserId(User);
 
 			// Check if the user is an admin and prevent them from adding to the cart
 			if (User.IsInRole(SD.Role_Admin))
@@ -92,7 +97,7 @@ namespace BookLink.Areas.Member.Controllers
 				_unitOfWork.Save();
 				TempData["success"] = "Item added to cart successfully!";
 				HttpContext.Session.SetInt32(SD.SessionCart,
-					_unitOfWork.ShoppingCart.GetAll(u => u.UserId == userId && u.BookId == shoppingCart.BookId).Count());
+					_unitOfWork.ShoppingCart.GetAll(u => u.UserId == userId).Count());
 			}
 			return RedirectToAction(nameof(Index));
 		}

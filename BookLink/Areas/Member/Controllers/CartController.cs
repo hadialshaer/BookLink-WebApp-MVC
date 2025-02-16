@@ -103,6 +103,8 @@ namespace BookLink.Areas.Member.Controllers
 			if (cartFromDb.Count <= 1)
 			{
 				// Remove the item from the cart
+				HttpContext.Session.SetInt32(SD.SessionCart, _unitOfWork.ShoppingCart
+					.GetAll(u => u.UserId == cartFromDb.UserId).Count() - 1);
 				_unitOfWork.ShoppingCart.Remove(cartFromDb);
 			}
 			else
@@ -235,26 +237,31 @@ namespace BookLink.Areas.Member.Controllers
 
 
 
-			[HttpDelete]
-			public IActionResult Remove(int cartId)
+		[HttpDelete]
+		public IActionResult Remove(int cartId)
+		{
+			var cartFromDb = _unitOfWork.ShoppingCart.Get(u => u.Id == cartId);
+			if (cartFromDb == null)
 			{
-				var cartFromDb = _unitOfWork.ShoppingCart.Get(u => u.Id == cartId);
-				if (cartFromDb == null)
-				{
-					return Json(new { success = false, message = "Cart item not found" });
-				}
-
-				_unitOfWork.ShoppingCart.Remove(cartFromDb);
-				_unitOfWork.Save();
-
-				return Json(new { success = true, message = "Cart item removed successfully" });
+				return Json(new { success = false, message = "Cart item not found" });
 			}
+
+			HttpContext.Session.SetInt32(SD.SessionCart, _unitOfWork.ShoppingCart
+				.GetAll(u => u.UserId == cartFromDb.UserId).Count() - 1);
+
+			// Remove the item from the cart
+			_unitOfWork.ShoppingCart.Remove(cartFromDb);
+
+			_unitOfWork.Save();
+
+			return Json(new { success = true, message = "Cart item removed successfully" });
+		}
 
 
 
 		public IActionResult OrderConfirmation(int id)
 		{
-			OrderHeader orderHeader = _unitOfWork.OrderHeader.Get(u => u.Id == id, includeProperties:"User");
+			OrderHeader orderHeader = _unitOfWork.OrderHeader.Get(u => u.Id == id, includeProperties: "User");
 
 			var service = new SessionService();
 			var session = service.Get(orderHeader.SessionId);
@@ -262,10 +269,10 @@ namespace BookLink.Areas.Member.Controllers
 			if (session.PaymentStatus.ToLower() == "paid")
 			{
 				_unitOfWork.OrderHeader.UpdateStripePaymentId(id, session.Id, session.PaymentIntentId);
-				_unitOfWork.OrderHeader.UpdateStatus(id, SD.StatusApproved ,SD.PaymentStatusApproved);
+				_unitOfWork.OrderHeader.UpdateStatus(id, SD.StatusApproved, SD.PaymentStatusApproved);
 				_unitOfWork.Save();
 			}
-			
+
 			List<ShoppingCart> shoppingCarts = _unitOfWork.ShoppingCart
 				.GetAll(u => u.UserId == orderHeader.UserId).ToList();
 
