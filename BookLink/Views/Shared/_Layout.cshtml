@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="utf-8" />
@@ -38,7 +41,7 @@
 					<a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">BookLink</a>
 
 					<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
-							aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+					aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 						<span class="navbar-toggler-icon"></span>
 					</button>
 
@@ -50,8 +53,8 @@
 								</a>
 							</li>
 
-							 @if (!User.IsInRole(SD.Role_Admin))
-								{
+							@if (!User.IsInRole(SD.Role_Admin))
+							{
 								<li class="nav-item">
 									<a class="nav-link" asp-area="Member" asp-controller="Book" asp-action="Index">
 										<i class="bi bi-book"></i> My Books
@@ -63,11 +66,24 @@
 									</a>
 								</li>
 
-								<li class="nav-item">
-									<a class="nav-link text-dark" asp-area="Member" asp-controller="Cart" asp-action="Index">
-										<i class="bi bi-bag"></i> &nbsp; (0)
-									</a>
-								</li>
+								@if (HttpContextAccessor.HttpContext.Session.GetInt32(SD.SessionCart) != null)
+								{
+									<li class="nav-item">
+										<a class="nav-link text-dark" asp-area="Member" asp-controller="Cart" asp-action="Index">
+											<i class="bi bi-cart"></i>
+											(@HttpContextAccessor.HttpContext.Session.GetInt32(SD.SessionCart))
+										</a>
+									</li>
+								}
+								else 
+								{
+									<li class="nav-item">
+										<a class="nav-link text-dark" asp-area="Member" asp-controller="Cart" asp-action="Index">
+											<i class="bi bi-cart"></i>
+											(0)
+										</a>
+									</li>
+								}
 							}
 
 							@if (User.IsInRole(SD.Role_Admin))

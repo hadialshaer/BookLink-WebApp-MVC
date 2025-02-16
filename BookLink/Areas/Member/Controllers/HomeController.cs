@@ -82,18 +82,18 @@ namespace BookLink.Areas.Member.Controllers
 			{
 				cartFromDb.Count += shoppingCart.Count;
 				_unitOfWork.ShoppingCart.Update(cartFromDb);
+				_unitOfWork.Save();
 				TempData["success"] = "Item updated successfully!";
 			}
 			else
 				// Shopping cart does not exist, ADD Cart
 			{
 				_unitOfWork.ShoppingCart.Add(shoppingCart);
+				_unitOfWork.Save();
 				TempData["success"] = "Item added to cart successfully!";
+				HttpContext.Session.SetInt32(SD.SessionCart,
+					_unitOfWork.ShoppingCart.GetAll(u => u.UserId == userId && u.BookId == shoppingCart.BookId).Count());
 			}
-
-			
-
-			_unitOfWork.Save();
 			return RedirectToAction(nameof(Index));
 		}
 
