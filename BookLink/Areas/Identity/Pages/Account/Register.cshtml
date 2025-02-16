@@ -131,8 +131,12 @@
                         <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post">
                             @foreach (var provider in Model.ExternalLogins!)
                             {
-                                <button type="submit" class="btn btn-google w-100 my-2" name="provider" value="@provider.Name">
-                                    <i class="bi bi-google"></i> @provider.DisplayName
+                                <button type="submit"
+                                        class="btn btn-external @(provider.Name.ToLower())-btn w-100 my-2"
+                                        name="provider"
+                                        value="@provider.Name"
+                                        title="Register using your @provider.DisplayName account">
+                                    <i class="bi bi-@(provider.Name.ToLower())"></i> Continue with @provider.DisplayName
                                 </button>
                             }
                         </form>
@@ -147,6 +151,7 @@
                         </div>
                     }
                 </div>
+            </div>
             </div>
         </div>
     </div>

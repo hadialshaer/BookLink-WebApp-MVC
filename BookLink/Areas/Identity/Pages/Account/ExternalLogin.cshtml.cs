@@ -135,6 +135,24 @@ namespace BookLink.Areas.Identity.Pages.Account
 				return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
 			}
 
+			// Handle different provider claims
+			var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+			var firstName = info.Principal.FindFirstValue(ClaimTypes.GivenName);
+			var lastName = info.Principal.FindFirstValue(ClaimTypes.Surname);
+
+
+			// Facebook specific handling
+			if (info.LoginProvider == "Facebook")
+			{
+				var fullName = info.Principal.FindFirstValue("urn:facebook:name");
+				if (string.IsNullOrEmpty(firstName))
+				{
+					var nameParts = fullName?.Split(' ');
+					firstName = nameParts?[0];
+					lastName = nameParts?.Length > 1 ? nameParts[1] : "";
+				}
+			}
+
 			// Inside the OnGetCallbackAsync method
 			if (info.Principal.HasClaim(c => c.Type == ClaimTypes.Email))
 			{

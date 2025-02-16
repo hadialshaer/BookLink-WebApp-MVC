@@ -40,3 +40,40 @@ body {
         padding: 15px; /* Reduce padding on smaller screens */
     }
 }
+
+/* External Login Buttons */
+.btn-external {
+    color: white;
+    border: none;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.google-btn {
+    background-color: #DB4437;
+}
+
+    .google-btn:hover {
+        background-color: #c23321;
+        box-shadow: 0 4px 15px rgba(219, 68, 55, 0.3);
+    }
+
+.facebook-btn {
+    background-color: #1877F2;
+}
+
+    .facebook-btn:hover {
+        background-color: #146cdf;
+        box-shadow: 0 4px 15px rgba(24, 119, 242, 0.3);
+    }
+
+.bi-google::before {
+    content: "\F62A";
+    margin-right: 8px;
+}
+
+.bi-facebook::before {
+    content: "\F344";
+    margin-right: 8px;
+}

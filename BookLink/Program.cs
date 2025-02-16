@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using BookLink.Utility;
 using BookLink.Models;
 using Stripe;
+using Microsoft.AspNetCore.Authentication.Facebook;
+using Microsoft.AspNetCore.Authentication.Google;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,12 +34,25 @@ builder.Services.ConfigureApplicationCookie(options =>
 	options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
 });
 
-builder.Services.AddAuthentication().AddFacebook(options =>
-{
-	options.AppId = "637738368942674";
-	options.AppSecret = "8262c0c244a03cce1e0ad9aee375fe95";
-});
+// Add services to the container
 
+// Add Authentication Services for Google and Facebook
+builder.Services.AddAuthentication(options =>
+{
+	options.DefaultScheme = "Cookies";
+	options.DefaultChallengeScheme = "Google";
+})
+	.AddCookie("Cookies")
+	.AddGoogle(GoogleDefaults.AuthenticationScheme, options =>
+	{
+		options.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+		options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+	})
+	.AddFacebook(FacebookDefaults.AuthenticationScheme, options =>
+	{
+		options.AppId = builder.Configuration["Authentication:Facebook:AppId"];
+		options.AppSecret = builder.Configuration["Authentication:Facebook:AppSecret"];
+	});
 
 // Add Session Support to Services
 builder.Services.AddDistributedMemoryCache();
