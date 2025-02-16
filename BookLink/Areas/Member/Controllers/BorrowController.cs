@@ -90,6 +90,11 @@ namespace BookLink.Areas.Member.Controllers
 				if (string.IsNullOrEmpty(userId))
 					return Json(new { success = false, error = "User not authenticated, Please Log In" });
 
+				// Authorize only members to borrow books.
+				if (User.IsInRole(SD.Role_Admin))
+				{
+					return Json(new { success = false, error = "Admin cannot borrow a book" });
+				}
 				// Check for an existing pending request for this book.
 				var existingRequest = _unitOfWork.BorrowRequest.Get(br =>
 					br.BookId == borrowRequestVM.BorrowRequest.BookId &&

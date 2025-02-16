@@ -117,15 +117,11 @@
 								<i class="fas fa-info-circle me-2"></i>
 								@if (Model.Book.BookStatus == BookStatus.Available)
 								{
-									<span>Available for Borrowing</span>
+									<span>Available Now</span>
 								}
 								else
 								{
-									<span>Currently Borrowed</span>
-									if (Model.Book.DueDate.HasValue)
-									{
-										<span> - Due @Model.Book.DueDate.Value.ToString("MMM dd, yyyy")</span>
-									}
+									<span>Book Will be available Soon</span>
 								}
 							</h5>
 						</div>
@@ -383,7 +379,15 @@ else if (Model.Book?.TransactionType == TransactionType.Lend)
 						if (xhr.status === 401) {
 							// Redirect to login if unauthorized
 							window.location.href = '/Identity/Account/Login'; // Adjust the URL if necessary
-						} else {
+						}
+						else if (xhr.status == 403) {
+							toastr.error('Admin is Not allowed to borrow books');
+							setTimeout(function() {
+								window.location.href = '/';
+							}, 1000); // Delay redirect by 2 seconds
+						}
+
+						else {
 							toastr.error('An error occurred: ' + xhr.statusText);
 						}
 					}

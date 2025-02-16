@@ -2,6 +2,8 @@
 using BookLink.DataAccess.Repository.IRepository;
 using BookLink.Models;
 using BookLink.Models.ViewModels;
+using BookLink.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
@@ -9,6 +11,7 @@ using System.Collections.Generic;
 namespace BookLink.Areas.Admin.Controllers
 {
 	[Area("Admin")]
+	[Authorize(Roles = SD.Role_Admin)]
 	public class BookController : Controller
 	{
 		private readonly IUnitOfWork _unitOfWork;

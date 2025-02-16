@@ -1,9 +1,11 @@
 using BookLink.DataAccess.Repository;
 using BookLink.DataAccess.Repository.IRepository;
 using BookLink.Models;
+using BookLink.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Diagnostics;
 using System.Security.Claims;
 
@@ -60,6 +62,15 @@ namespace BookLink.Areas.Member.Controllers
 		{
 			var claimsIdentity = (ClaimsIdentity)User.Identity;
 			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+			// Check if the user is an admin and prevent them from adding to the cart
+			if (User.IsInRole(SD.Role_Admin))
+			{
+				TempData["error"] = "Admins cannot add items to the cart.";
+				return RedirectToAction(nameof(Index));
+			}
+
+
 			shoppingCart.UserId = userId;
 
 			ShoppingCart cartFromDb = _unitOfWork.ShoppingCart.Get

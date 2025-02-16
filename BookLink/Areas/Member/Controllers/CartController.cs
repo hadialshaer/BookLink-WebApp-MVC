@@ -11,6 +11,7 @@ using System.Security.Claims;
 namespace BookLink.Areas.Member.Controllers
 {
 	[Area("Member")]
+	[Authorize(Roles = SD.Role_Member)]
 	public class CartController : Controller
 	{
 
