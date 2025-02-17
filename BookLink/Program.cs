@@ -12,37 +12,26 @@ using Microsoft.AspNetCore.Authentication.Google;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add Services to the DI Container
+#region Configure Services (Dependency Injection)
+
+// Add Razor Pages and MVC
 builder.Services.AddRazorPages();
 builder.Services.AddControllersWithViews();
 
-// Fetch Stripe Settings values from appsettings.json
+// Configure Stripe Settings
 builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
+
 // Configure Database Connection
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Configure Identity
-builder.Services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>()
+builder.Services.AddIdentity<User, IdentityRole>()
+	.AddEntityFrameworkStores<ApplicationDbContext>()
 	.AddDefaultTokenProviders();
 
-// Configure Identity Options
-builder.Services.ConfigureApplicationCookie(options =>
-{
-	options.LoginPath = $"/Identity/Account/Login";
-	options.LogoutPath = $"/Identity/Account/Logout";
-	options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
-});
-
-// Add services to the container
-
-// Add Authentication Services for Google and Facebook
-builder.Services.AddAuthentication(options =>
-{
-	options.DefaultScheme = "Cookies";
-	options.DefaultChallengeScheme = "Google";
-})
-	.AddCookie("Cookies")
+// Add Authentication Services (Google & Facebook)
+builder.Services.AddAuthentication()
 	.AddGoogle(GoogleDefaults.AuthenticationScheme, options =>
 	{
 		options.ClientId = builder.Configuration["Authentication:Google:ClientId"];
@@ -54,7 +43,15 @@ builder.Services.AddAuthentication(options =>
 		options.AppSecret = builder.Configuration["Authentication:Facebook:AppSecret"];
 	});
 
-// Add Session Support to Services
+// Configure Identity Cookie Options
+builder.Services.ConfigureApplicationCookie(options =>
+{
+	options.LoginPath = "/Identity/Account/Login";
+	options.LogoutPath = "/Identity/Account/Logout";
+	options.AccessDeniedPath = "/Identity/Account/AccessDenied";
+});
+
+// Configure Session Management
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {
@@ -66,26 +63,45 @@ builder.Services.AddSession(options =>
 // Register Repositories for Dependency Injection
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IEmailSender, EmailSender>();
+
+#endregion
+
 var app = builder.Build();
 
-// Configure Middleware (Request Processing Pipeline)
+#region Configure Middleware (Request Processing Pipeline)
+
+// Error Handling
 if (!app.Environment.IsDevelopment())
 {
 	app.UseExceptionHandler("/Home/Error");
 	app.UseHsts();
 }
 
+// Security & Static Files
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
+// Configure Stripe API Key
 StripeConfiguration.ApiKey = app.Configuration.GetSection("Stripe:SecretKey").Get<string>();
+
+//  Enable Routing
 app.UseRouting();
 
+//  Enable Authentication & Authorization
 app.UseAuthentication();
 app.UseAuthorization();
+
+//  Enable Session Middleware
 app.UseSession();
+
+//  Map Razor Pages
 app.MapRazorPages();
+
+//  Configure Default Route
 app.MapControllerRoute(
 	name: "default",
 	pattern: "{area=Member}/{controller=Home}/{action=Index}/{id?}");
+
+#endregion
 
 app.Run();
