@@ -11,9 +11,20 @@
 
 <div class="d-flex justify-content-center align-items-center min-vh-100">
     <div class="card shadow-lg border-0">
-        <div class="card-header bg-primary bg-gradient text-white py-4">
-            <h2 class="text-white py-2 m-0 text-center">Create New Account</h2>
-        </div>
+        @if(User.IsInRole(SD.Role_Admin))
+        {
+            <div class="card-header bg-primary bg-gradient text-white py-4">
+                <h2 class="text-white py-2 m-0 text-center">Register - ADMIN PORTAL</h2>
+            </div>
+        }
+        else
+        {
+            <div class="card-header bg-primary bg-gradient text-white py-4">
+                <h2 class="text-white py-2 m-0 text-center">Create New Account</h2>
+            </div>
+        }
+       
+
         <div class="card-body">
             <p class="text-center text-muted">Join BookLink and start exploring books!</p>
             <hr />
@@ -101,13 +112,15 @@
                     </div>
                 </div>
 
-                <!-- Role Selection -->
-                <div class="mb-3">
-                    <select asp-for="Input.Role" asp-items="@Model.Input.RoleList" class="form-select">
-                        <option disabled selected>--Select Role--</option>
-                    </select>
-                </div>
-
+                @if (User.IsInRole(SD.Role_Admin))
+                {
+                    <!-- Role Selection -->
+                    <div class="mb-3">
+                        <select asp-for="Input.Role" asp-items="@Model.Input.RoleList" class="form-select">
+                            <option disabled selected>--Select Role--</option>
+                        </select>
+                    </div>
+                }
                 <!-- Submit Button -->
                 <div class="d-flex justify-content-center">
                     <button id="registerSubmit" type="submit" class="btn btn-primary py-2 w-50">
@@ -122,6 +135,8 @@
 
             <hr />
 
+            @if(!User.IsInRole(SD.Role_Admin))
+            {
             <!-- External Login Section -->
             <div>
                 <h5 class="text-center">Or Register with</h5>
@@ -152,6 +167,7 @@
                     }
                 </div>
             </div>
+            }
             </div>
         </div>
     </div>
