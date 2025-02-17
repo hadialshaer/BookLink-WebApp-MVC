@@ -154,7 +154,6 @@ namespace BookLink.Areas.Identity.Pages.Account
 				}),
 				CityList = new List<SelectListItem>
 				{
-					new SelectListItem { Value = "", Text = "Choose..." },
 					new SelectListItem { Value = "Beirut", Text = "Beirut" },
 					new SelectListItem { Value = "South", Text = "South" },
 					new SelectListItem { Value = "North", Text = "North" },

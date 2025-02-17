@@ -1,105 +1,105 @@
 ﻿@page
 @model ExternalLoginModel
 @{
-	ViewData["HideNavbar"] = true;
-	ViewData["Title"] = "Complete Registration";
+    ViewData["HideNavbar"] = true;
+    ViewData["Title"] = "Complete Registration";
 }
 
 @section Styles {
-	<link href="~/css/login_signUp.css" rel="stylesheet" />
+    <link href="~/css/login_signup.css" rel="stylesheet" />
 }
 
-<div class="d-flex justify-content-center align-items-center min-vh-100">
-	<div class="card shadow-lg border-0">
-		<div class="card-header bg-primary bg-gradient text-white py-4">
-			<h2 class="text-white py-2 m-0 text-center">Complete Your Registration</h2>
-		</div>
-		<div class="card-body">
-			<p class="text-center text-muted">
-				<i class="bi bi-check-circle-fill text-success"></i>
-				Authenticated via <strong>@Model.ProviderDisplayName</strong>
-			</p>
-			<hr />
+<div class="d-flex justify-content-center align-items-center min-vh-100 p-3">
+    <div class="card auth-card bg-white shadow-lg rounded-4 w-100" style="max-width: 600px;">
+        <div class="card-header bg-primary text-white text-center py-4 rounded-top-4">
+            <h2 class="text-white m-0">Complete Your Registration</h2>
+        </div>
+        <div class="card-body p-4">
+            <div class="text-center mb-4">
+                <div class="authentication-status">
+                    <i class="bi bi-check-circle-fill text-success fs-1"></i>
+                    <p class="text-muted mt-2 mb-0">
+                        Successfully authenticated via <strong>@Model.ProviderDisplayName</strong>
+                    </p>
+                </div>
+            </div>
 
-			<form asp-page-handler="Confirmation" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-				<div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+            <form asp-page-handler="Confirmation" asp-route-returnUrl="@Model.ReturnUrl" method="post"
+                  class="needs-validation" novalidate id="externalLoginForm">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
 
-				<div class="row g-2">
-					<!-- Email -->
-					<div class="col-12">
-						<div class="input-group">
-							<span class="input-group-text"><i class="bi bi-envelope"></i></span>
-							<input asp-for="Input.Email" class="form-control" placeholder="Email Address" />
-						</div>
-						<span asp-validation-for="Input.Email" class="text-danger"></span>
-					</div>
+                <div class="row g-3">
+                    <!-- Email -->
+                    <div class="col-12">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                            <input asp-for="Input.Email" class="form-control" placeholder="Email Address" required />
+                        </div>
+                        <span asp-validation-for="Input.Email" class="text-danger small mt-1 d-block"></span>
+                    </div>
 
-					<!-- Personal Information -->
-					<div class="col-12 col-md-6">
-						<div class="input-group">
-							<span class="input-group-text"><i class="bi bi-person"></i></span>
-							<input asp-for="Input.FirstName" class="form-control" placeholder="First Name" />
-						</div>
-						<span asp-validation-for="Input.FirstName" class="text-danger"></span>
-					</div>
-					<div class="col-12 col-md-6">
-						<div class="input-group">
-							<span class="input-group-text"><i class="bi bi-person"></i></span>
-							<input asp-for="Input.LastName" class="form-control" placeholder="Last Name" />
-						</div>
-						<span asp-validation-for="Input.LastName" class="text-danger"></span>
-					</div>
+                    <!-- Name Fields -->
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-person"></i></span>
+                            <input asp-for="Input.FirstName" class="form-control" placeholder="First Name" required />
+                        </div>
+                        <span asp-validation-for="Input.FirstName" class="text-danger small mt-1 d-block"></span>
+                    </div>
 
-					<!-- Gender & Birth Date -->
-					<div class="col-12 col-md-6">
-						<div class="input-group">
-							<span class="input-group-text"><i class="bi bi-gender-ambiguous"></i></span>
-							<select asp-for="Input.gender" class="form-select">
-								<option value="">-- Select Gender --</option>
-								<option value="0">Male</option>
-								<option value="1">Female</option>
-								<option value="2">Other</option>
-							</select>
-						</div>
-						<span asp-validation-for="Input.gender" class="text-danger"></span>
-					</div>
-					<div class="col-12 col-md-6">
-						<div class="input-group">
-							<span class="input-group-text"><i class="bi bi-calendar"></i></span>
-							<input asp-for="Input.BirthDate" type="date" class="form-control" />
-						</div>
-						<span asp-validation-for="Input.BirthDate" class="text-danger"></span>
-					</div>
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-person"></i></span>
+                            <input asp-for="Input.LastName" class="form-control" placeholder="Last Name" required />
+                        </div>
+                        <span asp-validation-for="Input.LastName" class="text-danger small mt-1 d-block"></span>
+                    </div>
 
-					<!-- City -->
-					<div class="col-12">
-						<div class="input-group">
-							<span class="input-group-text"><i class="bi bi-geo-alt"></i></span>
-							<input asp-for="Input.City" class="form-control" placeholder="City" />
-						</div>
-						<span asp-validation-for="Input.City" class="text-danger"></span>
-					</div>
+                    <!-- Gender & Birth Date -->
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-gender-ambiguous"></i></span>
+                            <select asp-for="Input.gender" class="form-select" required>
+                                <option value="">Select Gender</option>
+                                <option value="0">Male</option>
+                                <option value="1">Female</option>
+                                <option value="2">Other</option>
+                            </select>
+                        </div>
+                        <span asp-validation-for="Input.gender" class="text-danger small mt-1 d-block"></span>
+                    </div>
 
-					<!-- Submit Button -->
-					<div class="d-flex justify-content-center">
-						<button type="submit" class="btn btn-primary py-2 w-50">
-							<i class="bi bi-check-circle-fill"></i> Complete Registration
-						</button>
-					</div>
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-calendar"></i></span>
+                            <input asp-for="Input.BirthDate" type="date" class="form-control" required />
+                        </div>
+                        <span asp-validation-for="Input.BirthDate" class="text-danger small mt-1 d-block"></span>
+                    </div>
 
-				</div>
-			</form>
-		</div>
+                    <!-- City -->
+                    <div class="col-12">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-geo-alt"></i></span>
+                            <input asp-for="Input.City" class="form-control" placeholder="City" required />
+                        </div>
+                        <span asp-validation-for="Input.City" class="text-danger small mt-1 d-block"></span>
+                    </div>
 
-		<div class="text-center mt-4">
-			<p class="mb-0">
-				Already have an account?
-				<a asp-page="./Login" class="text-decoration-none">Sign in here</a>
-			</p>
-		</div>
-	</div>
-</div>
+                    <!-- Submit Button -->
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold" id="completeRegBtn">
+                            <span class="button-text">
+                                <i class="bi bi-check-circle-fill me-2"></i>Complete Registration
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </form>
 
-@section Scripts {
-	<partial name="_ValidationScriptsPartial" />
-}
+            <div class="text-center mt-4">
+                <p class="mb-0">
+                    Already have an account?
+                    <a asp-page="./Login" class="text-decoration-none fw-bold text-primary hover-effect">Sign in here</a>
+                </p>
+            </div>

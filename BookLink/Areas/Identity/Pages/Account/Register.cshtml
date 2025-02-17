@@ -10,21 +10,21 @@
 }
 
 <div class="d-flex justify-content-center align-items-center min-vh-100 p-3">
-    <div class="card bg-white shadow-lg rounded-4 w-100" style="max-width: 850px;">
+    <div class="card auth-card bg-white shadow-lg rounded-4 w-100" style="max-width: 850px;">
         <div class="card-header bg-primary text-white text-center py-4 rounded-top-4">
             <h2 class="mb-0">@(User.IsInRole(SD.Role_Admin) ? "ADMIN REGISTRATION" : "Join BookLink")</h2>
         </div>
 
-        <div class="card-body p-4 p-md-4">
-            <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="g-4">
+        <div class="card-body p-4">
+            <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="needs-validation" novalidate>
                 <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-4"></div>
 
-                <div class="row g-2">
+                <div class="row g-3">
                     <!-- Email -->
                     <div class="col-12">
                         <div class="input-group">
                             <span class="input-group-text"><i class="bi bi-envelope-fill"></i></span>
-                            <input asp-for="Input.Email" class="form-control" placeholder="Email Address" />
+                            <input asp-for="Input.Email" class="form-control" placeholder="Email Address" required />
                         </div>
                         <span asp-validation-for="Input.Email" class="text-danger small mt-1 d-block"></span>
                     </div>
@@ -33,7 +33,7 @@
                     <div class="col-12 col-md-6">
                         <div class="input-group">
                             <span class="input-group-text"><i class="bi bi-person-badge"></i></span>
-                            <input asp-for="Input.FirstName" class="form-control" placeholder="First Name" />
+                            <input asp-for="Input.FirstName" class="form-control" placeholder="First Name" required />
                         </div>
                         <span asp-validation-for="Input.FirstName" class="text-danger small mt-1 d-block"></span>
                     </div>
@@ -41,7 +41,7 @@
                     <div class="col-12 col-md-6">
                         <div class="input-group">
                             <span class="input-group-text"><i class="bi bi-person-badge"></i></span>
-                            <input asp-for="Input.LastName" class="form-control" placeholder="Last Name" />
+                            <input asp-for="Input.LastName" class="form-control" placeholder="Last Name" required />
                         </div>
                         <span asp-validation-for="Input.LastName" class="text-danger small mt-1 d-block"></span>
                     </div>
@@ -50,7 +50,8 @@
                     <div class="col-md-6">
                         <div class="input-group">
                             <span class="input-group-text"><i class="bi bi-gender-ambiguous"></i></span>
-                            <select asp-for="Input.gender" class="form-select" asp-items="Html.GetEnumSelectList<Gender>()">
+                            <select asp-for="Input.gender" class="form-select" asp-items="Html.GetEnumSelectList<Gender>()" required>
+                                <option value="">Select Gender</option>
                             </select>
                         </div>
                         <span asp-validation-for="Input.gender" class="text-danger small mt-1 d-block"></span>
@@ -59,29 +60,27 @@
                     <div class="col-md-6">
                         <div class="input-group">
                             <span class="input-group-text"><i class="bi bi-calendar-date"></i></span>
-                            <input asp-for="Input.BirthDate" type="date" class="form-control" />
+                            <input asp-for="Input.BirthDate" type="date" class="form-control" required />
                         </div>
                         <span asp-validation-for="Input.BirthDate" class="text-danger small mt-1 d-block"></span>
                     </div>
 
-                    
                     <!-- City -->
                     <div class="col-12">
                         <div class="input-group">
                             <span class="input-group-text"><i class="bi bi-geo-alt"></i></span>
-                            <select asp-for="Input.City" asp-items="Model.Input.CityList" class="form-select">
-                                <option value="">City</option>
+                            <select asp-for="Input.City" asp-items="Model.Input.CityList" class="form-select" required>
+                                <option value="">Select City</option>
                             </select>
                         </div>
                         <span asp-validation-for="Input.City" class="text-danger small mt-1 d-block"></span>
                     </div>
 
-
                     <!-- Passwords -->
                     <div class="col-md-6">
                         <div class="input-group">
                             <span class="input-group-text"><i class="bi bi-lock"></i></span>
-                            <input asp-for="Input.Password" type="password" class="form-control" placeholder="Password" />
+                            <input asp-for="Input.Password" type="password" class="form-control" placeholder="Password" required />
                         </div>
                         <span asp-validation-for="Input.Password" class="text-danger small mt-1 d-block"></span>
                     </div>
@@ -89,7 +88,7 @@
                     <div class="col-md-6">
                         <div class="input-group">
                             <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
-                            <input asp-for="Input.ConfirmPassword" type="password" class="form-control" placeholder="Confirm Password" />
+                            <input asp-for="Input.ConfirmPassword" type="password" class="form-control" placeholder="Confirm Password" required />
                         </div>
                         <span asp-validation-for="Input.ConfirmPassword" class="text-danger small mt-1 d-block"></span>
                     </div>
@@ -100,7 +99,7 @@
                         <div class="col-12">
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-shield-lock"></i></span>
-                                <select asp-for="Input.Role" class="form-select">
+                                <select asp-for="Input.Role" class="form-select" required>
                                     <option value="">Select Role</option>
                                     @foreach (var role in Model.Input.RoleList)
                                     {
@@ -112,8 +111,8 @@
                     }
 
                     <div class="col-12">
-                        <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold">
-                            <i class="bi bi-person-plus me-2"></i>Create Account
+                        <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold" id="registerBtn">
+                            <span class="button-text"><i class="bi bi-person-plus me-2"></i>Create Account</span>
                         </button>
                     </div>
                 </div>
@@ -123,7 +122,7 @@
             {
                 <div class="position-relative my-4">
                     <hr class="text-muted" />
-                    <span class="position-absolute top-50 start-50 translate-middle bg-white px-2 small text-muted">
+                    <span class="position-absolute top-50 start-50 translate-middle bg-white px-3 small text-muted">
                         or continue with
                     </span>
                 </div>
@@ -140,8 +139,8 @@
                                         value="@provider.Name"
                                         title="Connect @provider.DisplayName"
                                         style="max-width: 250px;">
-                                    <i class="bi bi-@provider.Name.ToLower() fs-5"></i>
-                                    Connect @provider.DisplayName
+                                    <i class="bi bi-@provider.Name.ToLower() fs-5 me-2"></i>
+                                    <span>Connect @provider.DisplayName</span>
                                 </button>
                             }
                         }
@@ -149,10 +148,9 @@
                 </form>
             }
 
-
             <p class="text-center mt-4 mb-0">
                 Already registered?
-                <a asp-page="./Login" class="text-decoration-none fw-bold text-primary">Sign in here</a>
+                <a asp-page="./Login" class="text-decoration-none fw-bold text-primary hover-effect">Sign in here</a>
             </p>
         </div>
     </div>
@@ -160,4 +158,27 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Form submission animation
+        const form = document.querySelector('#registerForm');
+        const submitBtn = document.querySelector('#registerBtn');
+
+        form.addEventListener('submit', function(e) {
+            if (form.checkValidity()) {
+                submitBtn.classList.add('btn-loading');
+                submitBtn.querySelector('.button-text').style.opacity = '0';
+            }
+        });
+
+        // Progressive field reveal
+        document.querySelectorAll('.input-group').forEach((group, index) => {
+            group.style.opacity = '0';
+            group.style.transform = 'translateY(20px)';
+            setTimeout(() => {
+                group.style.transition = 'all 0.3s ease';
+                group.style.opacity = '1';
+                group.style.transform = 'translateY(0)';
+            }, index * 100);
+        });
+    </script>
 }

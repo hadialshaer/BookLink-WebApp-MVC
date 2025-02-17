@@ -179,7 +179,6 @@ namespace BookLink.Areas.Identity.Pages.Account
 						out var birthDate) ? birthDate : DateTime.MinValue,
 					CityList = new List<SelectListItem>
 					{
-						new SelectListItem { Value = "", Text = "Choose..." },
 						new SelectListItem { Value = "Beirut", Text = "Beirut" },
 						new SelectListItem { Value = "South", Text = "South" },
 						new SelectListItem { Value = "North", Text = "North" },
