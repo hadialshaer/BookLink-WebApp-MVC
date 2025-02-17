@@ -155,14 +155,16 @@ namespace BookLink.Areas.Admin.Controllers
 			if(bookVM.Book.BookId != 0)
 			{
 				_unitOfWork.Book.Update(bookVM.Book);
+				TempData["success"] = "Book updated successfully";
 			}
 			else
 			{
 				_unitOfWork.Book.Add(bookVM.Book);
+				TempData["success"] = "Book created successfully";
 			}
 
 			_unitOfWork.Save();
-			TempData["success"] = "Book created successfully";
+			
 			return RedirectToAction(nameof(Index));
 
 		}
