@@ -375,22 +375,19 @@ else if (Model.Book?.TransactionType == TransactionType.Lend)
 							$('#borrowModal').modal('show');
 						}
 					},
-					error: function (xhr) {
+					error: function(xhr) {
 						if (xhr.status === 401) {
-							// Redirect to login if unauthorized
-							window.location.href = '/Identity/Account/Login'; // Adjust the URL if necessary
-						}
-						else if (xhr.status == 403) {
-							toastr.error('Admin is Not allowed to borrow books');
+							
+							window.location.href = '/Identity/Account/Login';
+						} else if (xhr.status == 403) {
+							toastr.error('Admin is not allowed to borrow books.');
 							setTimeout(function() {
 								window.location.href = '/';
-							}, 1000); // Delay redirect by 2 seconds
-						}
-
-						else {
-							toastr.error('An error occurred: ' + xhr.statusText);
-						}
-					}
+							}, 1000);
+			} else {
+				toastr.error('An error occurred: ' + xhr.statusText);
+			}
+		}
 				});
 			});
 
@@ -415,7 +412,7 @@ else if (Model.Book?.TransactionType == TransactionType.Lend)
 					error: function (xhr) {
 						if (xhr.status === 401) {
 							// Redirect to login if unauthorized
-							window.location.href = '/Account/Login'; // Adjust the URL if necessary
+							window.location.href = '/Identity/Account/Login'; // Adjust the URL if necessary
 						} else {
 							alert('An error occurred: ' + xhr.statusText);
 						}
