@@ -6,169 +6,154 @@
 }
 
 @section Styles {
-    <link href="~/css/login_signUp.css" rel="stylesheet" />
+    <link href="~/css/login_signup.css" rel="stylesheet" />
 }
 
-<div class="d-flex justify-content-center align-items-center min-vh-100">
-    <div class="card shadow-lg border-0">
-        @if(User.IsInRole(SD.Role_Admin))
-        {
-            <div class="card-header bg-primary bg-gradient text-white py-4">
-                <h2 class="text-white py-2 m-0 text-center">Register - ADMIN PORTAL</h2>
-            </div>
-        }
-        else
-        {
-            <div class="card-header bg-primary bg-gradient text-white py-4">
-                <h2 class="text-white py-2 m-0 text-center">Create New Account</h2>
-            </div>
-        }
-       
+<div class="d-flex justify-content-center align-items-center min-vh-100 p-3">
+    <div class="card bg-white shadow-lg rounded-4 w-100" style="max-width: 850px;">
+        <div class="card-header bg-primary text-white text-center py-4 rounded-top-4">
+            <h2 class="mb-0">@(User.IsInRole(SD.Role_Admin) ? "ADMIN REGISTRATION" : "Join BookLink")</h2>
+        </div>
 
-        <div class="card-body">
-            <p class="text-center text-muted">Join BookLink and start exploring books!</p>
-            <hr />
+        <div class="card-body p-4 p-md-4">
+            <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="g-4">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-4"></div>
 
-            <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-                <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
-
-                <!-- Email -->
-                <div class="row mb-3">
+                <div class="row g-2">
+                    <!-- Email -->
                     <div class="col-12">
                         <div class="input-group">
-                            <span class="input-group-text"><i class="bi bi-envelope" aria-label="Email"></i></span>
+                            <span class="input-group-text"><i class="bi bi-envelope-fill"></i></span>
                             <input asp-for="Input.Email" class="form-control" placeholder="Email Address" />
                         </div>
-                        <span asp-validation-for="Input.Email" class="text-danger"></span>
+                        <span asp-validation-for="Input.Email" class="text-danger small mt-1 d-block"></span>
                     </div>
-                </div>
 
-                <!-- Phone Number -->
-                <div class="row mb-3">
-                    <div class="col-12">
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="bi bi-telephone" aria-label="Phone"></i></span>
-                            <input asp-for="Input.PhoneNumber" class="form-control" placeholder="Phone Number" />
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Personal Information (First Name & Last Name) -->
-                <div class="row mb-3">
+                    <!-- Name Row -->
                     <div class="col-12 col-md-6">
                         <div class="input-group">
-                            <span class="input-group-text"><i class="bi bi-person" aria-label="First Name"></i></span>
+                            <span class="input-group-text"><i class="bi bi-person-badge"></i></span>
                             <input asp-for="Input.FirstName" class="form-control" placeholder="First Name" />
                         </div>
-                        <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+                        <span asp-validation-for="Input.FirstName" class="text-danger small mt-1 d-block"></span>
                     </div>
 
                     <div class="col-12 col-md-6">
                         <div class="input-group">
-                            <span class="input-group-text"><i class="bi bi-person" aria-label="Last Name"></i></span>
+                            <span class="input-group-text"><i class="bi bi-person-badge"></i></span>
                             <input asp-for="Input.LastName" class="form-control" placeholder="Last Name" />
                         </div>
-                        <span asp-validation-for="Input.LastName" class="text-danger"></span>
+                        <span asp-validation-for="Input.LastName" class="text-danger small mt-1 d-block"></span>
                     </div>
-                </div>
 
-                <!-- Gender & Birth Date -->
-                <div class="row mb-3">
-                    <div class="col-12 col-md-6">
+                    <!-- Gender & Birth Date -->
+                    <div class="col-md-6">
                         <div class="input-group">
-                            <span class="input-group-text"><i class="bi bi-gender-ambiguous" aria-label="Gender"></i></span>
+                            <span class="input-group-text"><i class="bi bi-gender-ambiguous"></i></span>
                             <select asp-for="Input.gender" class="form-select" asp-items="Html.GetEnumSelectList<Gender>()">
-                                <option value="">--Select Gender--</option>
                             </select>
                         </div>
-                        <span asp-validation-for="Input.gender" class="text-danger"></span>
+                        <span asp-validation-for="Input.gender" class="text-danger small mt-1 d-block"></span>
                     </div>
 
-                    <div class="col-12 col-md-6">
+                    <div class="col-md-6">
                         <div class="input-group">
-                            <span class="input-group-text"><i class="bi bi-calendar" aria-label="Birth Date"></i></span>
+                            <span class="input-group-text"><i class="bi bi-calendar-date"></i></span>
                             <input asp-for="Input.BirthDate" type="date" class="form-control" />
                         </div>
-                        <span asp-validation-for="Input.BirthDate" class="text-danger"></span>
+                        <span asp-validation-for="Input.BirthDate" class="text-danger small mt-1 d-block"></span>
                     </div>
-                </div>
 
-                <!-- Password & Confirm Password -->
-                <div class="row mb-3">
-                    <div class="col-12 col-md-6">
+                    
+                    <!-- City -->
+                    <div class="col-12">
                         <div class="input-group">
-                            <span class="input-group-text"><i class="bi bi-lock" aria-label="Password"></i></span>
+                            <span class="input-group-text"><i class="bi bi-geo-alt"></i></span>
+                            <select asp-for="Input.City" asp-items="Model.Input.CityList" class="form-select">
+                                <option value="">City</option>
+                            </select>
+                        </div>
+                        <span asp-validation-for="Input.City" class="text-danger small mt-1 d-block"></span>
+                    </div>
+
+
+                    <!-- Passwords -->
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-lock"></i></span>
                             <input asp-for="Input.Password" type="password" class="form-control" placeholder="Password" />
                         </div>
-                        <span asp-validation-for="Input.Password" class="text-danger"></span>
+                        <span asp-validation-for="Input.Password" class="text-danger small mt-1 d-block"></span>
                     </div>
 
-                    <div class="col-12 col-md-6">
+                    <div class="col-md-6">
                         <div class="input-group">
-                            <span class="input-group-text"><i class="bi bi-lock-fill" aria-label="Confirm Password"></i></span>
+                            <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
                             <input asp-for="Input.ConfirmPassword" type="password" class="form-control" placeholder="Confirm Password" />
                         </div>
-                        <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                        <span asp-validation-for="Input.ConfirmPassword" class="text-danger small mt-1 d-block"></span>
                     </div>
-                </div>
 
-                @if (User.IsInRole(SD.Role_Admin))
-                {
-                    <!-- Role Selection -->
-                    <div class="mb-3">
-                        <select asp-for="Input.Role" asp-items="@Model.Input.RoleList" class="form-select">
-                            <option disabled selected>--Select Role--</option>
-                        </select>
+                    <!-- Admin Role Section -->
+                    @if (User.IsInRole(SD.Role_Admin))
+                    {
+                        <div class="col-12">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-shield-lock"></i></span>
+                                <select asp-for="Input.Role" class="form-select">
+                                    <option value="">Select Role</option>
+                                    @foreach (var role in Model.Input.RoleList)
+                                    {
+                                        <option value="@role.Text">@role.Text</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    }
+
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold">
+                            <i class="bi bi-person-plus me-2"></i>Create Account
+                        </button>
                     </div>
-                }
-                <!-- Submit Button -->
-                <div class="d-flex justify-content-center">
-                    <button id="registerSubmit" type="submit" class="btn btn-primary py-2 w-50">
-                        <i class="bi bi-person-plus"></i> Register
-                    </button>
                 </div>
             </form>
 
-            <div class="text-center mt-3">
-                <p class="mb-0">Already have an account? <a asp-page="./Login" class="text-decoration-none">Login here</a></p>
-            </div>
-
-            <hr />
-
-            @if(!User.IsInRole(SD.Role_Admin))
+            @if (!User.IsInRole(SD.Role_Admin))
             {
-            <!-- External Login Section -->
-            <div>
-                <h5 class="text-center">Or Register with</h5>
-                <div class="text-center">
-                    @if ((Model.ExternalLogins?.Count ?? 0) > 0)
-                    {
-                        <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-                            @foreach (var provider in Model.ExternalLogins!)
+                <div class="position-relative my-4">
+                    <hr class="text-muted" />
+                    <span class="position-absolute top-50 start-50 translate-middle bg-white px-2 small text-muted">
+                        or continue with
+                    </span>
+                </div>
+
+                <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                    <div class="d-flex flex-wrap justify-content-center gap-3">
+                        @if ((Model.ExternalLogins?.Count ?? 0) > 0)
+                        {
+                            @foreach (var provider in Model.ExternalLogins)
                             {
                                 <button type="submit"
-                                        class="btn btn-external @(provider.Name.ToLower())-btn w-100 my-2"
+                                        class="btn btn-@provider.Name.ToLower() btn-social w-100 w-sm-auto"
                                         name="provider"
                                         value="@provider.Name"
-                                        title="Register using your @provider.DisplayName account">
-                                    <i class="bi bi-@(provider.Name.ToLower())"></i> Continue with @provider.DisplayName
+                                        title="Connect @provider.DisplayName"
+                                        style="max-width: 250px;">
+                                    <i class="bi bi-@provider.Name.ToLower() fs-5"></i>
+                                    Connect @provider.DisplayName
                                 </button>
                             }
-                        </form>
-                    }
-                    else
-                    {
-                        <div class="alert alert-warning">
-                            <p class="mb-0">
-                                No external authentication services configured.
-                                <a href="https://go.microsoft.com/fwlink/?LinkID=532715">Learn More</a>
-                            </p>
-                        </div>
-                    }
-                </div>
-            </div>
+                        }
+                    </div>
+                </form>
             }
-            </div>
+
+
+            <p class="text-center mt-4 mb-0">
+                Already registered?
+                <a asp-page="./Login" class="text-decoration-none fw-bold text-primary">Sign in here</a>
+            </p>
         </div>
     </div>
 </div>

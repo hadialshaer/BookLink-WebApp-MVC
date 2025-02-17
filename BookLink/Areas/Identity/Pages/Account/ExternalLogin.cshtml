@@ -1,121 +1,105 @@
 ﻿@page
 @model ExternalLoginModel
 @{
-    ViewData["HideNavbar"] = true;
-    ViewData["Title"] = "Complete Registration";
+	ViewData["HideNavbar"] = true;
+	ViewData["Title"] = "Complete Registration";
 }
 
 @section Styles {
-    <link href="~/css/login_signUp.css" rel="stylesheet" />
+	<link href="~/css/login_signUp.css" rel="stylesheet" />
 }
 
 <div class="d-flex justify-content-center align-items-center min-vh-100">
-    <div class="card shadow-lg border-0">
-        <div class="card-header bg-primary bg-gradient text-white py-4">
-            <h2 class="text-white py-2 m-0 text-center">Complete Your Registration</h2>
-        </div>
-        <div class="card-body">
-            <p class="text-center text-muted">
-                <i class="bi bi-check-circle-fill text-success"></i>
-                Authenticated via <strong>@Model.ProviderDisplayName</strong>
-            </p>
-            <hr />
+	<div class="card shadow-lg border-0">
+		<div class="card-header bg-primary bg-gradient text-white py-4">
+			<h2 class="text-white py-2 m-0 text-center">Complete Your Registration</h2>
+		</div>
+		<div class="card-body">
+			<p class="text-center text-muted">
+				<i class="bi bi-check-circle-fill text-success"></i>
+				Authenticated via <strong>@Model.ProviderDisplayName</strong>
+			</p>
+			<hr />
 
-            <form asp-page-handler="Confirmation" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-                <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+			<form asp-page-handler="Confirmation" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+				<div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
 
-                <!-- Email -->
-                <div class="row mb-3">
-                    <div class="col-12">
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="bi bi-envelope"></i></span>
-                            <input asp-for="Input.Email" class="form-control" placeholder="Email Address" />
-                        </div>
-                        <span asp-validation-for="Input.Email" class="text-danger"></span>
-                    </div>
-                </div>
+				<div class="row g-2">
+					<!-- Email -->
+					<div class="col-12">
+						<div class="input-group">
+							<span class="input-group-text"><i class="bi bi-envelope"></i></span>
+							<input asp-for="Input.Email" class="form-control" placeholder="Email Address" />
+						</div>
+						<span asp-validation-for="Input.Email" class="text-danger"></span>
+					</div>
 
-                <!-- Personal Information -->
-                <div class="row mb-3">
-                    <div class="col-12 col-md-6">
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="bi bi-person"></i></span>
-                            <input asp-for="Input.FirstName" class="form-control" placeholder="First Name" />
-                        </div>
-                        <span asp-validation-for="Input.FirstName" class="text-danger"></span>
-                    </div>
-                    <div class="col-12 col-md-6">
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="bi bi-person"></i></span>
-                            <input asp-for="Input.LastName" class="form-control" placeholder="Last Name" />
-                        </div>
-                        <span asp-validation-for="Input.LastName" class="text-danger"></span>
-                    </div>
-                </div>
+					<!-- Personal Information -->
+					<div class="col-12 col-md-6">
+						<div class="input-group">
+							<span class="input-group-text"><i class="bi bi-person"></i></span>
+							<input asp-for="Input.FirstName" class="form-control" placeholder="First Name" />
+						</div>
+						<span asp-validation-for="Input.FirstName" class="text-danger"></span>
+					</div>
+					<div class="col-12 col-md-6">
+						<div class="input-group">
+							<span class="input-group-text"><i class="bi bi-person"></i></span>
+							<input asp-for="Input.LastName" class="form-control" placeholder="Last Name" />
+						</div>
+						<span asp-validation-for="Input.LastName" class="text-danger"></span>
+					</div>
 
-                <!-- Phone Number -->
-                <div class="row mb-3">
-                    <div class="col-12">
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="bi bi-telephone"></i></span>
-                            <input asp-for="Input.PhoneNumber" class="form-control" placeholder="Phone Number" />
-                        </div>
-                        <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
-                    </div>
-                </div>
+					<!-- Gender & Birth Date -->
+					<div class="col-12 col-md-6">
+						<div class="input-group">
+							<span class="input-group-text"><i class="bi bi-gender-ambiguous"></i></span>
+							<select asp-for="Input.gender" class="form-select">
+								<option value="">-- Select Gender --</option>
+								<option value="0">Male</option>
+								<option value="1">Female</option>
+								<option value="2">Other</option>
+							</select>
+						</div>
+						<span asp-validation-for="Input.gender" class="text-danger"></span>
+					</div>
+					<div class="col-12 col-md-6">
+						<div class="input-group">
+							<span class="input-group-text"><i class="bi bi-calendar"></i></span>
+							<input asp-for="Input.BirthDate" type="date" class="form-control" />
+						</div>
+						<span asp-validation-for="Input.BirthDate" class="text-danger"></span>
+					</div>
 
-                <!-- Gender & Birth Date -->
-                <div class="row mb-3">
-                    <div class="col-12 col-md-6">
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="bi bi-gender-ambiguous"></i></span>
-                            <select asp-for="Input.gender" class="form-select">
-                                <option value="">-- Select Gender --</option>
-                                <option value="0">Male</option>
-                                <option value="1">Female</option>
-                                <option value="2">Other</option>
-                            </select>
-                        </div>
-                        <span asp-validation-for="Input.gender" class="text-danger"></span>
-                    </div>
-                    <div class="col-12 col-md-6">
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="bi bi-calendar"></i></span>
-                            <input asp-for="Input.BirthDate" type="date" class="form-control" />
-                        </div>
-                        <span asp-validation-for="Input.BirthDate" class="text-danger"></span>
-                    </div>
-                </div>
+					<!-- City -->
+					<div class="col-12">
+						<div class="input-group">
+							<span class="input-group-text"><i class="bi bi-geo-alt"></i></span>
+							<input asp-for="Input.City" class="form-control" placeholder="City" />
+						</div>
+						<span asp-validation-for="Input.City" class="text-danger"></span>
+					</div>
 
-                <!-- City -->
-                <div class="row mb-4">
-                    <div class="col-12">
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="bi bi-geo-alt"></i></span>
-                            <input asp-for="Input.City" class="form-control" placeholder="City" />
-                        </div>
-                        <span asp-validation-for="Input.City" class="text-danger"></span>
-                    </div>
-                </div>
+					<!-- Submit Button -->
+					<div class="d-flex justify-content-center">
+						<button type="submit" class="btn btn-primary py-2 w-50">
+							<i class="bi bi-check-circle-fill"></i> Complete Registration
+						</button>
+					</div>
 
-                <!-- Submit Button -->
-                <div class="d-flex justify-content-center">
-                    <button type="submit" class="btn btn-primary py-2 w-50">
-                        <i class="bi bi-check-circle-fill"></i> Complete Registration
-                    </button>
-                </div>
-            </form>
+				</div>
+			</form>
+		</div>
 
-            <div class="text-center mt-4">
-                <p class="mb-0">
-                    Already have an account?
-                    <a asp-page="./Login" class="text-decoration-none">Sign in here</a>
-                </p>
-            </div>
-        </div>
-    </div>
+		<div class="text-center mt-4">
+			<p class="mb-0">
+				Already have an account?
+				<a asp-page="./Login" class="text-decoration-none">Sign in here</a>
+			</p>
+		</div>
+	</div>
 </div>
 
 @section Scripts {
-    <partial name="_ValidationScriptsPartial" />
+	<partial name="_ValidationScriptsPartial" />
 }

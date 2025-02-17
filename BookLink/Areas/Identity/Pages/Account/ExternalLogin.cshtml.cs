@@ -20,6 +20,8 @@ using Microsoft.Extensions.Logging;
 using BookLink.Models;
 using BookLink.Utility;
 using System.Net;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace BookLink.Areas.Identity.Pages.Account
 {
@@ -98,6 +100,9 @@ namespace BookLink.Areas.Identity.Pages.Account
 
 			public string? City { get; set; }
 
+			[ValidateNever]
+			public IEnumerable<SelectListItem> CityList { get; set; }
+
 			[DataType(DataType.Date)]
 			public DateTime BirthDate { get; set; }
 
@@ -171,7 +176,15 @@ namespace BookLink.Areas.Identity.Pages.Account
 					BirthDate = DateTime.TryParse(
 						info.Principal.FindFirstValue(ClaimTypes.DateOfBirth)
 						?? info.Principal.FindFirstValue("birthdate"),
-						out var birthDate) ? birthDate : DateTime.MinValue
+						out var birthDate) ? birthDate : DateTime.MinValue,
+					CityList = new List<SelectListItem>
+					{
+						new SelectListItem { Value = "", Text = "Choose..." },
+						new SelectListItem { Value = "Beirut", Text = "Beirut" },
+						new SelectListItem { Value = "South", Text = "South" },
+						new SelectListItem { Value = "North", Text = "North" },
+						new SelectListItem { Value = "Baalbek-Hermel", Text = "Baalbek-Hermel" }
+					}
 				};
 
 				// Handle gender from custom claims
@@ -297,7 +310,14 @@ namespace BookLink.Areas.Identity.Pages.Account
 					ModelState.AddModelError(string.Empty, error.Description);
 				}
 			}
-
+			Input.CityList = new List<SelectListItem>
+			{
+				new SelectListItem { Value = "", Text = "Choose..." },
+				new SelectListItem { Value = "Beirut", Text = "Beirut" },
+				new SelectListItem { Value = "South", Text = "South" },
+				new SelectListItem { Value = "North", Text = "North" },
+				new SelectListItem { Value = "Baalbek-Hermel", Text = "Baalbek-Hermel" }
+			};
 			ProviderDisplayName = info.ProviderDisplayName;
 			ReturnUrl = returnUrl;
 			return Page();

@@ -121,6 +121,9 @@ namespace BookLink.Areas.Identity.Pages.Account
 
 			public string? City { get; set; }
 
+			[ValidateNever]
+			public IEnumerable<SelectListItem> CityList { get; set; }
+
 			[DataType(DataType.Date)]
 			public DateTime BirthDate { get; set; }
 
@@ -148,7 +151,15 @@ namespace BookLink.Areas.Identity.Pages.Account
 				{
 					Text = r.Name,
 					Value = r.Name
-				})
+				}),
+				CityList = new List<SelectListItem>
+				{
+					new SelectListItem { Value = "", Text = "Choose..." },
+					new SelectListItem { Value = "Beirut", Text = "Beirut" },
+					new SelectListItem { Value = "South", Text = "South" },
+					new SelectListItem { Value = "North", Text = "North" },
+					new SelectListItem { Value = "Baalbek-Hermel", Text = "Baalbek-Hermel" }
+				}
 			};
 
 			ReturnUrl = returnUrl;
@@ -172,6 +183,7 @@ namespace BookLink.Areas.Identity.Pages.Account
 				user.BirthDate = Input.BirthDate;
 				user.PhoneNumber = Input.PhoneNumber;
 				user.gender = Input.gender;
+				
 
 
 				var result = await _userManager.CreateAsync(user, Input.Password);
@@ -215,7 +227,7 @@ namespace BookLink.Areas.Identity.Pages.Account
 						{
 							await _signInManager.SignInAsync(user, isPersistent: false);
 						}
-						
+
 						return LocalRedirect(returnUrl);
 					}
 				}
