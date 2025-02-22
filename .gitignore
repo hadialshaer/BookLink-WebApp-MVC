@@ -3,6 +3,11 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+# Ignore appsettings.json files inside BookLink directory
+BookLink/appsettings.json
+BookLink/appsettings.Development.json
+BookLink/appsettings.*.json
+
 # User-specific files
 *.rsuser
 *.suo
