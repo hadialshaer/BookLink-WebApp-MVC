@@ -62,6 +62,15 @@ public class Book
 	[Display(Name = "Max Lend Duration (Days)")]
 	[Range(1, 60, ErrorMessage = "Duration must be between 1 and 60 days")]
 	public int MaxLendDurationDays { get; set; } = 14;
+
+	[Required(ErrorMessage = "Setting a symbolic price for the book gives it tangible value.")]
+	[Range(50000, 200000, ErrorMessage = "Borrowing fee must be between 50,000 and 200,000 ل.ل")]
+	[Display(Name = "Borrowing Fee")]
+	public int BorrowingFee { get; set; } = 100;
+
+	[Range(1, int.MaxValue, ErrorMessage = "Number of pages must be at least 1")]
+	public int NumberOfPages { get; set; }
+
 	public DateTime? DueDate { get; set; }
 	public string? BorrowerId { get; set; }
 

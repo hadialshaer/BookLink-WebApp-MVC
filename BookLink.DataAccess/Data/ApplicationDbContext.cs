@@ -30,6 +30,8 @@ public class ApplicationDbContext : IdentityDbContext<IdentityUser>
 
 	public DbSet<Location> Locations { get; set; }
 
+	public DbSet<Wishlist> Wishlists { get; set; }
+
 	// Seed the database with initial data
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
