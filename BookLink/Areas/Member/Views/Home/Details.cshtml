@@ -1,11 +1,13 @@
 ﻿@model ShoppingCart
 
-
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
 
 @section Styles {
 	<style>
+		.card-title {
+			letter-spacing: 0 !important;
+		}
 		.book-image {
 			border: 3px solid #fff;
 			box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15);
@@ -41,10 +43,49 @@
 				box-shadow: 0 4px 15px rgba(42, 47, 79, 0.15) !important;
 			}
 
-		.bg-white.text-warning {
-			color: var(--primary-color) !important;
+		/* Metadata Styles */
+		.book-metadata {
+			background: rgba(255, 255, 255, 0.9);
+			border-radius: 10px;
+			padding: 1.5rem;
+			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 		}
 
+		.metadata-item {
+			display: flex;
+			align-items: center;
+			margin-bottom: 1rem;
+			padding: 0.8rem 1.2rem;
+			background: #f8f9fa;
+			border-radius: 8px;
+			transition: all 0.3s ease;
+		}
+
+			.metadata-item:hover {
+				transform: translateX(5px);
+				box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+			}
+
+			.metadata-item i {
+				font-size: 1.4rem;
+				width: 40px;
+				color: var(--primary-color);
+			}
+
+		.symbolic-price-card {
+			border-left: 4px solid #2a9d8f;
+			background: rgba(42, 157, 143, 0.08);
+			border-radius: 8px;
+		}
+
+		.fee-disclaimer {
+			font-size: 0.9rem;
+			color: #6c757d;
+			padding-top: 0.8rem;
+			margin-top: 1rem;
+		}
+
+		/* Status Alerts */
 		.alert-warning {
 			background-color: rgba(233, 196, 106, 0.15);
 			border-color: #e9c46a;
@@ -64,7 +105,7 @@
 		<input type="hidden" name="BookId" value="@Model.BookId" />
 
 		<div class="card shadow border-0 mt-4 mb-4 animate__animated animate__fadeIn">
-			<!-- Header -->
+			<!-- Header Section -->
 			<div class="card-header bg-primary bg-gradient text-white py-4 text-center">
 				<div class="row align-items-center">
 					<div class="col-auto">
@@ -73,36 +114,52 @@
 						</a>
 					</div>
 					<div class="col text-center">
-						<h3 class="text-white text-uppercase mb-0">@Model.Book.Title</h3>
+						<h3 class="text-white text-uppercase mb-0" style="letter-spacing: 0 !important;">@Model.Book.Title</h3>
 						<p class="text-white-50 fw-semibold mb-0 mt-2">by @Model.Book.Author</p>
 					</div>
 					<div class="col-auto"></div>
 				</div>
 			</div>
 
-			<!-- Body -->
+			<!-- Main Content -->
 			<div class="card-body">
 				<div class="row">
-					<!-- Image Section -->
+					<!-- Book Image -->
 					<div class="col-12 col-lg-4 text-center mb-4">
 						<div class="position-relative">
 							<img src="@Model.Book.ImageUrl"
 								 class="img-fluid rounded shadow-lg book-image"
 								 alt="@Model.Book.Title cover"
-								 style="max-height: 400px; transition: transform 0.3s ease;"
-								 onmouseover="this.style.transform='scale(1.03)'"
-								 onmouseout="this.style.transform='scale(1)'">
+								 style="max-height: 400px;">
 							<div class="position-absolute top-0 start-0 mt-2 ms-2">
 								<span class="badge bg-info fs-6">
 									<i class="fas fa-book-open me-2"></i>@Model.Book.BookCategory.CategoryName
 								</span>
 							</div>
 						</div>
+						<!-- Metadata Section -->
+						<div class="book-metadata mb-4">
+							<div class="metadata-item">
+								<i class="fas fa-user-edit"></i>
+								<div class="ms-3">
+									<h6 class="mb-0 text-start">Author</h6>
+									<p class="mb-0 text-muted">@Model.Book.Author</p>
+								</div>
+							</div>
+
+							<div class="metadata-item">
+								<i class="fas fa-file-alt"></i>
+								<div class="ms-3">
+									<h6 class="mb-0 text-start">Pages</h6>
+									<p class="mb-0 text-muted">@Model.Book.NumberOfPages pages</p>
+								</div>
+							</div>
+						</div>
 					</div>
 
-					<!-- Details Section -->
+					<!-- Purchase Details -->
 					<div class="col-12 col-lg-8">
-						<!-- Transaction Type Badge -->
+						<!-- Availability Badge -->
 						<div class="mb-4">
 							<div class="d-inline-block bg-success p-2 rounded-pill shadow-sm">
 								<i class="fas fa-tag me-2"></i>
@@ -110,19 +167,11 @@
 							</div>
 						</div>
 
-						<!-- Book Status Indicator -->
-						<div class="alert @(Model.Book.BookStatus == BookStatus.Available ? "alert-success" : "alert-warning")
-							animate__animated animate__pulse" role="alert">
+						<!-- Status Alert -->
+						<div class="alert @(Model.Book.BookStatus == BookStatus.Available ? "alert-success" : "alert-warning") animate__animated animate__pulse">
 							<h5 class="mb-0">
 								<i class="fas fa-info-circle me-2"></i>
-								@if (Model.Book.BookStatus == BookStatus.Available)
-								{
-									<span>Available Now</span>
-								}
-								else
-								{
-									<span>Book Will be available Soon</span>
-								}
+								@(Model.Book.BookStatus == BookStatus.Available ? "Available Now" : "Available Soon")
 							</h5>
 						</div>
 
@@ -166,7 +215,7 @@
 							</div>
 						</div>
 
-						<!-- Add to Cart Button -->
+						<!-- Add to Cart Section -->
 						<div class="d-grid gap-3">
 							<div class="row mb-4">
 								<div class="col-md-8">
@@ -176,27 +225,25 @@
 											<input asp-for="Count" type="number" value="1"
 												   class="form-control text-end" min="1" max="100">
 										</div>
-										<button type="submit" class="btn btn-success btn-lg w-100 py-3 text-uppercase fw-bold
-                                                       animate__animated animate__pulse animate__infinite">
+										<button type="submit" class="btn btn-success btn-lg w-100 py-3 text-uppercase fw-bold animate__animated animate__pulse animate__infinite">
 											<i class="fas fa-cart-plus me-2"></i>Add to Cart
 										</button>
 									</div>
 								</div>
 							</div>
-						</div>
-					</div>
-				</div>
-
-				<!-- Description Section -->
-				<div class="row mt-4">
-					<div class="col-12">
-						<div class="card border-0 shadow-sm">
-							<div class="card-header bg-primary bg-gradient text-white border-bottom-0 pb-0">
-								<h4 class="mb-3">Book Description</h4>
-							</div>
-							<div class="card-body px-0">
-								<div class="lh-lg" style="font-size: 1.1rem; line-height: 1.8; padding-left: 20px;">
-									@Html.Raw(Model.Book.Description)
+						</div>	
+						<!-- Description Section -->
+						<div class="row mt-4">
+							<div class="col-12">
+								<div class="card border-0 shadow-sm">
+									<div class="card-header bg-primary bg-gradient text-white">
+										<h4 class="mb-0"><i class="fas fa-book-open me-2"></i>Book Description</h4>
+									</div>
+									<div class="card-body">
+										<div class="lh-lg" style="font-size: 1.1rem;">
+											@Html.Raw(Model.Book.Description)
+										</div>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -209,7 +256,6 @@
 else if (Model.Book?.TransactionType == TransactionType.Lend)
 {
 	<!-- Borrow Form -->
-
 	<div class="card shadow border-0 mt-4 mb-4 animate__animated animate__fadeIn">
 		<!-- Header -->
 		<div class="card-header bg-primary bg-gradient text-white py-4 text-center">
@@ -220,7 +266,7 @@ else if (Model.Book?.TransactionType == TransactionType.Lend)
 					</a>
 				</div>
 				<div class="col text-center">
-					<h3 class="text-white text-uppercase mb-0">@Model.Book.Title</h3>
+					<h3 class="text-white text-uppercase mb-0" style="letter-spacing: 0 !important;">@Model.Book.Title</h3>
 					<p class="text-white-50 fw-semibold mb-0 mt-2">by @Model.Book.Author</p>
 				</div>
 				<div class="col-auto"></div>
@@ -236,13 +282,40 @@ else if (Model.Book?.TransactionType == TransactionType.Lend)
 						<img src="@Model.Book.ImageUrl"
 							 class="img-fluid rounded shadow-lg book-image"
 							 alt="@Model.Book.Title cover"
-							 style="max-height: 400px; transition: transform 0.3s ease;"
-							 onmouseover="this.style.transform='scale(1.03)'"
-							 onmouseout="this.style.transform='scale(1)'">
+							 style="max-height: 400px;">
 						<div class="position-absolute top-0 start-0 mt-2 ms-2">
 							<span class="badge bg-info fs-6">
 								<i class="fas fa-book-open me-2"></i>@Model.Book.BookCategory.CategoryName
 							</span>
+						</div>
+					</div>
+					<!-- Book Metadata -->
+					<div class="book-metadata mb-4">
+						<div class="metadata-item">
+							<i class="fas fa-user-edit"></i>
+							<div class="ms-3">
+								<h6 class="mb-0 text-start">Author</h6>
+								<p class="mb-0 text-muted">@Model.Book.Author</p>
+							</div>
+						</div>
+
+						<div class="metadata-item">
+							<i class="fas fa-file-alt"></i>
+							<div class="ms-3">
+								<h6 class="mb-0 text-start">Pages</h6>
+								<p class="mb-0 text-muted">@Model.Book.NumberOfPages pages</p>
+							</div>
+						</div>
+
+						<div class="metadata-item">
+							<i class="fas fa-hand-holding-usd"></i>
+							<div class="ms-3">
+								<h6 class="mb-0 text-start">Borrowing Fee</h6>
+								<p class="mb-0 text-success fw-bold text-start">
+									@Model.Book.BorrowingFee
+									<small class="fee-disclaimer">(10% of book's price)</small>
+								</p>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -267,6 +340,17 @@ else if (Model.Book?.TransactionType == TransactionType.Lend)
 						</h5>
 					</div>
 
+					<!-- Symbolic Price Explanation -->
+					<div class="symbolic-price-card p-4 mb-4">
+						<div class="d-flex align-items-start">
+							<i class="fas fa-info-circle me-3 fs-4 text-success"></i>
+							<div>
+								<h5 class="mb-3">Why a Borrowing Fee?</h5>
+								<p><strong class="text-warning">Setting a symbolic price for the book gives it tangible value.</strong></p>
+							</div>
+						</div>
+					</div>
+
 					<!-- Lending Details -->
 					<div class="bg-light p-4 rounded-3 mb-4">
 						<div class="row g-3">
@@ -274,8 +358,10 @@ else if (Model.Book?.TransactionType == TransactionType.Lend)
 								<div class="d-flex align-items-center bg-white p-3 rounded shadow-sm">
 									<i class="fas fa-clock fa-2x text-primary me-3"></i>
 									<div>
-										<h6 class="mb-0">Max Lend Duration</h6>
-										<p class="mb-0 text-muted">@Model.Book.MaxLendDurationDays days</p>
+										<h6 class="mb-0">Lending Period</h6>
+										<p class="mb-0 text-muted">
+											Up to @Model.Book.MaxLendDurationDays days
+										</p>
 									</div>
 								</div>
 							</div>
@@ -286,7 +372,7 @@ else if (Model.Book?.TransactionType == TransactionType.Lend)
 									<div class="d-flex align-items-center bg-white p-3 rounded shadow-sm">
 										<i class="fas fa-calendar-check fa-2x text-success me-3"></i>
 										<div>
-											<h6 class="mb-0">Due Date</h6>
+											<h6 class="mb-0">Available After</h6>
 											<p class="mb-0 text-muted">
 												@Model.Book.DueDate?.ToString("MMM dd, yyyy")
 											</p>
@@ -299,41 +385,36 @@ else if (Model.Book?.TransactionType == TransactionType.Lend)
 
 					<!-- Borrow Request Button -->
 					<div class="d-grid gap-3">
-						<div class="mt-4">
-							@if (Model.Book.BookStatus == BookStatus.Available || Model.Book.BookStatus == BookStatus.Pending)
-							{
-								<button type="button"
-										class="btn btn-borrow-request btn-success btn-lg w-100 py-3 text-uppercase fw-bold animate__animated animate__pulse animate__infinite"
-										data-bookid="@Model.BookId">
-									<i class="fas fa-handshake me-2"></i>Request to Borrow
-								</button>
-
-							}
-							else
-							{
-								<div class="alert alert-info">
-									<h5 class="mb-0">
-										<i class="fas fa-info-circle me-2"></i>
-										This book is currently borrowed and will be available after
-										@Model.Book.DueDate?.ToString("MMM dd, yyyy")
-									</h5>
-								</div>
-							}
-						</div>
+						@if (Model.Book.BookStatus == BookStatus.Available || Model.Book.BookStatus == BookStatus.Pending)
+						{
+							<button type="button"
+									class="btn btn-borrow-request btn-success btn-lg w-100 py-3 text-uppercase fw-bold"
+									data-bookid="@Model.BookId">
+								<i class="fas fa-handshake me-2"></i>Request to Borrow
+							</button>
+						}
+						else
+						{
+							<div class="alert alert-info">
+								<h5 class="mb-0">
+									<i class="fas fa-info-circle me-2"></i>
+									Available after @Model.Book.DueDate?.ToString("MMM dd, yyyy")
+								</h5>
+							</div>
+						}
 					</div>
-				</div>
-			</div>
-
-			<!-- Description Section -->
-			<div class="row mt-4">
-				<div class="col-12">
-					<div class="card border-0 shadow-sm">
-						<div class="card-header bg-primary bg-gradient text-white border-bottom-0 pb-0">
-							<h4 class="mb-3">Book Description</h4>
-						</div>
-						<div class="card-body px-0">
-							<div class="lh-lg" style="font-size: 1.1rem; line-height: 1.8; padding-left: 20px;">
-								@Html.Raw(Model.Book.Description)
+					<!-- Description Section -->
+					<div class="row mt-4">
+						<div class="col-12">
+							<div class="card border-0 shadow-sm">
+								<div class="card-header bg-primary bg-gradient text-white">
+									<h4 class="mb-0"><i class="fas fa-book-open me-2"></i>Book Description</h4>
+								</div>
+								<div class="card-body">
+									<div class="lh-lg" style="font-size: 1.1rem;">
+										@Html.Raw(Model.Book.Description)
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -377,7 +458,7 @@ else if (Model.Book?.TransactionType == TransactionType.Lend)
 					},
 					error: function(xhr) {
 						if (xhr.status === 401) {
-							
+
 							window.location.href = '/Identity/Account/Login';
 						} else if (xhr.status == 403) {
 							toastr.error('Admin is not allowed to borrow books.');
