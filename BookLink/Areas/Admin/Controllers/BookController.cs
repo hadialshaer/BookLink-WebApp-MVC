@@ -71,6 +71,10 @@ namespace BookLink.Areas.Admin.Controllers
 		{
 			if (bookVM.Book.TransactionType == TransactionType.Sell)
 			{
+				// Remove errors for Lend-specific fields
+				ModelState.Remove("Book.BorrowingFee");
+				ModelState.Remove("Book.MaxLendDurationDays");
+
 				// Selling-specific validation
 				if (bookVM.Book.ListPrice == null || bookVM.Book.ListPrice <= 0)
 				{

@@ -44,6 +44,13 @@
 							<label asp-for="Book.Author"></label>
 							<span asp-validation-for="Book.Author" class="text-danger"></span>
 						</div>
+
+						<!-- Number of Pages -->
+						<div class="form-floating py-2 col-12">
+							<input asp-for="Book.NumberOfPages" type="number" class="form-control border-0 shadow" min="1" />
+							<label asp-for="Book.NumberOfPages"></label>
+							<span asp-validation-for="Book.NumberOfPages" class="text-danger"></span>
+						</div>
 						@if (Model.Book.TransactionType == TransactionType.Sell)
 						{
 							<!-- Prices -->
@@ -95,17 +102,6 @@
 							</select>
 							<label asp-for="Book.CategoryId">Book Category</label>
 							<span asp-validation-for="Book.CategoryId" class="text-danger"></span>
-						</div>
-
-						<!--Statues-->
-						<div class="form-floating py-2 col-6">
-							<select asp-for="Book.BookStatus" class="form-select border-0 shadow">
-								<option value="Available">Available</option>
-								<option value="Borrowed">Borrowed</option>
-								<option value="Sold">Sold</option>
-								<option value="Pending">Pending</option>
-							</select>
-							<label asp-for="Book.BookStatus">Book Status</label>
 						</div>
 
 						<!--File Upload-->
