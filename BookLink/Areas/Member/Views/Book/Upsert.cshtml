@@ -1,6 +1,6 @@
 ﻿@model BookVM
 
-<div class="card-header bg-success bg-gradient text-white py-4">
+<div class="card-header bg-success bg-gradient text-white py-4 mt-4">
     <!-- Card Header -->
     <div class="row">
         <div class="col-12 text-center">
@@ -43,6 +43,14 @@
 						<label asp-for="Book.Author"></label>
 						<span asp-validation-for="Book.Author" class="text-danger"></span>
 					</div>
+
+
+					<!-- Number of Pages -->
+					<div class="form-floating py-2 col-12">
+						<input asp-for="Book.NumberOfPages" type="number" class="form-control border-0 shadow" min="1" />
+						<label asp-for="Book.NumberOfPages"></label>
+						<span asp-validation-for="Book.NumberOfPages" class="text-danger"></span>
+					</div>
 					@if (Model.Book.TransactionType == TransactionType.Sell)
 					{
 						<!-- Prices -->
@@ -71,18 +79,36 @@
 					}
 					else
 					{
+						<!-- Borrowing Fee -->
+						<div class="form-floating py-2 col-12">
+							<select asp-for="Book.BorrowingFee" class="form-select border-0 shadow">
+								<option value="50000">50,000 ل.ل</option>
+								<option value="100000">100,000 ل.ل</option>
+								<option value="150000">150,000 ل.ل</option>
+								<option value="200000">200,000 ل.ل</option>
+							</select>
+							<label asp-for="Book.BorrowingFee"></label>
+							<span asp-validation-for="Book.BorrowingFee" class="text-danger"></span>
+							<div class="alert alert-info mt-2 py-2 border-start border-4 border-info" role="alert">
+								<div class="d-flex align-items-center">
+									<i class="bi bi-hand-thumbs-up fs-5 me-2"></i>
+									<div>
+										<h6 class="alert-heading mb-2">Why charge a fee?</h6>
+										<ul class="mb-1 ps-3">
+											<li>This fee goes <strong>directly to you</strong> as the lender</li>
+											<li>Ensures borrowers value and care for your book</li>
+											<small class="text-muted d-block mt-1">Setting a symbolic price for the book gives it tangible value.</small>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- Max Lend Duration -->
 						<div class="form-floating py-2 col-12">
 							<input asp-for="Book.MaxLendDurationDays" class="form-control border-0 shadow" />
 							<label asp-for="Book.MaxLendDurationDays"></label>
 							<span asp-validation-for="Book.MaxLendDurationDays" class="text-danger"></span>
-						</div>
-
-						<div class="form-floating py-2 col-12">
-							<input asp-for="Book.DueDate" class="form-control border-0 shadow"
-								   type="date"
-								   required />
-							<label asp-for="Book.DueDate"></label>
-							<span asp-validation-for="Book.DueDate" class="text-danger"></span>
 						</div>
 					}
 
@@ -94,17 +120,6 @@
 						</select>
 						<label asp-for="Book.CategoryId">Book Category</label>
 						<span asp-validation-for="Book.CategoryId" class="text-danger"></span>
-					</div>
-
-					<!--Statues-->
-					<div class="form-floating py-2 col-6">
-						<select asp-for="Book.BookStatus" class="form-select border-0 shadow">
-							<option value="Available">Available</option>
-							<option value="Borrowed">Borrowed</option>
-							<option value="Sold">Sold</option>
-							<option value="Pending">Pending</option>
-						</select>
-						<label asp-for="Book.BookStatus">Book Status</label>
 					</div>
 
 					<!--File Upload-->
@@ -156,13 +171,7 @@
 			'anchor', 'autolink', 'charmap', 'codesample', 'emoticons', 'lists', 'table', 'visualblocks', 'wordcount'
 		  ],
 		  toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent',
-		  tinycomments_mode: 'embedded',
-		  tinycomments_author: 'Author name',
-		  mergetags_list: [
-			{ value: 'First.Name', title: 'First Name' },
-			{ value: 'Email', title: 'Email' },
-		  ],
-		  ai_request: (request, respondWith) => respondWith.string(() => Promise.reject('See docs to implement AI Assistant')),
+
 		});
 	</script>
 

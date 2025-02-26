@@ -29,7 +29,7 @@
 
 						<!-- Product Details -->
 						<div class="col-md-6">
-							<h4 class="text-uppercase" style="color: #613659;">@item.Book.Title</h4>
+							<h4 class="text-uppercase" style="color: #613659; letter-spacing: 0 !important;">@item.Book.Title</h4>
 							<p class="text-muted mb-2">@Html.Raw(item.Book.Description)</p>
 							<div class="d-flex align-items-center">
 								<span class="h5 mb-0" style="color: #57bedc;">@item.Book.Price.GetValueOrDefault().ToString("c")</span>
@@ -85,19 +85,6 @@
 							style="background: linear-gradient(45deg, #613659, #3CB371); color: white;">
 								Checkout
 							</a>
-						</div>
-					</div>
-
-					<!-- Related Products -->
-					<div class="col-md-3">
-						<div class="bg-light p-4 rounded-3 shadow-sm">
-							<h5 class="text-uppercase" style="color: #613659;">Related Products</h5>
-							<ul class="list-unstyled">
-								<li><a href="#" class="text-decoration-none" style="color: #57bedc;">Product 1</a></li>
-								<li><a href="#" class="text-decoration-none" style="color: #57bedc;">Product 2</a></li>
-								<li><a href="#" class="text-decoration-none" style="color: #57bedc;">Product 3</a></li>
-							</ul>
-							<a href="#" class="btn btn-link text-decoration-none" style="color: #57bedc;">View More</a>
 						</div>
 					</div>
 				</div>
