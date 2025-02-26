@@ -2,126 +2,138 @@
 @inject SignInManager<User> SignInManager
 @inject UserManager<User> UserManager
 
-<ul class="navbar-nav align-items-center">
-    @if (SignInManager.IsSignedIn(User))
-    {
-        var user = await UserManager.GetUserAsync(User);
+<ul class="navbar-nav align-items-center ms-auto">
+	@if (SignInManager.IsSignedIn(User))
+	{
+		var user = await UserManager.GetUserAsync(User);
 
-        <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle d-flex align-items-center pe-3" href="#" role="button"
-               data-bs-toggle="dropdown" aria-expanded="false">
-                <div class="d-flex flex-column me-2">
-                    <span class="small mb-n1">Welcome</span>
-                    <span class="fw-semibold">@user.FirstName</span>
-                </div>
-                <i class="bi bi-person-circle fs-5 text-primary"></i>
-            </a>
-            <ul class="dropdown-menu dropdown-menu-end border-0 shadow-sm">
-                <li>
-                    <a class="dropdown-item d-flex align-items-center"
-                       asp-area="Identity" asp-page="/Account/Manage/Index">
-                        <i class="bi bi-person-gear me-2"></i>Profile
-                    </a>
-                </li>
-                <li><hr class="dropdown-divider"></li>
-                <li>
-                    <form id="logoutForm" asp-area="Identity" asp-page="/Account/Logout"
-                          asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                        <button type="submit" class="dropdown-item d-flex align-items-center text-danger">
-                            <i class="bi bi-box-arrow-right me-2"></i>Logout
-                        </button>
-                    </form>
-                </li>
-            </ul>
-        </li>
-    }
-    else
-    {
-        <li class="nav-item">
-            <a class="nav-link btn btn-outline-primary me-2 px-3 hover-scale"
-               id="register" asp-area="Identity" asp-page="/Account/Register">
-                <i class="bi bi-person-add me-1"></i>Register
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link btn btn-primary px-3 hover-scale"
-               id="login" asp-area="Identity" asp-page="/Account/Login">
-                <i class="bi bi-box-arrow-in-right me-1"></i>Login
-            </a>
-        </li>
-    }
+		<li class="nav-item dropdown">
+			<a class="nav-link dropdown-toggle d-flex align-items-center pe-3" href="#" role="button"
+			   data-bs-toggle="dropdown" aria-expanded="false">
+				<div class="d-flex flex-column me-2">
+					<span class="small mb-n1">Welcome</span>
+					<span class="fw-semibold">@user.FirstName</span>
+				</div>
+				<i class="bi bi-person-circle fs-5 text-primary"></i>
+			</a>
+			<ul class="dropdown-menu dropdown-menu-end border-0 shadow-sm">
+				<li>
+					<a class="dropdown-item d-flex align-items-center"
+					   asp-area="Identity" asp-page="/Account/Manage/Index">
+						<i class="bi bi-person-gear me-2"></i>Profile
+					</a>
+				</li>
+				<li><hr class="dropdown-divider"></li>
+				<li>
+					<form id="logoutForm" asp-area="Identity" asp-page="/Account/Logout"
+						  asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+						<button type="submit" class="dropdown-item d-flex align-items-center text-danger">
+							<i class="bi bi-box-arrow-right me-2"></i>Logout
+						</button>
+					</form>
+				</li>
+			</ul>
+		</li>
+	}
+	else
+	{
+		<li class="nav-item">
+			<a class="nav-link btn btn-outline-light text-white me-2 px-3 hover-scale"
+			   id="register" asp-area="Identity" asp-page="/Account/Register">
+				<i class="bi bi-person-add me-1"></i>Register
+			</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link btn btn-outline-light text-white me-2 px-3 hover-scale"
+			   id="login" asp-area="Identity" asp-page="/Account/Login">
+				<i class="bi bi-box-arrow-in-right me-1"></i>Login
+			</a>
+		</li>
+	}
+
 </ul>
 
 <style>
-    .nav-link {
-        transition: all 0.3s ease;
-        position: relative;
-    }
+	.nav-link {
+		transition: all 0.3s ease;
+		position: relative;
+	}
 
-        .nav-link:hover {
-            transform: translateY(-1px);
-        }
+		.nav-link:hover {
+			transform: translateY(-1px);
+		}
 
-    .dropdown-menu {
-        transition: all 0.3s ease;
-        min-width: 200px;
-        border-radius: 12px;
-    }
+	.dropdown-menu {
+		transition: all 0.3s ease;
+		min-width: 200px;
+		border-radius: 12px;
+	}
 
-    .dropdown-item {
-        padding: 0.75rem 1.25rem;
-        border-radius: 8px;
-        transition: all 0.2s ease;
-    }
+	.dropdown-item {
+		padding: 0.75rem 1.25rem;
+		border-radius: 8px;
+		transition: all 0.2s ease;
+	}
 
-        .dropdown-item:hover {
-            background-color: #f8f9fa;
-            transform: translateX(5px);
-        }
+		.dropdown-item:hover {
+			background-color: #f8f9fa;
+			transform: translateX(5px);
+		}
 
-    .hover-scale {
-        transition: transform 0.3s ease;
-    }
+	.hover-scale {
+		transition: transform 0.3s ease;
+	}
 
-        .hover-scale:hover {
-            transform: scale(1.05);
-        }
+		.hover-scale:hover {
+			transform: scale(1.05);
+		}
 
-    .nav-item:not(:last-child) {
-        margin-right: 0.75rem;
-    }
+	.nav-item:not(:last-child) {
+		margin-right: 0.75rem;
+	}
 
-    @@keyframes welcomePulse {
-        0% {
-            transform: scale(1);
-        }
+	@@keyframes welcomePulse {
+		0% {
+			transform: scale(1);
+		}
 
-        50% {
-            transform: scale(1.02);
-        }
+		50% {
+			transform: scale(1.02);
+		}
 
-        100% {
-            transform: scale(1);
-        }
-    }
+		100% {
+			transform: scale(1);
+		}
+	}
 
-    .nav-link.dropdown-toggle:hover .fw-semibold {
-        animation: welcomePulse 0.8s ease;
-    }
+	.nav-link.dropdown-toggle:hover .fw-semibold {
+		animation: welcomePulse 0.8s ease;
+	}
+
+	.btn-outline-light {
+		border-color: rgba(255,255,255,0.5);
+		color: white;
+	}
+
+		.btn-outline-light:hover {
+			background-color: rgba(255,255,255,0.1);
+			border-color: white;
+			color: white;
+		}
 </style>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Add hover effect to dropdown parent
-        const dropdownToggle = document.querySelector('.nav-link.dropdown-toggle');
-        if(dropdownToggle) {
-            dropdownToggle.addEventListener('mouseenter', function() {
-                this.closest('.nav-item').classList.add('hover');
-            });
+	document.addEventListener('DOMContentLoaded', function() {
+		// Add hover effect to dropdown parent
+		const dropdownToggle = document.querySelector('.nav-link.dropdown-toggle');
+		if(dropdownToggle) {
+			dropdownToggle.addEventListener('mouseenter', function() {
+				this.closest('.nav-item').classList.add('hover');
+			});
 
-            dropdownToggle.addEventListener('mouseleave', function() {
-                this.closest('.nav-item').classList.remove('hover');
-            });
-        }
-    });
+			dropdownToggle.addEventListener('mouseleave', function() {
+				this.closest('.nav-item').classList.remove('hover');
+			});
+		}
+	});
 </script>

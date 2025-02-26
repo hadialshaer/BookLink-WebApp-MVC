@@ -1,75 +1,129 @@
 ﻿@{
-    // Set the parent layout dynamically or default to the main application layout
-    Layout = ViewData["ParentLayout"]?.ToString() ?? "/Views/Shared/_Layout.cshtml";
+	Layout = ViewData["ParentLayout"]?.ToString() ?? "/Views/Shared/_Layout.cshtml";
 }
 
-<!-- Custom Styles for this layout -->
 @section Styles {
-    <style>
-        /* Sidebar Styling */
-        .sidebar {
-            padding: 1rem;
-            border-right: 1px solid #dee2e6;
-            position: sticky;
-            top: 0; /* Stick to the top of the viewport */
-            height: 100vh; /* Full height of the viewport */
-            overflow-y: auto;
-            background-color: transparent;
-        }
+	<style>
+		/* Improved Sidebar Styling */
+		.sidebar {
+			padding: 1rem 0;
+			border-right: 1px solid #dee2e6;
+			position: sticky;
+			top: 80px; /* Account for fixed navbar height */
+			height: calc(100vh - 80px); /* Full height minus navbar */
+			overflow-y: auto;
+			background-color: #f8f9fa !important;
+		}
 
-            /* Hover Effect for Sidebar Links */
-            .sidebar .nav-link {
-                color: #333;
-                transition: all 0.3s ease;
-                padding: 0.75rem 1rem;
-                border-radius: 0.25rem;
-                text-decoration: none;
-            }
+			.sidebar .nav {
+				flex-direction: column;
+				gap: 0.5rem;
+				padding: 0 1rem;
+			}
 
-                .sidebar .nav-link:hover {
-                    background-color: transparent;
-                    color: #57bedc;
-                    border-left: 4px solid #613659;
-                    transform: scale(1.05);
-                }
+			.sidebar .nav-link {
+				color: #495057 !important;
+				transition: all 0.3s ease;
+				padding: 0.75rem 1rem;
+				border-radius: 0.5rem;
+				display: flex;
+				align-items: center;
+				gap: 0.75rem;
+			}
 
-                /* Active Link Highlighting */
-                .sidebar .nav-link.active {
-                    background-color: transparent;
-                    color: #211522;
-                    font-weight: bold;
-                    border-left: 4px solid #c197d2;
-                }
+				.sidebar .nav-link:hover {
+					background-color: rgba(97, 54, 89, 0.1) !important;
+					color: #613659 !important;
+					transform: translateX(5px);
+				}
 
-            /* Smooth Scrolling for Overflow */
-            .sidebar::-webkit-scrollbar {
-                width: 8px;
-            }
+				.sidebar .nav-link.active {
+					background-color: #613659 !important;
+					color: white !important;
+					pointer-events: none; /* Prevent clicking on active item */
+				}
 
-            .sidebar::-webkit-scrollbar-thumb {
-                background: #d3b1c2;
-                border-radius: 4px;
-            }
-    </style>
+			/* Scrollbar Styling */
+			.sidebar::-webkit-scrollbar {
+				width: 6px;
+			}
+
+			.sidebar::-webkit-scrollbar-thumb {
+				background: #d3b1c2;
+				border-radius: 4px;
+			}
+
+		.sidebar {
+			scrollbar-width: thin;
+			scrollbar-color: #d3b1c2 transparent;
+		}
+
+		/* Main Content Area */
+		.main-content {
+			padding-top: 2rem; /* Add space below navbar */
+			min-height: calc(100vh - 80px);
+		}
+
+		@@media (max-width: 767.98px) {
+			.sidebar {
+				top: 0; /* Reset for mobile */
+				height: auto;
+			}
+
+			.main-content {
+				padding-top: 1rem;
+			}
+		}
+	</style>
 }
 
-<h1>Manage your account</h1>
-<div>
-    <p class="text-muted">Change your account settings</p>
-    <hr />
-    <div class="row">
-        <!-- Sidebar -->
-        <div class="col-md-3 col-lg-2 sidebar d-flex flex-column">
-            @await Html.PartialAsync("_ManageNav")
-        </div>
-        <!-- Main Content -->
-        <div class="col-md-9 col-lg-10 main-content">
-            @RenderBody()
-        </div>
-    </div>
+<div class="container-fluid">
+	<div class="row">
+		<!-- Sidebar -->
+		<div class="col-lg-2 col-md-3 sidebar">
+			<partial name="_ManageNav" />
+		</div>
+
+		<!-- Main Content -->
+		<div class="col-lg-10 col-md-9 main-content">
+			<h1 class="mb-4">Manage Your Account</h1>
+			<div class="card shadow-sm border-0">
+				<div class="card-body">
+					@RenderBody()
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 
-<!-- Scripts Section -->
 @section Scripts {
-    @RenderSection("Scripts", required: false)
+	@RenderSection("Scripts", required: false)
+	<script>
+		document.addEventListener('DOMContentLoaded', function() {
+			// Get current path without query parameters and trailing slash
+			const currentPath = window.location.pathname
+				.toLowerCase()
+				.replace(/\/$/, '') // Remove trailing slash
+				.split('?')[0]; // Remove query parameters
+
+			document.querySelectorAll('.sidebar .nav-link').forEach(link => {
+				// Get link path and normalize
+				let linkPath = link.getAttribute('href')
+					.toLowerCase()
+					.replace(/\/$/, '')
+					.split('?')[0];
+
+				// Remove any trailing index
+				linkPath = linkPath.replace(/\/index$/, '');
+
+				// Reset active class
+				link.classList.remove('active');
+
+				// Exact match condition
+				if (currentPath === linkPath) {
+					link.classList.add('active');
+				}
+			});
+		});
+	</script>
 }

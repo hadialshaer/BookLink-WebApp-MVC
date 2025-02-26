@@ -3,20 +3,32 @@
 
 @{
     ViewData["HideNavbar"] = true;
+    ViewData["Footer"] = true;
 }
 
 @section Styles {
     <link href="~/css/login_signup.css" rel="stylesheet" />
+    <style>
+        body{
+			padding-top: 0;
+        }
+    </style>
 }
 
-<div class="d-flex justify-content-center align-items-center min-vh-100 p-3">
+<div class="d-flex justify-content-center align-items-center">
     <div class="card auth-card bg-white shadow-lg rounded-4 w-100" style="max-width: 850px;">
         <div class="card-header bg-primary text-white text-center py-4 rounded-top-4">
             <h2 class="mb-0">@(User.IsInRole(SD.Role_Admin) ? "ADMIN REGISTRATION" : "Join BookLink")</h2>
         </div>
 
         <div class="card-body p-4">
-            <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="needs-validation" novalidate>
+            <!-- Back to Home link -->
+            <div class="text-center mb-4">
+                <a asp-area="Member" asp-controller="Home" asp-action="Index" class="text-decoration-none text-primary hover-scale">
+                    <i class="bi bi-arrow-left-short"></i> Back to Home
+                </a>
+            </div>
+            <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="needs-validation">
                 <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-4"></div>
 
                 <!-- Legend for Required Fields -->

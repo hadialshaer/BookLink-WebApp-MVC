@@ -696,14 +696,13 @@ bg-success {
         background-color: #4b7147;
         border-color: #4b7147;
     }
-
-.book-card {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+.book-card.hover-transform {
+    transition: transform 0.3s ease;
 }
 
-    .book-card:hover {
-        transform: scale(1.05);
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    .book-card.hover-transform:hover {
+        transform: translateY(-10px) rotate(1deg);
+        box-shadow: 0 12px 24px rgba(0,0,0,0.15);
     }
 
 .form-control {

@@ -1,164 +1,281 @@
 ﻿@using Microsoft.AspNetCore.Http
 @inject IHttpContextAccessor HttpContextAccessor
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 	<title>@ViewData["Title"] - BookLink</title>
 
 	<!-- Include Bootstrap CSS -->
 	<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
-
-	<!-- Include application-specific styles -->
-	<link rel="stylesheet" href="~/BookLink.styles.css" asp-append-version="true" />
 	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-
-	<!-- Include Bootstrap Icons CSS -->
+	<link rel="stylesheet" href="~/BookLink.styles.css" asp-append-version="true" />
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
-	<!-- Add Font Awesome for icons -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
-
-	<!-- Include Toastr CSS (for notifications) -->
 	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
-
-	<!-- Include DataTables CSS (for tables) -->
 	<link rel="stylesheet" href="//cdn.datatables.net/2.2.1/css/dataTables.dataTables.min.css" />
 
-	<!-- Allow additional styles to be included in specific views -->
+	<style>
+		body {
+			padding-top: 80px;
+			background-color: #f8f9fa;
+			min-height: 100vh;
+			display: flex;
+			flex-direction: column;
+		}
+
+		.navbar {
+			background-color: #192E2F !important;
+			box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+			padding: 0.5rem 1rem;
+			height: 80px;
+		}
+
+		.nav-link {
+			transition: all 0.3s ease;
+			position: relative;
+			display: flex;
+			align-items: center;
+			gap: 0.5rem;
+		}
+
+			.nav-link.active {
+				font-weight: 600;
+				background-color: rgba(255,255,255,0.1);
+			}
+
+			.nav-link:hover {
+				transform: translateY(-2px);
+			}
+
+			.nav-link::after {
+				content: '';
+				position: absolute;
+				bottom: 0;
+				left: 0;
+				width: 0;
+				height: 2px;
+				background: white;
+				transition: width 0.3s ease;
+			}
+
+			.nav-link:hover::after {
+				width: 100%;
+			}
+
+		.dropdown-menu {
+			background-color: #192E2F;
+			border: 1px solid rgba(255,255,255,0.1);
+		}
+
+		.dropdown-item {
+			color: white !important;
+		}
+
+			.dropdown-item:hover {
+				background-color: rgba(255,255,255,0.1) !important;
+			}
+
+		@@media (max-width: 992px) {
+			.navbar-collapse {
+				padding: 1rem 0;
+				background-color: #192E2F;
+			}
+
+			.nav-link {
+				margin: 0.5rem 1rem;
+				padding: 0.5rem 1rem;
+			}
+
+			.dropdown-menu {
+				background-color: rgba(25, 46, 47, 0.95);
+				margin-left: 1rem;
+				width: calc(100% - 2rem);
+			}
+
+			.navbar-nav {
+				width: 100%;
+			}
+		}
+
+		<!-- Admin cutum-- >
+		.nav-item.admin-link {
+			margin: 0 0.5rem;
+		}
+
+		.nav-link.bg-danger {
+			transition: all 0.3s ease;
+		}
+
+			.nav-link.bg-danger:hover {
+				transform: translateY(-2px);
+				box-shadow: 0 4px 15px rgba(220,53,69,0.3);
+			}
+
+			.nav-link.bg-danger.active {
+				background-color: #dc3545 !important;
+				box-shadow: 0 2px 8px rgba(220,53,69,0.4);
+			}
+
+		@@media (max-width: 992px) {
+			.nav-link.bg-danger {
+				margin: 0.5rem 1rem;
+				width: calc(100% - 2rem);
+			}
+		}
+	</style>
+
 	@RenderSection("Styles", required: false)
 </head>
 <body>
 	<header>
-		<!-- Navigation bar -->
 		@if (ViewData["HideNavbar"] == null || !(bool)ViewData["HideNavbar"])
 		{
-			<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+			<nav class="navbar navbar-expand-lg navbar-dark fixed-top py-4">
 				<div class="container-fluid">
-					<a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">BookLink</a>
+					<!-- Brand/Logo -->
+					<a class="navbar-brand fw-bold" href="#">
+						<i class="fas fa-book-open me-2"></i>
+						<span class="d-none d-sm-inline">BookLink</span>
+						<span class="d-sm-none">BL</span>
+					</a>
 
-					<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
-					aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+					<!-- Toggler -->
+					<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
 						<span class="navbar-toggler-icon"></span>
 					</button>
 
-					<div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-						<ul class="navbar-nav me-auto">
-							<li class="nav-item">
-								<a class="nav-link" asp-area="Member" asp-controller="Home" asp-action="Index">
-									<i class="bi bi-house-door"></i> Home
-								</a>
-							</li>
+					<!-- Navbar Content -->
+					<div class="collapse navbar-collapse justify-content-between" id="navbarNav">
+						
+						<ul class="navbar-nav mx-auto">
 
 							@if (!User.IsInRole(SD.Role_Admin))
 							{
 								<li class="nav-item">
-									<a class="nav-link" asp-area="Member" asp-controller="Book" asp-action="Index">
-										<i class="bi bi-book"></i> My Books
+									<a class="nav-link text-white rounded bg-opacity-75 hover-bg-opacity-100
+									@(ViewContext.RouteData.Values["Controller"]?.ToString() == "Home" ? "active" : "")"
+									   asp-area="Member" asp-controller="Home" asp-action="Index">
+										<i class="bi bi-house-door"></i>
+										<span class="d-none d-md-inline">Home</span>
 									</a>
 								</li>
 								<li class="nav-item">
-									<a class="nav-link" asp-area="Member" asp-controller="Borrow" asp-action="Index">
-										<i class="bi bi-arrow-left-right"></i> Borrowings
+									<a class="nav-link text-white rounded bg-opacity-75 hover-bg-opacity-100
+										@(ViewContext.RouteData.Values["Controller"]?.ToString() == "Book" ? "active" : "")"
+									   asp-area="Member" asp-controller="Book" asp-action="Index">
+										<i class="bi bi-book"></i>
+										<span class="d-none d-md-inline">My Books</span>
 									</a>
 								</li>
-
-								
-									<li class="nav-item">
-										<a class="nav-link text-dark" asp-area="Member" asp-controller="Cart" asp-action="Index">
+								<li class="nav-item">
+									<a class="nav-link text-white rounded bg-opacity-75 hover-bg-opacity-100
+										@(ViewContext.RouteData.Values["Controller"]?.ToString() == "WishList" ? "active" : "")"
+									   asp-area="Member" asp-controller="WishList" asp-action="Index">
+										<i class="bi bi-book"></i>
+										<span class="d-none d-md-inline">My Wish List</span>
+									</a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link text-white rounded bg-opacity-75 hover-bg-opacity-100
+										@(ViewContext.RouteData.Values["Controller"]?.ToString() == "Borrow" ? "active" : "")"
+									   asp-area="Member" asp-controller="Borrow" asp-action="Index">
+										<i class="bi bi-arrow-left-right"></i>
+										<span class="d-none d-md-inline">Borrowings</span>
+									</a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link text-white rounded bg-opacity-75 hover-bg-opacity-100
+										@(ViewContext.RouteData.Values["Controller"]?.ToString() == "Cart" ? "active" : "")"
+									   asp-area="Member" asp-controller="Cart" asp-action="Index">
 										@await Component.InvokeAsync("ShoppingCart")
-										</a>
-									</li>
-								
+									</a>
+								</li>
 							}
 
 							@if (User.IsInRole(SD.Role_Admin))
 							{
-								<li class="nav-item dropdown">
-									<a class="nav-link dropdown-toggle text-white bg-danger px-3 rounded shadow-sm" href="#"
-									   role="button" data-bs-toggle="dropdown" aria-expanded="false">
-										<i class="bi bi-gear"></i> Admin Panel
+
+								<li class="nav-item admin-nav">
+									<a class="nav-link text-white bg-danger rounded bg-opacity-75 hover-bg-opacity-100
+                                       @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Category" ? "active" : "")"
+									   asp-area="Admin" asp-controller="Category" asp-action="Index">
+										<i class="bi bi-folder"></i>
+										<span class="d-none d-md-inline">Categories</span>
 									</a>
-									<ul class="dropdown-menu shadow-sm rounded-3">
-										<li>
-											<a class="dropdown-item d-flex align-items-center py-2 px-3 rounded"
-											   asp-area="Admin" asp-controller="Category" asp-action="Index">
-												<i class="bi bi-folder me-2 text-primary fs-5"></i> <strong>Manage Categories</strong>
-											</a>
-										</li>
-										<li>
-											<a class="dropdown-item d-flex align-items-center py-2 px-3 rounded"
-											   asp-area="Admin" asp-controller="Book" asp-action="Index">
-												<i class="bi bi-book me-2 text-success fs-5"></i> <strong>Manage Books</strong>
-											</a>
-										</li>
-
-										<li>
-											<a class="dropdown-item d-flex align-items-center py-2 px-3 rounded"
-											   asp-area="Admin" asp-controller="Order" asp-action="Index">
-												<i class="bi bi-clipboard me-2 text-success fs-5"></i><strong>Manage Orders</strong>
-											</a>
-										</li>
-
-										<li><hr class="dropdown-divider"></li>
-										<li>
-											<a class="dropdown-item d-flex align-items-center py-2 px-3 rounded text-danger"
-											   asp-area="Identity" asp-page="/Account/Register">
-												<i class="bi bi-people me-2 fs-5"></i> <strong>Create User</strong>
-											</a>
-										</li>
-									</ul>
+								</li>
+								<li class="nav-item admin-nav">
+									<a class="nav-link text-white bg-danger rounded bg-opacity-75 hover-bg-opacity-100
+										@(ViewContext.RouteData.Values["Controller"]?.ToString() == "Book" ? "active" : "")"
+									   asp-area="Admin" asp-controller="Book" asp-action="Index">
+										<i class="bi bi-book me-2"></i>
+										<span class="d-none d-md-inline">Books</span>
+									</a>
+								</li>
+								<li class="nav-item admin-nav">
+									<a class="nav-link text-white bg-danger rounded bg-opacity-75 hover-bg-opacity-100
+										@(ViewContext.RouteData.Values["Controller"]?.ToString() == "Order" ? "active" : "")"
+									   asp-area="Admin" asp-controller="Order" asp-action="Index">
+										<i class="bi bi-clipboard me-2"></i>
+										<span class="d-none d-md-inline">Orders</span>
+									</a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link text-white bg-danger rounded bg-opacity-75 hover-bg-opacity-100
+										@(ViewContext.RouteData.Values["Page"]?.ToString() == "/Account/Register" ? "active" : "")"
+									   asp-area="Identity" asp-page="/Account/Register">
+										<i class="bi bi-people me-2"></i>
+										<span class="d-none d-md-inline">Create User</span>
+									</a>
 								</li>
 							}
-							
 						</ul>
-
-						<partial name="_LoginPartial" />
+						<ul class="navbar-nav">
+							<partial name="_LoginPartial" />
+						</ul>
 					</div>
 				</div>
 			</nav>
 		}
 	</header>
 
-	<!-- Main content -->
-	<div class="container">
-		<main role="main" class="pb-3">
-			<!-- Notification partial -->
+	<main class="flex-grow-1">
+		<div class="container mt-4">
 			<partial name="_Notification" />
-			<!-- Render the page content -->
 			@RenderBody()
-		</main>
-	</div>
-
-	<!-- Footer -->
-	<footer class="border-top footer text-muted">
-		<div class="container text-center">
-			Made with <i class="bi bi-heart-fill text-danger"></i> by Hadi Alshaer
 		</div>
-	</footer>
+	</main>
 
-	<!-- Include jQuery -->
+	@if (ViewData["Footer"] == null || !(bool)ViewData["Footer"])
+	{
+		<footer class="footer py-3">
+			<div class="container text-center">
+				Made with <i class="bi bi-heart-fill text-danger"></i> by Hadi Alshaer
+			</div>
+		</footer>
+	}
+
 	<script src="~/lib/jquery/dist/jquery.min.js"></script>
-	<!-- Include Bootstrap JS  -->
 	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-
-	<!-- Include DataTables JS  -->
-	<script src="//cdn.datatables.net/2.2.1/js/dataTables.min.js" asp-append-version="true"></script>
-
-	<!-- Include TinyMCE  -->
-	<script src="https://cdn.tiny.cloud/1/eg58go00jp9emuvyhba36urdyyxtt9ouuhohozhkvh7my4iz/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
-
-	<!-- Include SweetAlert2  -->
+	<script src="//cdn.datatables.net/2.2.1/js/dataTables.min.js"></script>
+	<script src="https://cdn.tiny.cloud/1/eg58go00jp9emuvyhba36urdyyxtt9ouuhohozhkvh7my4iz/tinymce/7/tinymce.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-	<!-- Site-specific JavaScript -->
 	<script src="~/js/site.js" asp-append-version="true"></script>
 
+	<script>
+		// active link detection
+		document.querySelectorAll('.nav-link').forEach(link => {
+			const currentPath = window.location.pathname.toLowerCase();
+			const linkPath = link.getAttribute('href').toLowerCase();
 
-	<!-- Allow additional scripts to be included in specific views -->
+			if (currentPath === linkPath ||
+			   (linkPath !== '/' && currentPath.startsWith(linkPath))) {
+				link.classList.add('active');
+			}
+		});
+	</script>
+
 	@await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

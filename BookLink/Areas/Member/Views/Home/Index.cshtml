@@ -45,7 +45,7 @@
 						<div class="col-12 col-lg-8">
 							<div class="input-group shadow-sm rounded-pill overflow-hidden">
 								<input type="text" class="form-control border-0 py-3"
-									   placeholder="Search by title, author, or ISBN...">
+									   placeholder="Search by title, author ...">
 								<button class="btn btn-primary px-4 rounded-end">
 									<i class="fas fa-search"></i>
 								</button>
@@ -87,8 +87,7 @@
 	</div>
 
 	<!-- Book Cards -->
-	<div class="container py-5" data-aos="zoom-in">
-		<div class="row g-4">
+	<div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 row-cols-xl-6 g-3 py-5 g-4">
 			@foreach (var book in Model)
 			{
 				<div class="col-6 col-sm-4 col-md-3 col-lg-2 d-flex" data-aos="flip-up">
