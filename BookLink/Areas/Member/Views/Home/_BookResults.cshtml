@@ -10,7 +10,7 @@
 
     @if (Model.Books != null && Model.Books.Any())
     {
-        <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 row-cols-xl-6 g-3 py-5">
+        <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 row-cols-xl-6 g-3 py-5 justify-content-center">
             @foreach (var book in Model.Books)
             {
                 <div class="col book-container" data-aos="fade-up">
