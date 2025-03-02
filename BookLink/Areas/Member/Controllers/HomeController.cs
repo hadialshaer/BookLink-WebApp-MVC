@@ -222,7 +222,7 @@ namespace BookLink.Areas.Member.Controllers
 			return availability switch
 			{
 				AvailabilityStatus.Available => bookListQuery.Where(b => b.BookStatus == BookStatus.Available),
-				AvailabilityStatus.ComingSoon => bookListQuery.Where(b => b.BookStatus == BookStatus.Pending),
+				AvailabilityStatus.ComingSoon => bookListQuery.Where(b => b.BookStatus == BookStatus.Borrowed),
 				_ => bookListQuery
 			};
 		}
