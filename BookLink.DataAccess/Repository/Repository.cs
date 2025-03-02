@@ -1,5 +1,6 @@
 ﻿using BookLink.DataAccess.Data;
 using BookLink.DataAccess.Repository.IRepository;
+using BookLink.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -67,7 +68,7 @@ namespace BookLink.DataAccess.Repository
 
 			if (!string.IsNullOrEmpty(includeProperties))
 			{
-				foreach(var includeProperty in includeProperties
+				foreach (var includeProperty in includeProperties
 					.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
 				{
 					query = query.Include(includeProperty);
@@ -77,6 +78,25 @@ namespace BookLink.DataAccess.Repository
 
 			return query.ToList();
 		}
+
+		public IQueryable<T> GetAllQuerable(Expression<Func<T, bool>>? filter = null, string? includeProperties = null)
+		{
+			IQueryable<T> query = dbSet;
+			if (filter != null)
+			{
+				query = query.Where(filter);
+			}
+			if (!string.IsNullOrEmpty(includeProperties))
+			{
+				foreach (var includeProperty in includeProperties
+					.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+				{
+					query = query.Include(includeProperty);
+				}
+			}
+			return query;
+		}
+
 
 		public void Remove(T entity)
 		{
