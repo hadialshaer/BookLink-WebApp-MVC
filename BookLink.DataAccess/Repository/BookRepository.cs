@@ -1,6 +1,7 @@
 ﻿using BookLink.DataAccess.Data;
 using BookLink.DataAccess.Repository.IRepository;
 using BookLink.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,6 +48,32 @@ namespace BookLink.DataAccess.Repository
 				bookFromDb.LenderId = book.LenderId;
 				bookFromDb.BookStatus = book.BookStatus;
 			}
+		}
+
+		public IQueryable<Book> FullTextSearch(string searchTerm)
+		{
+			if (string.IsNullOrWhiteSpace(searchTerm))
+				return _context.Books.AsQueryable();
+
+			// Sanitize input
+			var cleanTerm = searchTerm.Trim()
+				.Replace("\"", "")  // Remove quotes
+				.Replace("*", "")   // Remove wildcards
+				.Replace("'", "''"); // Escape single quotes
+
+			// Split and format terms
+			var terms = cleanTerm.Split()
+				.Where(t => t.Length > 0)
+				.Select(t => $"\"{t}*\"")
+				.ToList();
+
+			if (!terms.Any()) return _context.Books.AsQueryable();
+
+			var searchQuery = string.Join(" AND ", terms);
+
+			return _context.Books
+				.FromSqlRaw($"SELECT * FROM Books WHERE CONTAINS((Title, Author, Description), {{0}})", searchQuery)
+				.AsNoTracking();
 		}
 	}
 }

@@ -10,6 +10,7 @@ namespace BookLink.DataAccess.Repository.IRepository
 	public interface IBookRepository : IRepository<Book> // Book is a model
 	{
 		void Update(Book book);
+		public IQueryable<Book> FullTextSearch(string searchTerm);
 
 	}
 }

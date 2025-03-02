@@ -102,5 +102,10 @@ public enum BookStatus
 	Sold,        
 	Pending      
 }
+public enum AvailabilityStatus
+{
+	Available,
+	ComingSoon
+}
 
 
