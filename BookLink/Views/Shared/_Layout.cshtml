@@ -16,115 +16,6 @@
 	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
 	<link rel="stylesheet" href="//cdn.datatables.net/2.2.1/css/dataTables.dataTables.min.css" />
 
-	<style>
-		body {
-			padding-top: 80px;
-			background-color: #f8f9fa;
-			min-height: 100vh;
-			display: flex;
-			flex-direction: column;
-		}
-
-		.navbar {
-			background-color: #192E2F !important;
-			box-shadow: 0 2px 15px rgba(0,0,0,0.1);
-			padding: 0.5rem 1rem;
-			height: 80px;
-		}
-
-		.nav-link {
-			transition: all 0.3s ease;
-			position: relative;
-			display: flex;
-			align-items: center;
-			gap: 0.5rem;
-		}
-
-			.nav-link.active {
-				font-weight: 600;
-				background-color: rgba(255,255,255,0.1);
-			}
-
-			.nav-link:hover {
-				transform: translateY(-2px);
-			}
-
-			.nav-link::after {
-				content: '';
-				position: absolute;
-				bottom: 0;
-				left: 0;
-				width: 0;
-				height: 2px;
-				background: white;
-				transition: width 0.3s ease;
-			}
-
-			.nav-link:hover::after {
-				width: 100%;
-			}
-
-		.dropdown-menu {
-			background-color: #192E2F;
-			border: 1px solid rgba(255,255,255,0.1);
-		}
-
-		.dropdown-item {
-			color: white !important;
-		}
-
-			.dropdown-item:hover {
-				background-color: rgba(255,255,255,0.1) !important;
-			}
-
-		@@media (max-width: 992px) {
-			.navbar-collapse {
-				padding: 1rem 0;
-				background-color: #192E2F;
-			}
-
-			.nav-link {
-				margin: 0.5rem 1rem;
-				padding: 0.5rem 1rem;
-			}
-
-			.dropdown-menu {
-				background-color: rgba(25, 46, 47, 0.95);
-				margin-left: 1rem;
-				width: calc(100% - 2rem);
-			}
-
-			.navbar-nav {
-				width: 100%;
-			}
-		}
-
-		<!-- Admin cutum-- >
-		.nav-item.admin-link {
-			margin: 0 0.5rem;
-		}
-
-		.nav-link.bg-danger {
-			transition: all 0.3s ease;
-		}
-
-			.nav-link.bg-danger:hover {
-				transform: translateY(-2px);
-				box-shadow: 0 4px 15px rgba(220,53,69,0.3);
-			}
-
-			.nav-link.bg-danger.active {
-				background-color: #dc3545 !important;
-				box-shadow: 0 2px 8px rgba(220,53,69,0.4);
-			}
-
-		@@media (max-width: 992px) {
-			.nav-link.bg-danger {
-				margin: 0.5rem 1rem;
-				width: calc(100% - 2rem);
-			}
-		}
-	</style>
 
 	@RenderSection("Styles", required: false)
 </head>
@@ -132,7 +23,7 @@
 	<header>
 		@if (ViewData["HideNavbar"] == null || !(bool)ViewData["HideNavbar"])
 		{
-			<nav class="navbar navbar-expand-lg navbar-dark fixed-top py-4">
+			<nav class="navbar navbar-expand-lg navbar-dark fixed-top py-2">
 				<div class="container-fluid">
 					<!-- Brand/Logo -->
 					<a class="navbar-brand fw-bold" href="#">
@@ -240,7 +131,7 @@
 		}
 	</header>
 
-	<main class="flex-grow-1">
+	<main>
 		<div class="container mt-4">
 			<partial name="_Notification" />
 			@RenderBody()
@@ -249,12 +140,35 @@
 
 	@if (ViewData["Footer"] == null || !(bool)ViewData["Footer"])
 	{
-		<footer class="footer py-3">
-			<div class="container text-center">
-				Made with <i class="bi bi-heart-fill text-danger"></i> by Hadi Alshaer
+		<footer class="footer mt-auto border-top">
+			<div class="container py-2">
+				<div class="row align-items-center">
+					<!-- Left Side: Copyright -->
+					<div class="col-md-4 text-center text-md-start mb-2 mb-md-0">
+						<span class="text-white-60 small">
+							© @DateTime.Now.Year BookLink. All rights reserved.
+						</span>
+					</div>
+
+					<!-- Center: Contact & GitHub -->
+					<div class="col-md-4 text-center mb-2 mb-md-0">
+						<span class="text-white-60 small">
+							<a href="mailto:hadialshaer.dev@gmail.com" class="text-white-60">hadialshaer.dev@gmail.com</a> |
+							<a href="https://github.com/hadialshaer" target="_blank" class="text-white-60">GitHub: hadialshaer</a>
+						</span>
+					</div>
+
+					<!-- Right Side: Built by -->
+					<div class="col-md-4 text-center text-md-end">
+						<span class="text-white-60 small">
+							Built with passion by Hadi Alshaer
+						</span>
+					</div>
+				</div>
 			</div>
 		</footer>
 	}
+
 
 	<script src="~/lib/jquery/dist/jquery.min.js"></script>
 	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
