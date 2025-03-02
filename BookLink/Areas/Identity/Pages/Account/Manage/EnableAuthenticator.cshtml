@@ -21,8 +21,20 @@
             </p>
         </li>
         <li>
-            <p>Scan the QR Code or enter this key <kbd>@Model.SharedKey</kbd> into your two factor authenticator app. Spaces and casing do not matter.</p>
-            <div id="qrCode"></div>
+            <p>Scan the QR Code or enter this key <kbd>@Model.SharedKey</kbd></p>
+            <div class="text-center">
+                    @if (!string.IsNullOrEmpty(Model.QrCodeImageBase64))
+                    {
+                    <img src="data:image/png;base64,@Model.QrCodeImageBase64"
+                         alt="QR Code"
+                         style="width: 200px; height: 200px;"
+                         class="border p-2 rounded-3" />
+                    }
+                    else
+                    {
+                    <div class="alert alert-danger">QR code generation failed</div>
+                    }
+            </div>
             <div id="qrCodeData" data-url="@Model.AuthenticatorUri"></div>
         </li>
         <li>

@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using QRCoder;
 
 namespace BookLink.Areas.Identity.Pages.Account.Manage
 {
@@ -23,7 +24,10 @@ namespace BookLink.Areas.Identity.Pages.Account.Manage
         private readonly ILogger<EnableAuthenticatorModel> _logger;
         private readonly UrlEncoder _urlEncoder;
 
-        private const string AuthenticatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
+		[TempData]
+		public string QrCodeImageBase64 { get; set; }
+
+		private const string AuthenticatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
 
         public EnableAuthenticatorModel(
             UserManager<User> userManager,
@@ -83,7 +87,7 @@ namespace BookLink.Areas.Identity.Pages.Account.Manage
             [DataType(DataType.Text)]
             [Display(Name = "Verification Code")]
             public string Code { get; set; }
-        }
+		}
 
         public async Task<IActionResult> OnGetAsync()
         {
@@ -94,8 +98,20 @@ namespace BookLink.Areas.Identity.Pages.Account.Manage
             }
 
             await LoadSharedKeyAndQrCodeUriAsync(user);
+			// Add QR code generation
+			using (var qrGenerator = new QRCodeGenerator())
+			{
+				var qrCodeData = qrGenerator.CreateQrCode(
+					AuthenticatorUri,
+					QRCodeGenerator.ECCLevel.Q
+				);
 
-            return Page();
+				var qrCode = new PngByteQRCode(qrCodeData);
+				var qrCodeImage = qrCode.GetGraphic(20);
+				QrCodeImageBase64 = Convert.ToBase64String(qrCodeImage);
+			}
+
+			return Page();
         }
 
         public async Task<IActionResult> OnPostAsync()
