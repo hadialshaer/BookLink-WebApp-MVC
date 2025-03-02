@@ -8,8 +8,8 @@
     <div class="card-body p-4">
         <!-- Header Row -->
         <div class="row pb-3">
-            <div class="col-md-6"></div>
-            <div class="col-md-6 text-md-end">
+            <div class="col-md-6">
+
                 <!-- Sell button -->
                 <a asp-controller="Book" asp-action="Upsert" asp-route-transactionType="Sell" class="btn btn-secondary me-2">
                     <i class="bi bi-plus-circle"></i> Sell New Book
@@ -17,6 +17,12 @@
                 <!-- Lend button -->
                 <a asp-controller="Book" asp-action="Upsert" asp-route-transactionType="Lend" class="btn btn-success">
                     <i class="bi bi-arrow-repeat"></i> Lend New Book
+                </a>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <!-- Export button -->
+                <a asp-action="ExportToExcel" class="btn btn-info me-2">
+                    <i class="bi bi-file-earmark-excel"></i> Export to Excel
                 </a>
             </div>
         </div>

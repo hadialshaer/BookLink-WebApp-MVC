@@ -3,6 +3,7 @@ using BookLink.DataAccess.Repository.IRepository;
 using BookLink.Models;
 using BookLink.Models.ViewModels;
 using BookLink.Utility;
+using ClosedXML.Excel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -194,6 +195,58 @@ namespace BookLink.Areas.Admin.Controllers
 				}).ToList();
 
 			return Json(new { data = books });
+		}
+
+		// Export to Excel
+		[HttpGet]
+		public IActionResult ExportToExcel()
+		{
+			var books = _unitOfWork.Book.GetAll(includeProperties: "BookCategory").ToList();
+
+			using var workbook = new XLWorkbook();
+			var worksheet = workbook.Worksheets.Add("Books");
+
+			// Add headers
+			worksheet.Cell(1, 1).Value = "Title";
+			worksheet.Cell(1, 2).Value = "Author";
+			worksheet.Cell(1, 3).Value = "Category";
+			worksheet.Cell(1, 4).Value = "Transaction Type";
+			worksheet.Cell(1, 5).Value = "List Price";
+			worksheet.Cell(1, 6).Value = "Price (1-3)";
+			worksheet.Cell(1, 7).Value = "Price (3+)";
+			worksheet.Cell(1, 8).Value = "Price (5+)";
+			worksheet.Cell(1, 9).Value = "Borrowing Fee";
+			worksheet.Cell(1, 10).Value = "Max Lend Days";
+			worksheet.Cell(1, 11).Value = "Due Date";
+			worksheet.Cell(1, 12).Value = "Status";
+
+			// Add data
+			int row = 2;
+			foreach (var book in books)
+			{
+				worksheet.Cell(row, 1).Value = book.Title;
+				worksheet.Cell(row, 2).Value = book.Author;
+				worksheet.Cell(row, 3).Value = book.BookCategory?.CategoryName;
+				worksheet.Cell(row, 4).Value = book.TransactionType.ToString();
+				worksheet.Cell(row, 5).Value = book.ListPrice;
+				worksheet.Cell(row, 6).Value = book.Price;
+				worksheet.Cell(row, 7).Value = book.Price3;
+				worksheet.Cell(row, 8).Value = book.Price5;
+				worksheet.Cell(row, 9).Value = book.BorrowingFee;
+				worksheet.Cell(row, 10).Value = book.MaxLendDurationDays;
+				worksheet.Cell(row, 11).Value = book.DueDate?.ToString("yyyy-MM-dd");
+				worksheet.Cell(row, 12).Value = book.BookStatus.ToString();
+				row++;
+			}
+
+			using var stream = new MemoryStream();
+			workbook.SaveAs(stream);
+			var content = stream.ToArray();
+
+			return File(
+				content,
+				"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+				$"Books_Export_{DateTime.Now:yyyyMMddHHmmss}.xlsx");
 		}
 
 		// Delete book
