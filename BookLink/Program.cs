@@ -14,6 +14,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 #region Configure Services (Dependency Injection)
 
+
+builder.Services.AddMemoryCache();
+
 // Add Razor Pages and MVC
 builder.Services.AddRazorPages();
 builder.Services.AddControllersWithViews();

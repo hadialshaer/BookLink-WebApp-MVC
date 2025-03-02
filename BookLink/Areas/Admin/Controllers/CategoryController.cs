@@ -4,6 +4,7 @@ using BookLink.Models;
 using BookLink.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace BookLink.Areas.Admin.Controllers
 {
@@ -12,10 +13,11 @@ namespace BookLink.Areas.Admin.Controllers
 	public class CategoryController : Controller
 	{
 		private readonly IUnitOfWork _unitOfWork;
-
-		public CategoryController(IUnitOfWork unitOfWork)
+		private readonly IMemoryCache _cache;
+		public CategoryController(IUnitOfWork unitOfWork, IMemoryCache cache)
 		{
 			_unitOfWork = unitOfWork;
+			_cache = cache;
 		}
 
 		// GET: Display categories
@@ -47,6 +49,7 @@ namespace BookLink.Areas.Admin.Controllers
 
 			TempData["success"] = "Category created succesfully";
 
+			_cache.Remove("CategoriesCacheKey");
 			return RedirectToAction(nameof(Index));
 		}
 
@@ -82,7 +85,7 @@ namespace BookLink.Areas.Admin.Controllers
 			_unitOfWork.Save();
 
 			TempData["success"] = "Category updated successfully";
-
+			_cache.Remove("CategoriesCacheKey");
 			return Json(new { success = true, message = "Category updated successfully" });
 		}
 
@@ -102,7 +105,7 @@ namespace BookLink.Areas.Admin.Controllers
 			_unitOfWork.Save();
 
 			TempData["success"] = "Category deleted succesfully"; // TempData is used to store temporary data, works for only one request
-
+			_cache.Remove("CategoriesCacheKey");
 			return RedirectToAction(nameof(Index));
 		}
 

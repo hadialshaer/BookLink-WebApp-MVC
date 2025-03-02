@@ -9,7 +9,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory; // Added for IMemoryCache
 using System.Diagnostics;
+using System.Collections.Generic;
 
 namespace BookLink.Areas.Member.Controllers
 {
@@ -21,12 +23,18 @@ namespace BookLink.Areas.Member.Controllers
 		private readonly ILogger<HomeController> _logger;
 		private readonly IUnitOfWork _unitOfWork;
 		private readonly UserManager<User> _userManager;
+		private readonly IMemoryCache _memoryCache;
 
-		public HomeController(ILogger<HomeController> logger, IUnitOfWork unitOfWork, UserManager<User> userManager)
+		public HomeController(
+			ILogger<HomeController> logger,
+			IUnitOfWork unitOfWork,
+			UserManager<User> userManager,
+			IMemoryCache memoryCache)
 		{
 			_logger = logger;
 			_unitOfWork = unitOfWork;
 			_userManager = userManager;
+			_memoryCache = memoryCache;
 		}
 
 		#endregion
@@ -223,10 +231,34 @@ namespace BookLink.Areas.Member.Controllers
 
 		#region Dropdown Helpers
 
+		private const string CategoriesCacheKey = "BookCategories";
+
 		private IEnumerable<SelectListItem> GetCategories()
 		{
-			return _unitOfWork.Category.GetAll()
-				.Select(c => new SelectListItem { Text = c.CategoryName, Value = c.CategoryId.ToString() });
+			// Try to get categories from cache
+			if (!_memoryCache.TryGetValue(CategoriesCacheKey, out IEnumerable<SelectListItem> cachedCategories))
+			{
+				// Cache miss: Fetch from database
+				cachedCategories = _unitOfWork.Category.GetAll()
+					.Select(c => new SelectListItem
+					{
+						Text = c.CategoryName,
+						Value = c.CategoryId.ToString()
+					})
+					.ToList();
+
+				// Set cache options: e.g., expire after 10 minutes
+				var cacheOptions = new MemoryCacheEntryOptions
+				{
+					AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10),
+					SlidingExpiration = TimeSpan.FromMinutes(5) // Reset expiration timer if accessed
+				};
+
+				// Store in cache
+				_memoryCache.Set(CategoriesCacheKey, cachedCategories, cacheOptions);
+			}
+
+			return cachedCategories;
 		}
 
 		private IEnumerable<SelectListItem> GetTransactionTypes()
