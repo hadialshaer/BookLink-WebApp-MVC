@@ -23,6 +23,9 @@ namespace BookLink.DataAccess.Repository.IRepository
 		IBorrowRequestRepository BorrowRequest { get; }
 		ILocationRepository Location { get; }
 
+		IWishlistRepository Wishlist { get; }
+
 		void Save();
+		Task SaveAsync();
 	}
 }

@@ -20,5 +20,7 @@ namespace BookLink.Models.ViewModels
 		public IEnumerable<SelectListItem> Categories { get; set; }
 		public IEnumerable<SelectListItem> TransactionTypes { get; set; }
 		public IEnumerable<SelectListItem> AvailabilityOptions { get; set; }
+
+		public List<int> WishlistBookIds { get; set; } = new List<int>();
 	}
 }

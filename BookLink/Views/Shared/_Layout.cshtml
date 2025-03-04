@@ -63,9 +63,11 @@
 								<li class="nav-item">
 									<a class="nav-link text-white rounded bg-opacity-75 hover-bg-opacity-100
 										@(ViewContext.RouteData.Values["Controller"]?.ToString() == "WishList" ? "active" : "")"
-									   asp-area="Member" asp-controller="WishList" asp-action="Index">
+									   asp-area="Member" asp-controller="Wishlist" asp-action="Index">
 										<i class="bi bi-book"></i>
-										<span class="d-none d-md-inline">My Wish List</span>
+										<span class="d-none d-md-inline">
+											My Wishlist @await Component.InvokeAsync("Wishlist")
+										</span>		
 									</a>
 								</li>
 								<li class="nav-item">
@@ -80,7 +82,7 @@
 									<a class="nav-link text-white rounded bg-opacity-75 hover-bg-opacity-100
 										@(ViewContext.RouteData.Values["Controller"]?.ToString() == "Cart" ? "active" : "")"
 									   asp-area="Member" asp-controller="Cart" asp-action="Index">
-										@await Component.InvokeAsync("ShoppingCart")
+										<i class="bi bi-cart"></i> @await Component.InvokeAsync("ShoppingCart")
 									</a>
 								</li>
 							}
@@ -175,6 +177,7 @@
 	<script src="//cdn.datatables.net/2.2.1/js/dataTables.min.js"></script>
 	<script src="https://cdn.tiny.cloud/1/eg58go00jp9emuvyhba36urdyyxtt9ouuhohozhkvh7my4iz/tinymce/7/tinymce.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 	<script src="~/js/site.js" asp-append-version="true"></script>
 
 	<script>
@@ -188,6 +191,14 @@
 				link.classList.add('active');
 			}
 		});
+		// Centralized function to update wishlist count
+		function updateWishlistCount(count) {
+			console.log('Updating #wishlist-count to:', count);
+			$('#wishlist-count').text('(' + count + ')');
+			if ($('#wishlist-count').length === 0) {
+				console.error('#wishlist-count not found in DOM');
+			}
+		}
 	</script>
 
 	@await RenderSectionAsync("Scripts", required: false)

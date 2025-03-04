@@ -14,7 +14,6 @@ namespace BookLink.Models
 		public string UserId { get; set; }
 		public int BookId { get; set; }
 		public DateTime AddedDate { get; set; } = DateTime.UtcNow;
-		public WishlistStatus Status { get; set; } = WishlistStatus.ToRead;
 
 		// Navigation properties
 		[ForeignKey("UserId")]
@@ -23,12 +22,5 @@ namespace BookLink.Models
 		[ForeignKey("BookId")]
 		[ValidateNever]
 		public Book Book { get; set; }
-	}
-
-	public enum WishlistStatus
-	{
-		ToRead,
-		ToBorrow,
-		ToPurchase
 	}
 }

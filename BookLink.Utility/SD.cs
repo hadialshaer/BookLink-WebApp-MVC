@@ -30,6 +30,7 @@ namespace BookLink.Utility
 		public const string PaymentStatusRejected = "Rejected";
 
 		public const string SessionCart = "SessionShoppingCart";
-		
+
+		public static string SessionWishlist = "SessionWishlist";
 	}
 }

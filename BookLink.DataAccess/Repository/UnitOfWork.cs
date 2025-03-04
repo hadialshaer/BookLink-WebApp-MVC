@@ -22,6 +22,8 @@ namespace BookLink.DataAccess.Repository
 		public IBorrowRequestRepository BorrowRequest { get; private set; }
 		public ILocationRepository Location { get; private set; }
 
+		public IWishlistRepository Wishlist { get; private set; }
+
 		public UnitOfWork(ApplicationDbContext context)
 		{
 			_context = context;
@@ -33,11 +35,17 @@ namespace BookLink.DataAccess.Repository
 			OrderHeader = new OrderHeaderRepository(_context);
 			BorrowRequest = new BorrowRequestRepository(_context);
 			Location = new LocationRepository(_context);
+			Wishlist = new WishlistRepository(_context);
 		}
 		
 		public void Save()
 		{
 			_context.SaveChanges();
+		}
+
+		public Task SaveAsync()
+		{
+			return _context.SaveChangesAsync();
 		}
 	}
 }

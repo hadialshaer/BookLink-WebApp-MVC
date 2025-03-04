@@ -1,4 +1,6 @@
-using System.Threading.Tasks;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using BookLink.DataAccess.Repository;
 using BookLink.DataAccess.Repository.IRepository;
 using BookLink.Models;
@@ -9,17 +11,14 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory; // Added for IMemoryCache
-using System.Diagnostics;
-using System.Collections.Generic;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
 
 namespace BookLink.Areas.Member.Controllers
 {
 	[Area("Member")]
 	public class HomeController : Controller
 	{
-		#region Fields and Constructor
-
 		private readonly ILogger<HomeController> _logger;
 		private readonly IUnitOfWork _unitOfWork;
 		private readonly UserManager<User> _userManager;
@@ -37,15 +36,11 @@ namespace BookLink.Areas.Member.Controllers
 			_memoryCache = memoryCache;
 		}
 
-		#endregion
-
-		#region Primary Actions
-
-		public async Task<IActionResult> Index()
+		public IActionResult Index()
 		{
 			var bookListQuery = _unitOfWork.Book.GetAllQuerable(includeProperties: "BookCategory");
-			var totalItems = await bookListQuery.CountAsync();
-			var items = await bookListQuery.Take(12).ToListAsync();
+			var totalItems = bookListQuery.Count();
+			var items = bookListQuery.Take(12).ToList();
 
 			var model = new BookSearchVM
 			{
@@ -56,15 +51,20 @@ namespace BookLink.Areas.Member.Controllers
 				Availability = null,
 				Categories = GetCategories(),
 				TransactionTypes = GetTransactionTypes(),
-				AvailabilityOptions = GetAvailabilityOptions()
+				AvailabilityOptions = GetAvailabilityOptions(),
+				WishlistBookIds = GetWishlistBookIds()
 			};
 			return View(model);
 		}
 
-		// GET - Details
 		public IActionResult Details(int bookId)
 		{
 			var book = _unitOfWork.Book.Get(b => b.BookId == bookId, includeProperties: "BookCategory");
+			if (book == null)
+			{
+				TempData["error"] = "Book not found.";
+				return RedirectToAction(nameof(Index));
+			}
 
 			ShoppingCart cart = new()
 			{
@@ -72,7 +72,6 @@ namespace BookLink.Areas.Member.Controllers
 				Count = 1,
 				BookId = bookId,
 			};
-
 			return View(cart);
 		}
 
@@ -82,7 +81,6 @@ namespace BookLink.Areas.Member.Controllers
 		{
 			var userId = _userManager.GetUserId(User);
 
-			// Check if the user is an admin and prevent them from adding to the cart
 			if (User.IsInRole(SD.Role_Admin))
 			{
 				TempData["error"] = "Admins cannot add items to the cart.";
@@ -96,7 +94,6 @@ namespace BookLink.Areas.Member.Controllers
 
 			if (cartFromDb != null)
 			{
-				// Shopping cart already exists
 				cartFromDb.Count += shoppingCart.Count;
 				_unitOfWork.ShoppingCart.Update(cartFromDb);
 				_unitOfWork.Save();
@@ -104,7 +101,6 @@ namespace BookLink.Areas.Member.Controllers
 			}
 			else
 			{
-				// Shopping cart does not exist, ADD Cart
 				_unitOfWork.ShoppingCart.Add(shoppingCart);
 				_unitOfWork.Save();
 				TempData["success"] = "Item added to cart successfully!";
@@ -113,10 +109,6 @@ namespace BookLink.Areas.Member.Controllers
 			}
 			return RedirectToAction(nameof(Index));
 		}
-
-		#endregion
-
-		#region API Endpoints
 
 		[HttpGet]
 		public IActionResult SearchSuggestions(string term)
@@ -151,7 +143,7 @@ namespace BookLink.Areas.Member.Controllers
 		}
 
 		[HttpGet]
-		public async Task<IActionResult> SearchResults(
+		public IActionResult SearchResults(
 			string searchString,
 			string category,
 			TransactionType? transactionType,
@@ -168,11 +160,11 @@ namespace BookLink.Areas.Member.Controllers
 				bookListQuery = ApplyTransactionFilter(bookListQuery, transactionType);
 				bookListQuery = ApplyAvailabilityFilter(bookListQuery, availability);
 
-				var totalItems = await bookListQuery.CountAsync();
-				var items = await bookListQuery
+				var totalItems = bookListQuery.Count();
+				var items = bookListQuery
 					.Skip((page - 1) * pageSize)
 					.Take(pageSize)
-					.ToListAsync();
+					.ToList();
 
 				var model = new BookSearchVM
 				{
@@ -183,7 +175,8 @@ namespace BookLink.Areas.Member.Controllers
 					Availability = availability,
 					Categories = GetCategories(),
 					TransactionTypes = GetTransactionTypes(),
-					AvailabilityOptions = GetAvailabilityOptions()
+					AvailabilityOptions = GetAvailabilityOptions(),
+					WishlistBookIds = GetWishlistBookIds()
 				};
 
 				return PartialView("_BookResults", model);
@@ -194,10 +187,6 @@ namespace BookLink.Areas.Member.Controllers
 				return BadRequest("Search error");
 			}
 		}
-
-		#endregion
-
-		#region Filter Helpers
 
 		private IQueryable<Book> ApplySearchFilter(IQueryable<Book> bookListQuery, string searchTerm)
 		{
@@ -227,18 +216,12 @@ namespace BookLink.Areas.Member.Controllers
 			};
 		}
 
-		#endregion
-
-		#region Dropdown Helpers
-
 		private const string CategoriesCacheKey = "BookCategories";
 
 		private IEnumerable<SelectListItem> GetCategories()
 		{
-			// Try to get categories from cache
 			if (!_memoryCache.TryGetValue(CategoriesCacheKey, out IEnumerable<SelectListItem> cachedCategories))
 			{
-				// Cache miss: Fetch from database
 				cachedCategories = _unitOfWork.Category.GetAll()
 					.Select(c => new SelectListItem
 					{
@@ -247,17 +230,14 @@ namespace BookLink.Areas.Member.Controllers
 					})
 					.ToList();
 
-				// Set cache options: e.g., expire after 10 minutes
 				var cacheOptions = new MemoryCacheEntryOptions
 				{
 					AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10),
-					SlidingExpiration = TimeSpan.FromMinutes(5) // Reset expiration timer if accessed
+					SlidingExpiration = TimeSpan.FromMinutes(5)
 				};
 
-				// Store in cache
 				_memoryCache.Set(CategoriesCacheKey, cachedCategories, cacheOptions);
 			}
-
 			return cachedCategories;
 		}
 
@@ -275,6 +255,17 @@ namespace BookLink.Areas.Member.Controllers
 				.Select(a => new SelectListItem { Text = a.ToString(), Value = ((int)a).ToString() });
 		}
 
-		#endregion
+		private List<int> GetWishlistBookIds()
+		{
+			if (!User.Identity.IsAuthenticated)
+			{
+				return new List<int>();
+			}
+
+			var userId = _userManager.GetUserId(User);
+			return _unitOfWork.Wishlist.GetAll(w => w.UserId == userId)
+				.Select(w => w.BookId)
+				.ToList();
+		}
 	}
 }
