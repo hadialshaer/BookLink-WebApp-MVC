@@ -272,19 +272,6 @@ namespace BookLink.Areas.Member.Controllers
 				.Select(w => w.BookId)
 				.ToList();
 		}
-
-		[HttpGet]
-		public IActionResult SendTestEmail()
-		{
-			return View();
-		}
-
-		[HttpPost]
-		public async Task<IActionResult> SendTestEmail(string toEmail)
-		{
-			await _emailSender.SendEmailAsync(toEmail, "Test Email from Booklink", "<h1>Hello!</h1><p>test test.</p>");
-			return RedirectToAction("Index");
-		}
 	}
 
 

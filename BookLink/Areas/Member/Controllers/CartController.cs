@@ -3,6 +3,8 @@ using BookLink.Models;
 using BookLink.Models.ViewModels;
 using BookLink.Utility;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Stripe.Checkout;
@@ -16,13 +18,15 @@ namespace BookLink.Areas.Member.Controllers
 	{
 
 		private readonly IUnitOfWork _unitOfWork;
+		private readonly IEmailSender _emailSender;
 
 		[BindProperty]
 		public ShoppingCartVM ShoppingCartVM { get; set; }
 
-		public CartController(IUnitOfWork unitOfWork)
+		public CartController(IUnitOfWork unitOfWork, IEmailSender emailSender)
 		{
 			_unitOfWork = unitOfWork;
+			_emailSender = emailSender;
 		}
 
 		// Get Shopping Cart items
@@ -273,6 +277,28 @@ namespace BookLink.Areas.Member.Controllers
 				_unitOfWork.Save();
 			}
 			HttpContext.Session.Clear();
+
+			var emailBody = $@"
+            <p>Dear {orderHeader.User.FirstName},</p>
+            <p>We are excited to inform you that your order has been successfully created on BookLink. Below are the details of your new order:</p>
+            
+            <p><strong>Order Details:</strong></p>
+            <ul>
+                <li><strong>Order ID:</strong> {orderHeader.Id}</li>
+                <li><strong>Order Date:</strong> {orderHeader.OrderDate}</li>
+                <li><strong>Total Amount:</strong> {orderHeader.OrderTotal}</li>
+            </ul>
+            
+            <p>You can track your order and find additional information through your BookLink account at any time.</p>
+            
+            <p>Thank you for choosing BookLink. If you have any questions or need further assistance, please feel free to reach out to our support team.</p>
+            
+            <p>Best regards,</p>
+            <p>BookLink Team</p>
+        ";
+
+			// Sending the email
+			_emailSender.SendEmailAsync(orderHeader.User.Email, "Order Confirmation - BookLink", emailBody);
 
 			List<ShoppingCart> shoppingCarts = _unitOfWork.ShoppingCart
 				.GetAll(u => u.UserId == orderHeader.UserId).ToList();

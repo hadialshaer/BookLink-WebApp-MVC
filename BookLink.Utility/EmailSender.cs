@@ -31,7 +31,7 @@ namespace BookLink.Utility
 			message.To.Add(new MailboxAddress("", email));
 			message.Subject = subject;
 
-			message.Body = new TextPart("html") { Text = htmlMessage }; // Use "html" since you’re passing htmlMessage
+			message.Body = new TextPart("html") { Text = htmlMessage };
 
 			using var client = new SmtpClient();
 			await client.ConnectAsync(_emailSettings.SmtpServer, _emailSettings.Port, MailKit.Security.SecureSocketOptions.StartTls);
