@@ -66,6 +66,7 @@ builder.Services.AddSession(options =>
 
 // Register Repositories for Dependency Injection
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 builder.Services.AddScoped<IEmailSender, EmailSender>();
 
 
@@ -121,7 +122,7 @@ void SeedDataBase()
 {
 	using (var scope = app.Services.CreateScope())
 	{
-		var services = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
-		services.Initialize();
+		var dbInitializer = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
+		dbInitializer.Initialize();
 	};
 }

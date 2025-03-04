@@ -8,6 +8,7 @@ using BookLink.Models.ViewModels;
 using BookLink.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -23,17 +24,20 @@ namespace BookLink.Areas.Member.Controllers
 		private readonly IUnitOfWork _unitOfWork;
 		private readonly UserManager<User> _userManager;
 		private readonly IMemoryCache _memoryCache;
+		private readonly IEmailSender _emailSender;
 
 		public HomeController(
 			ILogger<HomeController> logger,
 			IUnitOfWork unitOfWork,
 			UserManager<User> userManager,
-			IMemoryCache memoryCache)
+			IMemoryCache memoryCache,
+			IEmailSender emailSender)
 		{
 			_logger = logger;
 			_unitOfWork = unitOfWork;
 			_userManager = userManager;
 			_memoryCache = memoryCache;
+			_emailSender = emailSender;
 		}
 
 		public IActionResult Index()
@@ -255,6 +259,7 @@ namespace BookLink.Areas.Member.Controllers
 				.Select(a => new SelectListItem { Text = a.ToString(), Value = ((int)a).ToString() });
 		}
 
+
 		private List<int> GetWishlistBookIds()
 		{
 			if (!User.Identity.IsAuthenticated)
@@ -267,5 +272,20 @@ namespace BookLink.Areas.Member.Controllers
 				.Select(w => w.BookId)
 				.ToList();
 		}
+
+		[HttpGet]
+		public IActionResult SendTestEmail()
+		{
+			return View();
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> SendTestEmail(string toEmail)
+		{
+			await _emailSender.SendEmailAsync(toEmail, "Test Email from Booklink", "<h1>Hello!</h1><p>test test.</p>");
+			return RedirectToAction("Index");
+		}
 	}
+
+
 }
