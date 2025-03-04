@@ -12,7 +12,7 @@ namespace BookLink.Models
 {
 	public class User : IdentityUser
 	{
-		public string PostalCode;
+		public string? PostalCode { get; set; }
 
 		[Required]
 		[StringLength(50, ErrorMessage = "This name is not allowed", MinimumLength = 3)]
@@ -25,13 +25,13 @@ namespace BookLink.Models
 		public string? City { get; set; }
 
 		[DataType(DataType.Date)]
-		public DateTime BirthDate { get; set; }
+		public DateTime? BirthDate { get; set; }
 
-		public Gender gender { get; set; }
+		public Gender? gender { get; set; }
 
-		public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-		public string Address { get; set; }
-		public string State { get; set; }
+		public DateTime? CreatedAt { get; set; } = DateTime.UtcNow;
+		public string? Address { get; set; }
+		public string? State { get; set; }
 	}
 
 	public enum Gender{

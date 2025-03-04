@@ -137,14 +137,6 @@ namespace BookLink.Areas.Identity.Pages.Account
 		public async Task OnGetAsync(string returnUrl = null)
 		{
 
-			// Creatign Roles
-			if (!_roleManager.RoleExistsAsync(SD.Role_Member).GetAwaiter().GetResult())
-			{
-				_roleManager.CreateAsync(new IdentityRole(SD.Role_Member)).GetAwaiter().GetResult();
-				_roleManager.CreateAsync(new IdentityRole(SD.Role_Admin)).GetAwaiter().GetResult();
-				_roleManager.CreateAsync(new IdentityRole(SD.Role_Guest)).GetAwaiter().GetResult();
-			}
-
 			Input = new()
 			{
 				RoleList = _roleManager.Roles.Select(r => new SelectListItem

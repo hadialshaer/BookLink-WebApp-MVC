@@ -9,6 +9,7 @@ using BookLink.Models;
 using Stripe;
 using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.AspNetCore.Authentication.Google;
+using BookLink.DataAccess.DbInitializer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -67,6 +68,10 @@ builder.Services.AddSession(options =>
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IEmailSender, EmailSender>();
 
+
+// Register DbInitializer for Dependency Injection
+builder.Services.AddScoped<IDbInitializer, DbInitializer>();
+
 #endregion
 
 var app = builder.Build();
@@ -97,6 +102,9 @@ app.UseAuthorization();
 //  Enable Session Middleware
 app.UseSession();
 
+//  Seed Database
+SeedDataBase();
+
 //  Map Razor Pages
 app.MapRazorPages();
 
@@ -108,3 +116,12 @@ app.MapControllerRoute(
 #endregion
 
 app.Run();
+
+void SeedDataBase()
+{
+	using (var scope = app.Services.CreateScope())
+	{
+		var services = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
+		services.Initialize();
+	};
+}
