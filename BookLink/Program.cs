@@ -25,6 +25,9 @@ builder.Services.AddControllersWithViews();
 // Configure Stripe Settings
 builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
 
+// Cofigure TinyMCE Settings
+builder.Services.Configure<TinyMCESettings>(builder.Configuration.GetSection("TinyMCE"));
+
 // Configure Database Connection
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
