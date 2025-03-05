@@ -197,7 +197,7 @@ namespace BookLink.Areas.Member.Controllers
 				_unitOfWork.Save();
 			}
 
-			var domain = "https://localhost:7110/";
+			var domain = Request.Scheme + "://" + Request.Host.Value + "/";
 
 			// Option configuration
 			var options = new SessionCreateOptions
