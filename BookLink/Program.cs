@@ -66,8 +66,7 @@ builder.Services.AddSession(options =>
 
 // Register Repositories for Dependency Injection
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
-builder.Services.AddScoped<IEmailSender, EmailSender>();
+builder.Services.AddTransient<IEmailSender, EmailSender>();
 
 
 // Register DbInitializer for Dependency Injection
