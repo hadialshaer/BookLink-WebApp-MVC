@@ -249,7 +249,7 @@ BookLink follows a clean N-tier architecture pattern:
 ## 📋 Functional Requirements
 The complete functional requirements document is available in the [Requirements.md file](./docs/Requirements.md).
 
-## 🗄️ DataBase Design
+## 🗄 DataBase Design
 `For a detailed clear ER Diagram` => https://bit.ly/4i4V7kw
 
 ## 📊 UML Diagrams
