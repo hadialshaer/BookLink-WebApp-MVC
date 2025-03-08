@@ -104,13 +104,8 @@ namespace BookLink.Areas.Admin.Controllers
 			}
 			else
 			{
-				// Lending-specific validation
-				if (bookVM.Book.BookStatus == BookStatus.Borrowed &&
-					!bookVM.Book.DueDate.HasValue)
-				{
-					ModelState.AddModelError("Book.DueDate",
-						"Due date is required for borrowed books");
-				}
+				if (bookVM.Book.BorrowingFee < 50000 || bookVM.Book.BorrowingFee > 200000)
+					ModelState.AddModelError("Book.BorrowingFee", "Borrowing fee must be between 50,000 and 200,000 ل.ل");
 			}
 
 
