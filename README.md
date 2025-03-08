@@ -12,9 +12,9 @@ It enables users to list their books for lending or selling, borrow books from o
   <a href="https://github.com/hadialshaer"><strong>👤 View Profile</strong></a>
   <br />
   <br />
-  <a href="https://github.com/hadialshaer/hadialshaer-booklink-webapp-mvc/issues/new?labels=bug&template=bug_report.md">🐞 Report Bug</a>
+  <a href="https://github.com/hadialshaer/BookLink-WebApp-MVC/issues/new?labels=bug&template=bug_report.md">🐞 Report Bug</a>
   ·
-  <a href="https://github.com/hadialshaer/hadialshaer-booklink-webapp-mvc/issues/new?labels=enhancement&template=feature_request.md">✨ Request Feature</a>
+  <a href="https://github.com/hadialshaer/BookLink-WebApp-MVC/issues/new?labels=enhancement&template=feature_request.md">✨ Request Feature</a>
 </div>
 
 ![Azure](https://upload.wikimedia.org/wikipedia/commons/a/a8/Microsoft_Azure_Logo.svg)
