@@ -23,22 +23,19 @@ It enables users to list their books for lending or selling, borrow books from o
 Deployed to Microsoft Azure: https://booklink-webapp-mvc-dzbrdshae8d7gyb9.canadacentral-01.azurewebsites.net
 <br>
 ## 📋 Table of Contents
-- [Overview](#overview)
-- [Key Features](#key-features)
-- [System Architecture](#system-architecture)
-- [Technical Stack](#technical-stack)
-- [Installation Guide](#installation-guide)
-- [Project Structure](#project-structure)
-- [Functional Requirements](#functional-requirements)
-- [Database Design](#database-design)
-- [UML Diagrams](#uml-diagrams)
-- [API Endpoints](#api-endpoints)
-- [Screenshots](#screenshots)
-- [Deployment](#deployment)
-- [Roadmap](#roadmap)
-- [Contributing](#contributing)
-- [Contact](#contact)
-- [License](#license)
+- [Overview](#-overview)
+- [Key Features](#-key-features)
+- [System Architecture](#-system-architecture)
+- [Technical Stack](#-technical-stack)
+- [Installation Guide](#-installation-guide)
+- [Project Structure](#-project-structure)
+- [Functional Requirements](#-functional-requirements)
+- [Database Design](#-database-design)
+- [UML Diagrams](#-uml-diagrams)
+- [Deployment](#-deployment)
+- [Roadmap](#-roadmap)
+- [Contributing](#-contributing)
+- [Contact](#-contact)
 
 ## 🔍 Overview
 BookLink is a comprehensive digital library and book marketplace platform that connects book enthusiasts, enabling them to browse, purchase, lend, and borrow books within a community-centered environment.<br>
@@ -127,7 +124,7 @@ BookLink follows a clean N-tier architecture pattern:
 - Email services.
 - Stripe integration utilities.
 
-## Technical Stack
+## 💻 Technical Stack
 
 ### Backend
 - **ASP.NET Core 9.0 MVC**
@@ -162,7 +159,7 @@ BookLink follows a clean N-tier architecture pattern:
 ### Deployment
 - **Microsoft Azure**
 
-### Installation Guide
+### 🔧 Installation Guide
 ## Prerequisites
 
 - [.NET 9.0 SDK](https://dotnet.microsoft.com/download/dotnet/9.0)
@@ -249,6 +246,9 @@ BookLink follows a clean N-tier architecture pattern:
     │   └── ViewModels/                     # UI-specific models
     └── BookLink.Utility/                   # Helper classes
     ```
+## 📋 Functional Requirements
+The complete functional requirements document is available in the [Requirements.md file](./docs/Requirements.md).
+
 ## 🗄️ DataBase Design
 `For a detailed clear ER Diagram` => https://bit.ly/4i4V7kw
 
